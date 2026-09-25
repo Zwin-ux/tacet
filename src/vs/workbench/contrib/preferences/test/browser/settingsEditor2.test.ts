@@ -156,7 +156,7 @@ suite('SettingsEditor2', () => {
 			editor['searchResultModel'] = editor['createFilterModel']();
 			const searchModel = editor['searchResultModel']!;
 			tocModel.currentSearchModel = searchModel;
-			editor['renderResultCountMessages'](false);
+			editor['renderResultCountMessages']();
 			editor['refreshTree']();
 			const rebuild = sinon.spy(searchModel, 'updateChildren');
 			const read = () => ({
@@ -305,8 +305,8 @@ suite('SettingsEditor2', () => {
 		});
 
 		test('assignment filter includes advanced settings in the resolved TOC and category filtering', async () => {
-			const settingKey = 'chat.detectParticipant.enabled';
-			const { editor, assignments, settingsModel, viewState, treeFilter } = createEditor('', true, [settingKey, 'chat.detectParticipant.unassigned']);
+			const settingKey = 'search.assignedExample';
+			const { editor, assignments, settingsModel, viewState, treeFilter } = createEditor('', true, [settingKey, 'search.unassignedExample']);
 			await editor['onConfigUpdate']();
 			const hiddenInitially = !settingsModel.getElementsByName(settingKey)?.length;
 			assignments.setAssignment(settingKey, true);
@@ -320,8 +320,8 @@ suite('SettingsEditor2', () => {
 			const searchModel = editor['searchResultModel']!;
 			const assigned = searchModel.root.children[0];
 			assert.ok(assigned instanceof SettingsTreeSettingElement);
-			const chat = settingsModel.root.children.find((child): child is SettingsTreeGroupElement => child instanceof SettingsTreeGroupElement && child.id === 'chat');
-			const context = chat?.children.find((child): child is SettingsTreeGroupElement => child instanceof SettingsTreeGroupElement && child.id === 'chat/context');
+			const features = settingsModel.root.children.find((child): child is SettingsTreeGroupElement => child instanceof SettingsTreeGroupElement && child.id === 'features');
+			const context = features?.children.find((child): child is SettingsTreeGroupElement => child instanceof SettingsTreeGroupElement && child.id === 'features/search');
 			const categoryVisible = context ? treeFilter.filter(context, TreeVisibility.Visible) : false;
 			viewState.categoryFilter = context ?? settingsModel.root;
 			const categoryContainsAssignment = treeFilter.filter(assigned, TreeVisibility.Visible);

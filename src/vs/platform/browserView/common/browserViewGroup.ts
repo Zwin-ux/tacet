@@ -5,7 +5,7 @@
 
 import { Event } from '../../../base/common/event.js';
 import { IDisposable } from '../../../base/common/lifecycle.js';
-import { IBrowserViewAudience, IBrowserViewCreationContext, matchesBrowserViewAudience } from './browserView.js';
+import { IBrowserViewCreationContext } from './browserView.js';
 import { CDPEvent, CDPRequest, CDPResponse } from './cdp/types.js';
 
 export const ipcBrowserViewGroupChannelName = 'browserViewGroup';
@@ -25,16 +25,12 @@ export interface IBrowserViewGroup extends IDisposable {
 }
 
 export interface IBrowserViewGroupFilter {
-	/** Include views granted to this audience. */
-	readonly audience?: IBrowserViewAudience;
-	/** Include these views regardless of their audiences. */
+	/** Include these views. */
 	readonly browserIds?: readonly string[];
 }
 
-export function matchesBrowserViewGroupFilter(browserId: string, audiences: readonly IBrowserViewAudience[], filter: IBrowserViewGroupFilter): boolean {
-	const audienceFilter = filter.audience;
-	return filter.browserIds?.includes(browserId) === true
-		|| (audienceFilter !== undefined && audiences.some(audience => matchesBrowserViewAudience(audienceFilter, audience)));
+export function matchesBrowserViewGroupFilter(browserId: string, filter: IBrowserViewGroupFilter): boolean {
+	return filter.browserIds?.includes(browserId) === true;
 }
 
 /**

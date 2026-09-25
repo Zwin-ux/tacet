@@ -30,10 +30,7 @@ import { IDynamicAuthenticationProviderStorageService } from '../../services/aut
 import { IClipboardService } from '../../../platform/clipboard/common/clipboardService.js';
 import { IQuickInputService } from '../../../platform/quickinput/common/quickInput.js';
 import { ISecretStorageService } from '../../../platform/secrets/common/secrets.js';
-import { mcpOAuthClientSecretStorageKey } from '../../contrib/mcp/common/mcpTypes.js';
 import { IProductService } from '../../../platform/product/common/productService.js';
-import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
-import { IMcpEnterpriseManagedAuthIdpConfig, mcpEnterpriseManagedAuthIdpSection } from '../../contrib/mcp/common/mcpConfiguration.js';
 
 export interface AuthenticationInteractiveOptions {
 	detail?: string;
@@ -146,7 +143,6 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 		@IDynamicAuthenticationProviderStorageService private readonly dynamicAuthProviderStorageService: IDynamicAuthenticationProviderStorageService,
 		@IClipboardService private readonly clipboardService: IClipboardService,
 		@IQuickInputService private readonly quickInputService: IQuickInputService,
-		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@ISecretStorageService private readonly secretStorageService: ISecretStorageService,
 	) {
 		super();
@@ -200,16 +196,9 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 				const authProviderId = `xaa:${issuer.toString(true)}`;
 				const { metadata: serverMetadata } = await fetchAuthorizationServerMetadata(issuer.toString(true));
 
-				// Prefer the user-configured IdP client_id / client_secret over any cached registration.
-				// XAA requires a pre-provisioned (admin-approved) client_id at the IdP — there is no DCR
-				// fallback — so an explicit setting is the most reliable source. Typically delivered via
-				// enterprise policy; developers may hand-edit settings.json for local testing.
-				const configuredIdp = this.configurationService.getValue<IMcpEnterpriseManagedAuthIdpConfig | undefined>(mcpEnterpriseManagedAuthIdpSection) ?? {};
-				const configuredClientId = configuredIdp.clientId?.trim() || undefined;
-				const configuredClientSecret = configuredIdp.clientSecret?.trim() || undefined;
 				const cached = await this.dynamicAuthProviderStorageService.getClientRegistration(authProviderId);
-				const clientId = configuredClientId ?? cached?.clientId;
-				const clientSecret = configuredClientSecret ?? cached?.clientSecret;
+				const clientId = cached?.clientId;
+				const clientSecret = cached?.clientSecret;
 				let initialTokens: (IAuthorizationTokenResponse & { created_at: number })[] | undefined = undefined;
 				if (clientId) {
 					initialTokens = await this.dynamicAuthProviderStorageService.getSessionsForDynamicAuthProvider(authProviderId, clientId);
@@ -710,9 +699,8 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 
 	async $promptForResourceClientSecret(resourceClientId: string, resource: string): Promise<string | undefined> {
 		// Surface to the user that whatever they enter (including blank == none) will be remembered
-		// in OS secret storage, scoped to the MCP server URL + the resource client_id. This means:
-		//   - the codelens above `oauth.clientId` in mcp.json will flip to "Replace Client Secret"
-		//   - subsequent runs read the secret directly from storage and never re-prompt.
+		// in OS secret storage, scoped to the resource URL + the resource client_id, so subsequent
+		// runs read the secret directly from storage and never re-prompt.
 		//
 		// Return contract:
 		//   - `undefined` — user pressed Escape (cancelled). Caller should NOT cache; re-prompt allowed.
@@ -723,7 +711,7 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 			title: nls.localize('xaaResourceSecretTitle', "Resource Client Secret Required"),
 			prompt: nls.localize(
 				'xaaResourceSecretPrompt',
-				"The resource at '{0}' uses a per-resource client identifier '{1}'. Enter the matching client secret (leave blank if none). The value is saved in OS secret storage; manage it later via the 'Set Client Secret' code lens in mcp.json.",
+				"The resource at '{0}' uses a per-resource client identifier '{1}'. Enter the matching client secret (leave blank if none). The value is saved in OS secret storage.",
 				resource,
 				resourceClientId,
 			),
@@ -736,7 +724,7 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 			return undefined;
 		}
 		const trimmed = value.trim();
-		const key = mcpOAuthClientSecretStorageKey(resource, resourceClientId);
+		const key = `oauth.clientSecret:${resource}:${resourceClientId}`;
 		try {
 			if (trimmed.length === 0) {
 				// Blank-on-confirm means "no client secret" (e.g. token_endpoint_auth_method=none).

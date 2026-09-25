@@ -472,7 +472,7 @@ suite('SearchResult', () => {
 				contentPattern: { pattern: '' },
 				folderQueries: [{ folder: createFileUriFromPathFromRoot(folder) }]
 			};
-			testObject.add([], 'test', false);
+			testObject.add([], 'test');
 		}
 
 		testObject.dispose();

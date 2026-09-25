@@ -58,7 +58,6 @@ export enum BrowserViewCommandId {
 	ClearGlobalStorage = `${commandPrefix}.clearGlobalStorage`,
 	ClearWorkspaceStorage = `${commandPrefix}.clearWorkspaceStorage`,
 	ClearEphemeralStorage = `${commandPrefix}.clearEphemeralStorage`,
-	ClearAgentStorage = `${commandPrefix}.clearAgentStorage`,
 
 	// Find in page
 	ShowFind = `${commandPrefix}.showFind`,
@@ -156,9 +155,6 @@ export interface IBrowserViewWindowConfiguration {
 	readonly theme: IBrowserViewTheme;
 	/** Map of command ID to accelerator label for context menus. */
 	readonly keybindings: { [commandId: string]: string };
-
-	/** Whether AI features are disabled for this window. */
-	readonly aiFeaturesDisabled?: boolean;
 	/** Maximum number of entries to retain per browser session history. */
 	readonly maxHistoryEntries?: number;
 	/**
@@ -229,37 +225,11 @@ export interface IBrowserViewCaptureScreenshotOptions {
 }
 
 /** Identifies who controls a browser view. */
-export type IBrowserViewOwner =
-	| { readonly type: 'user' }
-	| { readonly type: 'agent'; readonly sessionId: string };
+export type IBrowserViewOwner = { readonly type: 'user' };
 
-/**
- * Grants matching agents access to a browser view. Omitted identifiers match all values.
- */
-export interface IBrowserViewAgentAudience {
-	readonly type: 'agent';
-	readonly sessionId?: string;
-}
-
-export type IBrowserViewAudience = IBrowserViewAgentAudience;
-
-export function equalsBrowserViewAudience(first: IBrowserViewAudience, second: IBrowserViewAudience): boolean {
-	return first.type === second.type
-		&& first.sessionId === second.sessionId;
-}
-
-/**
- * Returns whether an audience satisfies a pattern whose omitted identifiers are wildcards.
- */
-export function matchesBrowserViewAudience(candidate: IBrowserViewAudience, pattern: IBrowserViewAudience): boolean {
-	return candidate.type === pattern.type
-		&& (pattern.sessionId === undefined || pattern.sessionId === candidate.sessionId);
-}
-
-/** Identifies the workbench window and optional Agents Window session that host a browser view. */
+/** Identifies the workbench window that hosts a browser view. */
 export interface IBrowserViewHost {
 	readonly windowId: number;
-	readonly sessionId?: string;
 }
 
 /**
@@ -292,13 +262,11 @@ export interface IBrowserViewCreatedEvent {
 	readonly editorOpenRequest?: IBrowserViewEditorOpenOptions;
 }
 
-/** Host, ownership, storage, and initial access for a newly created browser view. */
+/** Host, ownership, and storage for a newly created browser view. */
 export interface IBrowserViewCreationContext {
 	readonly host: IBrowserViewHost;
 	readonly owner: IBrowserViewOwner;
 	readonly session: BrowserViewSessionSelector;
-	/** Grants automation clients access before the view is announced to other processes. */
-	readonly initialAudiences?: readonly IBrowserViewAudience[];
 }
 
 /** Complete main-process creation contract for a browser view. */
@@ -344,7 +312,6 @@ export interface IBrowserViewState {
 	isRemoteSession: boolean;
 	isAreaSelectionActive: boolean;
 	device: IBrowserDeviceProfile | undefined;
-	audiences: IBrowserViewAudience[];
 }
 
 export interface IBrowserViewNavigationEvent {
@@ -438,40 +405,20 @@ export interface IBrowserViewFindInPageResult {
 export enum BrowserViewStorageScope {
 	Global = 'global',
 	Workspace = 'workspace',
-	Ephemeral = 'ephemeral',
-	Agent = 'agent'
+	Ephemeral = 'ephemeral'
 }
 
 export type IBrowserViewSessionOptions =
 	| { readonly scope: BrowserViewStorageScope.Global }
 	| { readonly scope: BrowserViewStorageScope.Workspace }
-	| { readonly scope: BrowserViewStorageScope.Ephemeral }
-	| {
-		readonly scope: BrowserViewStorageScope.Agent;
-		/** Views with the same affinity share one in-memory browser session. */
-		readonly affinity?: string;
-	};
+	| { readonly scope: BrowserViewStorageScope.Ephemeral };
 
 export function isInMemoryStorageScope(scope: BrowserViewStorageScope): boolean {
-	return scope === BrowserViewStorageScope.Ephemeral || scope === BrowserViewStorageScope.Agent;
-}
-
-export function isBrowserViewStorageScopeShareableWithAgent(scope: BrowserViewStorageScope, networkFilteringEnabled: boolean): boolean {
-	return !networkFilteringEnabled || scope === BrowserViewStorageScope.Agent;
+	return scope === BrowserViewStorageScope.Ephemeral;
 }
 
 /** Selects an existing browser context by ID or resolves one from storage options. */
 export type BrowserViewSessionSelector = string | IBrowserViewSessionOptions;
-
-export function getAgentBrowserViewCreationDefaults(sessionId: string, storageAffinity?: string) {
-	return {
-		owner: { type: 'agent', sessionId } as const,
-		initialAudiences: [{ type: 'agent' }] as const,
-		session: storageAffinity === undefined
-			? { scope: BrowserViewStorageScope.Agent } as const
-			: { scope: BrowserViewStorageScope.Agent, affinity: storageAffinity } as const
-	};
-}
 
 export const ipcBrowserViewChannelName = 'browserView';
 
@@ -531,7 +478,6 @@ export interface IBrowserViewService {
 	onDynamicDidChangeAreaSelectionActive(id: string): Event<boolean>;
 	onDynamicDidChangeDeviceEmulation(id: string): Event<IBrowserDeviceProfile | undefined>;
 	onDynamicDidChangeRemoteStatus(id: string): Event<boolean>;
-	onDynamicDidChangeAudiences(id: string): Event<IBrowserViewAudience[]>;
 	onDynamicDidRequestPermission(id: string): Event<IBrowserViewPermissionRequestEvent>;
 	onDynamicDidChangePermissions(id: string): Event<ISerializedBrowserPermissionsSnapshot>;
 
@@ -566,11 +512,6 @@ export interface IBrowserViewService {
 	 * @throws If no browser view exists for the given ID
 	 */
 	getState(id: string): Promise<IBrowserViewState>;
-
-	/**
-	 * Adds an audience or, when disabled, removes every audience matching it.
-	 */
-	setAudience(id: string, audience: IBrowserViewAudience, enabled: boolean): Promise<void>;
 
 	/**
 	 * Update the bounds of a browser view

@@ -863,7 +863,7 @@ extension field is hidden (no fixed-width placeholder needed). */
 	display: none;
 }
 
-/* Title label row: label + AI generate button */
+/* Title label row */
 .issue-reporter-wizard .wizard-title-label-row {
 	display: flex;
 	align-items: center;
@@ -874,26 +874,6 @@ extension field is hidden (no fixed-width placeholder needed). */
 .issue-reporter-wizard .wizard-title-label-row .wizard-field-label {
 	margin-top: 0;
 	margin-bottom: 0;
-}
-
-.issue-reporter-wizard .wizard-ai-title-btn.monaco-button {
-	width: auto;
-	padding: 2px 6px 2px 4px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
-	gap: 4px;
-	white-space: nowrap;
-	font-size: 11px;
-	height: auto;
-	line-height: 1.4;
-}
-
-.issue-reporter-wizard .wizard-ai-title-btn.monaco-button[disabled],
-.issue-reporter-wizard .wizard-ai-title-btn.monaco-button.disabled {
-	opacity: 0.55;
-	cursor: default;
 }
 
 /* Description guidance text */

@@ -106,7 +106,7 @@ suite('XtermTerminal', () => {
 		XTermBaseCtor = (await importAMDNodeModule<typeof import('@xterm/xterm')>('@xterm/xterm', 'lib/xterm.js')).Terminal;
 
 		const capabilityStore = store.add(new TerminalCapabilityStore());
-		xterm = store.add(instantiationService.createInstance(XtermTerminal, undefined, XTermBaseCtor, {
+		xterm = store.add(instantiationService.createInstance(XtermTerminal, XTermBaseCtor, {
 			cols: 80,
 			rows: 30,
 			xtermColorProvider: { getBackgroundColor: () => undefined },
@@ -129,7 +129,7 @@ suite('XtermTerminal', () => {
 		const listenerCountAfterRegularXterm = listenerCount(onWillShutdown);
 		for (let index = 0; index < 50; index++) {
 			const capabilityStore = store.add(new TerminalCapabilityStore());
-			store.add(instantiationService.createInstance(XtermTerminal, undefined, XTermBaseCtor, {
+			store.add(instantiationService.createInstance(XtermTerminal, XTermBaseCtor, {
 				cols: 80,
 				rows: 30,
 				xtermColorProvider: { getBackgroundColor: () => undefined },
@@ -361,7 +361,7 @@ suite('XtermTerminal', () => {
 				[PANEL_BACKGROUND]: '#ff0000',
 				[SIDE_BAR_BACKGROUND]: '#00ff00'
 			}));
-			xterm = store.add(instantiationService.createInstance(XtermTerminal, undefined, XTermBaseCtor, {
+			xterm = store.add(instantiationService.createInstance(XtermTerminal, XTermBaseCtor, {
 				cols: 80,
 				rows: 30,
 				xtermAddonImporter: new TestXtermAddonImporter(),
@@ -397,7 +397,7 @@ suite('XtermTerminal', () => {
 				'terminal.ansiBrightCyan': '#150000',
 				'terminal.ansiBrightWhite': '#160000',
 			}));
-			xterm = store.add(instantiationService.createInstance(XtermTerminal, undefined, XTermBaseCtor, {
+			xterm = store.add(instantiationService.createInstance(XtermTerminal, XTermBaseCtor, {
 				cols: 80,
 				rows: 30,
 				xtermAddonImporter: new TestXtermAddonImporter(),

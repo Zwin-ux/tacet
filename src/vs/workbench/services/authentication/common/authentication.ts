@@ -326,7 +326,7 @@ export interface IAuthenticationService {
 	 * SSO issuer. Subsequent calls with the same issuer return the existing provider. The returned id
 	 * can be used with {@link getSessions}/{@link createSession} just like any other provider.
 	 *
-	 * @param issuer The OAuth/OIDC issuer URL (typically read from `mcp.enterpriseManagedAuth.idp`).
+	 * @param issuer The OAuth/OIDC issuer URL.
 	 */
 	createOrGetXaaProvider(issuer: URI): Promise<string | undefined>;
 }

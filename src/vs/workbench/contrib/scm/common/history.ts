@@ -7,7 +7,7 @@ import { CancellationToken } from '../../../../base/common/cancellation.js';
 import { IMarkdownString } from '../../../../base/common/htmlContent.js';
 import { IObservable } from '../../../../base/common/observable.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
-import { URI } from '../../../../base/common/uri.js';
+import { URI, UriComponents } from '../../../../base/common/uri.js';
 import { ColorIdentifier } from '../../../../platform/theme/common/colorUtils.js';
 import { ISCMRepository } from './scm.js';
 
@@ -25,8 +25,6 @@ export interface ISCMHistoryProvider {
 	provideHistoryItems(options: ISCMHistoryOptions, token?: CancellationToken): Promise<ISCMHistoryItem[] | undefined>;
 	provideHistoryItemChanges(historyItemId: string, historyItemParentId: string | undefined, token?: CancellationToken): Promise<ISCMHistoryItemChange[] | undefined>;
 	resolveHistoryItem(historyItemId: string, token?: CancellationToken): Promise<ISCMHistoryItem | undefined>;
-	resolveHistoryItemChatContext(historyItemId: string, token?: CancellationToken): Promise<string | undefined>;
-	resolveHistoryItemChangeRangeChatContext(historyItemId: string, historyItemParentId: string, path: string, token?: CancellationToken): Promise<string | undefined>;
 	resolveHistoryItemRefsCommonAncestor(historyItemRefs: string[], token?: CancellationToken): Promise<string | undefined>;
 }
 
@@ -73,6 +71,15 @@ export interface ISCMHistoryItem {
 	readonly statistics?: ISCMHistoryItemStatistics;
 	readonly references?: ISCMHistoryItemRef[];
 	readonly tooltip?: IMarkdownString | Array<IMarkdownString> | undefined;
+}
+
+/**
+ * Payload of a history item drag (`CodeDataTransfers.SCM_HISTORY_ITEM`).
+ */
+export interface SCMHistoryItemTransferData {
+	readonly name: string;
+	readonly resource: UriComponents;
+	readonly historyItem: ISCMHistoryItem;
 }
 
 export interface ISCMHistoryItemGraphNode {

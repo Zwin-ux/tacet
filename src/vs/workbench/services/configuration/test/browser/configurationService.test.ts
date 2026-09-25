@@ -78,7 +78,6 @@ suite('ConfigurationDefaultOverridesContribution', () => {
 		workbenchAssignmentService: {
 			getTreatmentWithAssignment<T extends string | number | boolean>(name: string): Promise<ITreatmentWithAssignment<T>>;
 		};
-		environmentService: { isSessionsWindow: boolean };
 		processExperimentalSettings(properties: Iterable<string>, autoRefetch: boolean): Promise<void>;
 	};
 
@@ -101,7 +100,6 @@ suite('ConfigurationDefaultOverridesContribution', () => {
 				hasAssignment: Promise.resolve(treatments[name] !== undefined),
 			}),
 		};
-		contribution.environmentService = { isSessionsWindow: false };
 		return contribution;
 	}
 
@@ -612,11 +610,10 @@ suite('ConfigurationDefaultOverridesContribution', () => {
 		} as unknown as IWorkbenchAssignmentService;
 		const extensionService = { whenInstalledExtensionsRegistered: async () => true } as unknown as IExtensionService;
 		const workspaceService = { reloadConfiguration: async () => { } } as unknown as WorkspaceService;
-		const environmentService = { isSessionsWindow: false } as unknown as IWorkbenchEnvironmentService;
 
 		configurationRegistry.registerConfiguration(startupConfiguration);
 		const experimentalSettingsService = store.add(new ExperimentalSettingsService());
-		const contribution = new ConfigurationDefaultOverridesContribution(workbenchAssignmentService, extensionService, workspaceService, environmentService, new NullLogService(), experimentalSettingsService);
+		const contribution = new ConfigurationDefaultOverridesContribution(workbenchAssignmentService, extensionService, workspaceService, new NullLogService(), experimentalSettingsService);
 		const internals = contribution as unknown as {
 			pendingStartupExperimentalSettings: Set<string>;
 			registeredExperimentalDefaults: Map<string, IConfigurationDefaults>;

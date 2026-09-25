@@ -45,11 +45,9 @@ import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { IQuickInputService, IQuickPick, IQuickPickItem } from '../../../../platform/quickinput/common/quickInput.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { FloatingEditorClickMenu } from '../../../browser/codeeditor.js';
-import { IChatCodeBlockContextProviderService } from '../../chat/browser/chat.js';
-import { ICodeBlockActionContext } from '../../chat/browser/widget/chatContentParts/codeBlockPart.js';
 import { getSimpleEditorOptions } from '../../codeEditor/browser/simpleEditorOptions.js';
 import { AccessibilityCommandId } from '../common/accessibilityCommands.js';
-import { AccessibilityVerbositySettingId, AccessibilityWorkbenchSettingId, accessibilityHelpIsShown, accessibleViewContainsCodeBlocks, accessibleViewCurrentProviderId, accessibleViewGoToSymbolSupported, accessibleViewHasAssignedKeybindings, accessibleViewHasUnassignedKeybindings, accessibleViewInCodeBlock, accessibleViewIsShown, accessibleViewOnLastLine, accessibleViewSupportsNavigation, accessibleViewVerbosityEnabled } from './accessibilityConfiguration.js';
+import { AccessibilityVerbositySettingId, AccessibilityWorkbenchSettingId, accessibilityHelpIsShown, accessibleViewCurrentProviderId, accessibleViewGoToSymbolSupported, accessibleViewHasAssignedKeybindings, accessibleViewHasUnassignedKeybindings, accessibleViewIsShown, accessibleViewOnLastLine, accessibleViewSupportsNavigation, accessibleViewVerbosityEnabled } from './accessibilityConfiguration.js';
 import { resolveContentAndKeybindingItems } from './accessibleViewKeybindingResolver.js';
 
 const enum DIMENSIONS {
@@ -59,14 +57,6 @@ const enum DIMENSIONS {
 }
 
 export type AccesibleViewContentProvider = AccessibleContentProvider | ExtensionContentProvider;
-
-interface ICodeBlock {
-	startLine: number;
-	endLine: number;
-	code: string;
-	languageId?: string;
-	chatSessionResource: URI | undefined;
-}
 
 export class AccessibleView extends Disposable {
 	private _editorWidget: CodeEditorWidget;
@@ -78,12 +68,9 @@ export class AccessibleView extends Disposable {
 	private _accessibleViewVerbosityEnabled: IContextKey<boolean>;
 	private _accessibleViewGoToSymbolSupported: IContextKey<boolean>;
 	private _accessibleViewCurrentProviderId: IContextKey<string>;
-	private _accessibleViewInCodeBlock: IContextKey<boolean>;
-	private _accessibleViewContainsCodeBlocks: IContextKey<boolean>;
 	private _hasUnassignedKeybindings: IContextKey<boolean>;
 	private _hasAssignedKeybindings: IContextKey<boolean>;
 
-	private _codeBlocks?: ICodeBlock[];
 	private _isInQuickPick: boolean = false;
 
 	get editorWidget() { return this._editorWidget; }
@@ -113,7 +100,6 @@ export class AccessibleView extends Disposable {
 		@ILayoutService private readonly _layoutService: ILayoutService,
 		@IMenuService private readonly _menuService: IMenuService,
 		@ICommandService private readonly _commandService: ICommandService,
-		@IChatCodeBlockContextProviderService private readonly _codeBlockContextProviderService: IChatCodeBlockContextProviderService,
 		@IStorageService private readonly _storageService: IStorageService,
 		@IQuickInputService private readonly _quickInputService: IQuickInputService,
 		@IAccessibilitySignalService private readonly _accessibilitySignalService: IAccessibilitySignalService,
@@ -126,8 +112,6 @@ export class AccessibleView extends Disposable {
 		this._accessibleViewVerbosityEnabled = accessibleViewVerbosityEnabled.bindTo(this._contextKeyService);
 		this._accessibleViewGoToSymbolSupported = accessibleViewGoToSymbolSupported.bindTo(this._contextKeyService);
 		this._accessibleViewCurrentProviderId = accessibleViewCurrentProviderId.bindTo(this._contextKeyService);
-		this._accessibleViewInCodeBlock = accessibleViewInCodeBlock.bindTo(this._contextKeyService);
-		this._accessibleViewContainsCodeBlocks = accessibleViewContainsCodeBlocks.bindTo(this._contextKeyService);
 		this._onLastLine = accessibleViewOnLastLine.bindTo(this._contextKeyService);
 		this._hasUnassignedKeybindings = accessibleViewHasUnassignedKeybindings.bindTo(this._contextKeyService);
 		this._hasAssignedKeybindings = accessibleViewHasAssignedKeybindings.bindTo(this._contextKeyService);
@@ -192,11 +176,6 @@ export class AccessibleView extends Disposable {
 		this._register(this._editorWidget.onDidDispose(() => this._resetContextKeys()));
 		this._register(this._editorWidget.onDidChangeCursorPosition(() => {
 			this._onLastLine.set(this._editorWidget.getPosition()?.lineNumber === this._editorWidget.getModel()?.getLineCount());
-			const cursorPosition = this._editorWidget.getPosition()?.lineNumber;
-			if (this._codeBlocks && cursorPosition !== undefined) {
-				const inCodeBlock = this._codeBlocks.find(c => c.startLine <= cursorPosition && c.endLine >= cursorPosition) !== undefined;
-				this._accessibleViewInCodeBlock.set(inCodeBlock);
-			}
 			this._playDiffSignals();
 		}));
 	}
@@ -249,37 +228,6 @@ export class AccessibleView extends Disposable {
 		}
 	}
 
-	getCodeBlockContext(): ICodeBlockActionContext | undefined {
-		const position = this._editorWidget.getPosition();
-		if (!this._codeBlocks?.length || !position) {
-			return;
-		}
-		const codeBlockIndex = this._codeBlocks?.findIndex(c => c.startLine <= position?.lineNumber && c.endLine >= position?.lineNumber);
-		const codeBlock = codeBlockIndex !== undefined && codeBlockIndex > -1 ? this._codeBlocks[codeBlockIndex] : undefined;
-		if (!codeBlock || codeBlockIndex === undefined) {
-			return;
-		}
-		return { code: codeBlock.code, languageId: codeBlock.languageId, codeBlockIndex, element: undefined, chatSessionResource: codeBlock.chatSessionResource };
-	}
-
-	navigateToCodeBlock(type: 'next' | 'previous'): void {
-		const position = this._editorWidget.getPosition();
-		if (!this._codeBlocks?.length || !position) {
-			return;
-		}
-		let codeBlock;
-		const codeBlocks = this._codeBlocks.slice();
-		if (type === 'previous') {
-			codeBlock = codeBlocks.reverse().find(c => c.endLine < position.lineNumber);
-		} else {
-			codeBlock = codeBlocks.find(c => c.startLine > position.lineNumber);
-		}
-		if (!codeBlock) {
-			return;
-		}
-		this.setPosition(new Position(codeBlock.startLine, 1), true);
-	}
-
 	showLastProvider(id: AccessibleViewProviderId): void {
 		if (!this._lastProvider || this._lastProvider.options.id !== id) {
 			return;
@@ -287,10 +235,9 @@ export class AccessibleView extends Disposable {
 		this.show(this._lastProvider);
 	}
 
-	public getAccessibilityStatus(): { providerId: string | undefined; isInCodeBlock: boolean; onLastLine: boolean } {
+	public getAccessibilityStatus(): { providerId: string | undefined; onLastLine: boolean } {
 		return {
 			providerId: this._currentProvider?.id,
-			isInCodeBlock: this._accessibleViewInCodeBlock.get() ?? false,
 			onLastLine: this._onLastLine.get() ?? false
 		};
 	}
@@ -350,9 +297,6 @@ export class AccessibleView extends Disposable {
 			// only cache a provider with an ID so that it will eventually be cleared.
 			this._lastProvider = provider;
 		}
-		if (provider.id === AccessibleViewProviderId.PanelChat || provider.id === AccessibleViewProviderId.QuickChat) {
-			this._register(this._codeBlockContextProviderService.registerProvider({ getCodeBlockContext: () => this.getCodeBlockContext() }, 'accessibleView'));
-		}
 		if (provider instanceof ExtensionContentProvider) {
 			this._storageService.store(`${ACCESSIBLE_VIEW_SHOWN_STORAGE_PREFIX}${provider.id}`, true, StorageScope.APPLICATION, StorageTarget.USER);
 		}
@@ -392,38 +336,6 @@ export class AccessibleView extends Disposable {
 		}
 		this._isInQuickPick = true;
 		this._instantiationService.createInstance(AccessibleViewSymbolQuickPick, this).show(this._currentProvider);
-	}
-
-	calculateCodeBlocks(markdown?: string): void {
-		if (!markdown) {
-			return;
-		}
-		if (this._currentProvider?.id !== AccessibleViewProviderId.PanelChat && this._currentProvider?.id !== AccessibleViewProviderId.QuickChat) {
-			return;
-		}
-		if (this._currentProvider.options.language && this._currentProvider.options.language !== 'markdown') {
-			// Symbols haven't been provided and we cannot parse this language
-			return;
-		}
-		const lines = markdown.split('\n');
-		this._codeBlocks = [];
-		let inBlock = false;
-		let startLine = 0;
-
-		let languageId: string | undefined;
-		lines.forEach((line, i) => {
-			if (!inBlock && line.startsWith('```')) {
-				inBlock = true;
-				startLine = i + 1;
-				languageId = line.substring(3).trim();
-			} else if (inBlock && line.endsWith('```')) {
-				inBlock = false;
-				const endLine = i;
-				const code = lines.slice(startLine, endLine).join('\n');
-				this._codeBlocks?.push({ startLine, endLine, code, languageId, chatSessionResource: undefined });
-			}
-		});
-		this._accessibleViewContainsCodeBlocks.set(this._codeBlocks.length > 0);
 	}
 
 	getSymbols(): IAccessibleViewSymbol[] | undefined {
@@ -607,7 +519,6 @@ export class AccessibleView extends Disposable {
 		this._accessibleViewCurrentProviderId.set(provider.id);
 		const verbose = this._verbosityEnabled();
 		this._updateContent(provider, updatedContent);
-		this.calculateCodeBlocks(this._currentContent);
 		this._updateContextKeys(provider, true);
 		const widgetIsFocused = this._editorWidget.hasTextFocus() || this._editorWidget.hasWidgetFocus();
 		const stableUri = this._getStableUri(provider.id);
@@ -865,7 +776,6 @@ export class AccessibleView extends Disposable {
 		const navigationHint = this._navigationHint();
 		const goToSymbolHint = this._goToSymbolHint(providerHasSymbols);
 		const toolbarHint = localize('toolbar', "Navigate to the toolbar (Shift+Tab).");
-		const chatHints = this._getChatHints();
 
 		let hint = localize('intro', "In the accessible view, you can:\n");
 		if (navigationHint) {
@@ -877,19 +787,7 @@ export class AccessibleView extends Disposable {
 		if (toolbarHint) {
 			hint += ' - ' + toolbarHint + '\n';
 		}
-		if (chatHints) {
-			hint += chatHints;
-		}
 		return hint;
-	}
-
-	private _getChatHints(): string | undefined {
-		if (this._currentProvider?.id !== AccessibleViewProviderId.PanelChat && this._currentProvider?.id !== AccessibleViewProviderId.QuickChat) {
-			return;
-		}
-		return [localize('insertAtCursor', " - Insert the code block at the cursor{0}.", '<keybinding:workbench.action.chat.insertCodeBlock>'),
-		localize('insertIntoNewFile', " - Insert the code block into a new file{0}.", '<keybinding:workbench.action.chat.insertIntoNewFile>'),
-		localize('runInTerminal', " - Run the code block in the terminal{0}.\n", '<keybinding:workbench.action.chat.runInTerminal>')].join('\n');
 	}
 
 	private _navigationHint(): string {
@@ -1014,12 +912,11 @@ export class AccessibleViewService extends Disposable implements IAccessibleView
 	setPosition(position: Position, reveal?: boolean, select?: boolean): void {
 		this._accessibleView?.setPosition(position, reveal, select);
 	}
-	getCodeBlockContext(): ICodeBlockActionContext | undefined {
-		return this._accessibleView?.getCodeBlockContext();
+	// Required by IAccessibleViewService until the platform interface drops its chat code-block members.
+	getCodeBlockContext(): undefined {
+		return undefined;
 	}
-	navigateToCodeBlock(type: 'next' | 'previous'): void {
-		this._accessibleView?.navigateToCodeBlock(type);
-	}
+	navigateToCodeBlock(): void { }
 }
 
 class AccessibleViewSymbolQuickPick {

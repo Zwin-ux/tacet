@@ -45,7 +45,7 @@ import { ContextMenuService } from '../../../platform/contextview/browser/contex
 import { IContextMenuService, IContextViewDelegate, IContextViewService, IOpenContextView } from '../../../platform/contextview/browser/contextView.js';
 import { ContextViewService } from '../../../platform/contextview/browser/contextViewService.js';
 import { IDataChannelService, NullDataChannelService } from '../../../platform/dataChannel/common/dataChannel.js';
-import { IDefaultAccountService, MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED } from '../../../platform/defaultAccount/common/defaultAccount.js';
+import { IDefaultAccountService } from '../../../platform/defaultAccount/common/defaultAccount.js';
 import { IConfirmation, IConfirmationResult, IDialogService, IInputResult, IPrompt, IPromptBaseButton, IPromptResult, IPromptResultWithCancel, IPromptWithCustomCancel, IPromptWithDefaultCancel } from '../../../platform/dialogs/common/dialogs.js';
 import { ExtensionKind, IEnvironmentService, IExtensionHostDebugParams } from '../../../platform/environment/common/environment.js';
 import { SyncDescriptor } from '../../../platform/instantiation/common/descriptors.js';
@@ -1058,13 +1058,6 @@ class StandaloneDefaultAccountService implements IDefaultAccountService {
 	readonly currentDefaultAccount: IDefaultAccount | null = null;
 	readonly copilotTokenInfo = null;
 	readonly onDidChangeCopilotTokenInfo: Event<null> = Event.None;
-	readonly managedSettingsFetchStatus: null = null;
-	readonly managedSettingsFetchedAt: null = null;
-	readonly managedSettingsRawResponse: unknown = null;
-	readonly managedSettingsCompatibilityError = null;
-	readonly onDidChangeManagedSettingsCompatibilityError = Event.None;
-	readonly managedSettingsFreshness = MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED;
-	readonly onDidChangeManagedSettingsFreshness = Event.None;
 
 	async getDefaultAccount(): Promise<IDefaultAccount | null> {
 		return null;

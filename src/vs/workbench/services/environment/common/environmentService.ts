@@ -35,6 +35,10 @@ export interface IWorkbenchEnvironmentService extends IEnvironmentService {
 	readonly skipReleaseNotes: boolean;
 	readonly skipWelcome: boolean;
 	readonly disableWorkspaceTrust: boolean;
+	/**
+	 * Always `false`: Margin has no agents (sessions) window. Kept only until
+	 * the remaining consumers outside the services layer drop their checks.
+	 */
 	readonly isSessionsWindow: boolean;
 	readonly webviewExternalEndpoint: string;
 
