@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="256" height="256" role="img" aria-labelledby="t">
+  <title id="t">Margin mark, flat</title>
+  <clipPath id="page"><rect x="9" y="3" width="30" height="42" rx="2.5"/></clipPath>
+  <rect x="9" y="3" width="30" height="42" rx="2.5" fill="#FFFFFF"/>
+  <rect x="15.25" y="3" width="1.5" height="42" fill="#2167D5" clip-path="url(#page)"/>
+  <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#B9C2CE" stroke-width="0.5"/>
+</svg>

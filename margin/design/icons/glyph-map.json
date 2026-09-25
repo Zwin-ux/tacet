@@ -1,0 +1,98 @@
+{
+	"shelf": {
+		"codepoint": "\\E001",
+		"source": "shelf.svg"
+	},
+	"note": {
+		"codepoint": "\\E002",
+		"source": "note.svg"
+	},
+	"note-draft": {
+		"codepoint": "\\E003",
+		"source": "note-draft.svg"
+	},
+	"new-note": {
+		"codepoint": "\\E004",
+		"source": "new-note.svg"
+	},
+	"file": {
+		"codepoint": "\\E005",
+		"source": "file.svg"
+	},
+	"file-text": {
+		"codepoint": "\\E006",
+		"source": "file-text.svg"
+	},
+	"folder": {
+		"codepoint": "\\E007",
+		"source": "folder.svg"
+	},
+	"recent": {
+		"codepoint": "\\E008",
+		"source": "recent.svg"
+	},
+	"outline": {
+		"codepoint": "\\E009",
+		"source": "outline.svg"
+	},
+	"search": {
+		"codepoint": "\\E00A",
+		"source": "search.svg"
+	},
+	"more": {
+		"codepoint": "\\E00B",
+		"source": "more.svg"
+	},
+	"mode-write": {
+		"codepoint": "\\E00C",
+		"source": "mode-write.svg"
+	},
+	"mode-read": {
+		"codepoint": "\\E00D",
+		"source": "mode-read.svg"
+	},
+	"mode-code": {
+		"codepoint": "\\E00E",
+		"source": "mode-code.svg"
+	},
+	"lock": {
+		"codepoint": "\\E00F",
+		"source": "lock.svg"
+	},
+	"task": {
+		"codepoint": "\\E010",
+		"source": "task.svg"
+	},
+	"saved": {
+		"codepoint": "\\E011",
+		"source": "saved.svg"
+	},
+	"warning": {
+		"codepoint": "\\E012",
+		"source": "warning.svg"
+	},
+	"compare": {
+		"codepoint": "\\E013",
+		"source": "compare.svg"
+	},
+	"coding-tools": {
+		"codepoint": "\\E014",
+		"source": "coding-tools.svg"
+	},
+	"close": {
+		"codepoint": "\\E015",
+		"source": "close.svg"
+	},
+	"chevron-right": {
+		"codepoint": "\\E016",
+		"source": "chevron-right.svg"
+	},
+	"chevron-down": {
+		"codepoint": "\\E017",
+		"source": "chevron-down.svg"
+	},
+	"settings": {
+		"codepoint": "\\E018",
+		"source": "settings.svg"
+	}
+}
