@@ -10,11 +10,15 @@ const sourceFile = path.join(import.meta.dirname, '../../../src/vs/workbench/con
 const destFile = path.join(import.meta.dirname, 'policyDto.ts');
 
 try {
-	// Check if source file exists
+	// Margin: the policy export contribution is removed from src, so the
+	// checked-in copy next to this script is the source of truth. Copy only
+	// when the upstream source still exists.
 	if (!fs.existsSync(sourceFile)) {
-		console.error(`Error: Source file not found: ${sourceFile}`);
-		console.error('Please ensure policyDto.ts exists in src/vs/workbench/contrib/policyExport/common/');
-		process.exit(1);
+		if (!fs.existsSync(destFile)) {
+			console.error(`Error: Neither ${sourceFile} nor ${destFile} exists.`);
+			process.exit(1);
+		}
+		process.exit(0);
 	}
 
 	// Copy the file

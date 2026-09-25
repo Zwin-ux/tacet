@@ -7,30 +7,23 @@ import fs from 'fs';
 import path from 'path';
 
 // Some dependencies ship their native binary in a per-platform package that is
-// declared as an *optional* dependency of a small base package — e.g.
-// `@openai/codex` and `@anthropic-ai/claude-agent-sdk` are thin launchers and
-// the real binaries live in `@openai/codex-<platform>-<arch>` /
-// `@anthropic-ai/claude-agent-sdk-<platform>-<arch>`. `npm install` / `npm ci`
+// declared as an *optional* dependency of a small base package (a thin
+// launcher whose real binary lives in `<base>-<platform>-<arch>`). `npm install` / `npm ci`
 // do NOT fail when an optional dependency cannot be installed, so a transient
 // hiccup can leave the base package present while the per-platform package is
 // missing (see https://github.com/microsoft/vscode/pull/323881).
 //
 // `findMissingNativeOptionalDep` is the reusable primitive that detects this.
-// It is used from two places:
-//   - The CLI entry point below runs after `npm ci` in the node_modules
-//     cache-build jobs (.github/workflows/pr-node-modules.yml) and fails the
-//     job so a poisoned cache is never saved.
-//   - The agent-SDK producer (build/agent-sdk/package.ts) runs it after its
-//     scratch `npm ci` so a binary-less tarball is never built and uploaded to
-//     the CDN.
+// The CLI entry point below runs after `npm ci` in the node_modules
+// cache-build jobs (.github/workflows/pr-node-modules.yml) and fails the job so
+// a poisoned cache is never saved.
 
 /**
  * Returns the name of the required per-platform package that is missing from
  * `nodeModulesDir`, or `undefined` when nothing is wrong.
  *
- * A base package (e.g. `@openai/codex`) ships its native binary in a
- * per-platform optional dependency named `<base>-<target>` (e.g.
- * `@openai/codex-linux-x64`, `@anthropic-ai/claude-agent-sdk-linux-x64-musl`).
+ * A base package ships its native binary in a
+ * per-platform optional dependency named `<base>-<target>`.
  * npm does not fail when an optional dependency cannot be installed, so this
  * detects a base package that ended up installed without its matching native
  * package.
@@ -61,11 +54,9 @@ export function findMissingNativeOptionalDep(nodeModulesDir: string, basePackage
 // is never persisted.
 
 // Base packages whose per-platform package (`<base>-<platform>-<arch>`) is
-// required whenever the base package itself is installed.
-const NATIVE_OPTIONAL_DEP_BASE_PACKAGES = [
-	'@openai/codex',
-	'@anthropic-ai/claude-agent-sdk',
-];
+// required whenever the base package itself is installed. Margin: the only
+// entries were AI agent SDKs, which are removed, so the list is empty.
+const NATIVE_OPTIONAL_DEP_BASE_PACKAGES: readonly string[] = [];
 
 // Platform/arch combinations these packages publish a per-platform package for.
 const SUPPORTED_PLATFORMS = new Set(['linux', 'darwin', 'win32']);
@@ -74,7 +65,7 @@ const SUPPORTED_ARCHS = new Set(['x64', 'arm64']);
 function isCliInvocation(): boolean {
 	// `import.meta.filename` is already a real filesystem path; comparing it
 	// directly to `process.argv[1]` works on Windows too. Matches the pattern
-	// in `build/agent-sdk/package.ts` and `build/npm/installStateHash.ts`.
+	// in `build/npm/installStateHash.ts`.
 	return import.meta.filename === process.argv[1];
 }
 

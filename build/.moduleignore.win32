@@ -1,2 +1,1 @@
-@anthropic-ai/claude-agent-sdk/vendor/audio-capture/*-darwin/**
-@anthropic-ai/claude-agent-sdk/vendor/audio-capture/*-linux/**
+# Windows-only node_modules exclusions (none).
