@@ -1,76 +1,49 @@
-# Visual Studio Code - Open Source ("Code - OSS")
-[![Feature Requests](https://img.shields.io/github/issues/microsoft/vscode/feature-request.svg)](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-[![Bugs](https://img.shields.io/github/issues/microsoft/vscode/bug.svg)](https://github.com/microsoft/vscode/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Abug)
+# Margin
 
-## The Repository
+**A quiet place for your files.**
 
-This repository ("`Code - OSS`") is where we (Microsoft) develop the [Visual Studio Code](https://code.visualstudio.com) product together with the community. Not only do we work on code and issues here, but we also publish our [roadmap](https://github.com/microsoft/vscode/wiki/Roadmap), [monthly iteration plans](https://github.com/microsoft/vscode/wiki/Iteration-Plans), and our [endgame plans](https://github.com/microsoft/vscode/wiki/Running-the-Endgame). This source code is available to everyone under the standard [MIT license](https://github.com/microsoft/vscode/blob/main/LICENSE.txt).
+An AI-free, notes-first desktop editor built from Code OSS. Paper-white, precise, and useful with a single file open. Markdown, plain text, and code share one dependable document system.
 
-## Visual Studio Code
+This repository currently contains the **requirements, design system, generated concepts, interactive design study, implementation plan, and pinned upstream source**. It is **not a built or release-qualified desktop app**.
 
-<p align="center">
-  <img alt="VS Code in action" src="https://github.com/user-attachments/assets/56af271c-949d-454c-a3ea-16188c063414">
-</p>
+## Start here
 
-[Visual Studio Code](https://code.visualstudio.com) is a distribution of the `Code - OSS` repository with Microsoft-specific customizations released under a traditional [Microsoft product license](https://code.visualstudio.com/License/).
+1. [Opus build handoff](margin/OPUS-HANDOFF.md): the execution prompt and first assignment.
+2. [Product requirements](margin/docs/01-PRODUCT.md): audience, differentiation, scope, workflows, and decision rules.
+3. [Document and file contract](margin/docs/02-DOCUMENT-CONTRACT.md): persistence, fidelity, recovery, concurrency, and Markdown.
+4. [Screen specification](margin/docs/03-SCREENS.md): 20 screens and states, including failures and compact windows.
+5. [Design system](margin/docs/04-DESIGN-SYSTEM.md): tokens, typography, icon, components, motion, and accessibility.
+6. [Architecture and modules](margin/docs/05-ARCHITECTURE.md): source integration, ownership, interfaces, and dependencies.
+7. [AI removal specification](margin/docs/06-NO-AI.md): what removal means and how to prove it.
+8. [Execution plan](margin/docs/07-EXECUTION.md): sequenced work packages and completion gates.
+9. [Acceptance matrix](margin/docs/08-ACCEPTANCE.md): behavior, recovery, performance, security, and release checks.
+10. [Research and source audit](margin/docs/09-RESEARCH.md): sources, observations, hypotheses, and limits.
+11. [Current state](margin/STATE.md): exact starting point and native build prerequisite.
 
-[Visual Studio Code](https://code.visualstudio.com) combines the simplicity of a code editor with what developers need for their core edit-build-debug cycle. It provides comprehensive code editing, navigation, and understanding support along with lightweight debugging, a rich extensibility model, and lightweight integration with existing tools.
+## See the direction
 
-Visual Studio Code is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on the [Visual Studio Code website](https://code.visualstudio.com/Download). To get the latest releases every day, install the [Insiders build](https://code.visualstudio.com/insiders).
+Open [the interactive design study](margin/prototype/index.html) in a browser. It uses sample notes and browser storage. It is not the native app or a persistence qualification harness. The sample terminal runs nothing.
 
-## Contributing
+![Margin writing concept](margin/concepts/01-writing.png)
 
-There are many ways in which you can participate in this project, for example:
+- [Capture, find, read, and recover](margin/concepts/02-everyday-states.png)
+- [Code and compact windows](margin/concepts/03-code-and-compact.png)
+- [Art prompts and corrections](margin/concepts/README.md)
 
-* [Submit bugs and feature requests](https://github.com/microsoft/vscode/issues), and help us verify them as they are checked in
-* Review [source code changes](https://github.com/microsoft/vscode/pulls)
-* Review the [documentation](https://github.com/microsoft/vscode-docs) and make pull requests for anything from typos to new content.
+Images are generated concept art. Written specifications govern behavior and measurements.
 
-If you are interested in fixing issues and contributing directly to the codebase, please see the document [How to Contribute](https://github.com/microsoft/vscode/wiki/How-to-Contribute), which covers the following:
+## Decisions already made
 
-* [How to build and run from source](https://github.com/microsoft/vscode/wiki/How-to-Contribute)
-* [The development workflow, including debugging and running tests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#debugging)
-* [Coding guidelines](https://github.com/microsoft/vscode/wiki/Coding-Guidelines)
-* [Submitting pull requests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#pull-requests)
-* [Finding an issue to work on](https://github.com/microsoft/vscode/wiki/How-to-Contribute#where-to-contribute)
-* [Contributing to translations](https://aka.ms/vscodeloc)
+- Windows first. Apple-level care adapted to Windows conventions.
+- White is the default identity. Accessibility and system high contrast still work.
+- No sign-in, mandatory vault, cloud service, or AI features.
+- Real files; original paths, text, encodings, and Markdown remain under the user's control.
+- Write, Read, and Code are views of the same document.
+- Coding tools are available deliberately; the first note opens into a quiet writing surface.
+- Recovery and file fidelity are release gates.
 
-## Feedback
+## Source identity
 
-* Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/vscode)
-* [Request a new feature](CONTRIBUTING.md)
-* Upvote [popular feature requests](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-* [File an issue](https://github.com/microsoft/vscode/issues)
-* Connect with the extension author community on [GitHub Discussions](https://github.com/microsoft/vscode-discussions/discussions) or [Slack](https://aka.ms/vscode-dev-community)
-* Follow [@code](https://x.com/code) and let us know what you think!
+Code OSS `1.139.0`, commit `2242ebbb54efeeb0129e08e919e7e8d43033cd83`, dated September 22, 2026. Local branch: `margin/notes-first`. Upstream source retains its [MIT license](LICENSE.txt); its original README is [preserved](README.upstream.md).
 
-See our [wiki](https://github.com/microsoft/vscode/wiki/Feedback-Channels) for a description of each of these channels and information on some other available community-driven channels.
-
-## Related Projects
-
-Many of the core components and extensions to VS Code live in their own repositories on GitHub. For example, the [node debug adapter](https://github.com/microsoft/vscode-node-debug) and the [mono debug adapter](https://github.com/microsoft/vscode-mono-debug) repositories are separate from each other. For a complete list, please visit the [Related Projects](https://github.com/microsoft/vscode/wiki/Related-Projects) page on our [wiki](https://github.com/microsoft/vscode/wiki).
-
-## Bundled Extensions
-
-VS Code includes a set of built-in extensions located in the [extensions](extensions) folder, including grammars and snippets for many languages. Extensions that provide rich language support (inline suggestions, Go to Definition) for a language have the suffix `language-features`. For example, the `json` extension provides coloring for `JSON` and the `json-language-features` extension provides rich language support for `JSON`.
-
-## Development Container
-
-This repository includes a Visual Studio Code Dev Containers / GitHub Codespaces development container.
-
-* For [Dev Containers](https://aka.ms/vscode-remote/download/containers), use the **Dev Containers: Clone Repository in Container Volume...** command, which creates a Docker volume for better disk I/O on macOS and Windows.
-  * If you already have VS Code and Docker installed, you can also click [here](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/vscode) to get started. This will cause VS Code to automatically install the Dev Containers extension if needed, clone the source code into a container volume, and spin up a dev container for use.
-
-* For Codespaces, install the [GitHub Codespaces](https://marketplace.visualstudio.com/items?itemName=GitHub.codespaces) extension in VS Code, and use the **Codespaces: Create New Codespace** command.
-
-Docker / the Codespace should have at least **4 cores and 6 GB of RAM (8 GB recommended)** to run a full build. See the [development container README](.devcontainer/README.md) for more information.
-
-## Code of Conduct
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-## License
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-
-Licensed under the [MIT](LICENSE.txt) license.
+Early implementation experiments are [quarantined](margin/experiments/README.md). They are sketches, not approved production architecture. Begin by obtaining a working baseline build.

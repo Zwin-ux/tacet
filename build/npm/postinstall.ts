@@ -312,7 +312,8 @@ async function main() {
 	}
 
 	// JS-only dirs run in parallel
-	const concurrency = Math.min(os.cpus().length, 8);
+	// Margin: bounded for 16 GB hosts; override with VSCODE_INSTALL_CONCURRENCY.
+	const concurrency = Math.max(1, Number(process.env['VSCODE_INSTALL_CONCURRENCY']) || Math.min(os.cpus().length, 3));
 	log('.', `Running ${parallelTasks.length} npm installs with concurrency ${concurrency}...`);
 	await runWithConcurrency(parallelTasks, concurrency);
 
