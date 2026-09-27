@@ -73,63 +73,14 @@ const apiMenus: IAPIMenu[] = [
 		description: localize('menus.editorContextCopyAs', "'Copy as' submenu in the editor context menu")
 	},
 	{
-		key: 'editor/context/share',
-		id: MenuId.EditorContextShare,
-		description: localize('menus.editorContextShare', "'Share' submenu in the editor context menu"),
-		proposed: 'contribShareMenu'
-	},
-	{
 		key: 'explorer/context',
 		id: MenuId.ExplorerContext,
 		description: localize('menus.explorerContext', "The file explorer context menu")
 	},
 	{
-		key: 'explorer/context/share',
-		id: MenuId.ExplorerContextShare,
-		description: localize('menus.explorerContextShare', "'Share' submenu in the file explorer context menu"),
-		proposed: 'contribShareMenu'
-	},
-	{
 		key: 'editor/title/context',
 		id: MenuId.EditorTitleContext,
 		description: localize('menus.editorTabContext', "The editor tabs context menu")
-	},
-	{
-		key: 'editor/title/context/share',
-		id: MenuId.EditorTitleContextShare,
-		description: localize('menus.editorTitleContextShare', "'Share' submenu inside the editor title context menu"),
-		proposed: 'contribShareMenu'
-	},
-	{
-		key: 'debug/callstack/context',
-		id: MenuId.DebugCallStackContext,
-		description: localize('menus.debugCallstackContext', "The debug callstack view context menu")
-	},
-	{
-		key: 'debug/variables/context',
-		id: MenuId.DebugVariablesContext,
-		description: localize('menus.debugVariablesContext', "The debug variables view context menu")
-	},
-	{
-		key: 'debug/watch/context',
-		id: MenuId.DebugWatchContext,
-		description: localize('menus.debugWatchContext', "The debug watch view context menu")
-	},
-	{
-		key: 'debug/toolBar',
-		id: MenuId.DebugToolBar,
-		description: localize('menus.debugToolBar', "The debug toolbar menu")
-	},
-	{
-		key: 'debug/createConfiguration',
-		id: MenuId.DebugCreateConfiguration,
-		proposed: 'contribDebugCreateConfiguration',
-		description: localize('menus.debugCreateConfiguation', "The debug create configuration menu")
-	},
-	{
-		key: 'notebook/variables/context',
-		id: MenuId.NotebookVariablesContext,
-		description: localize('menus.notebookVariablesContext', "The notebook variables view context menu")
 	},
 	{
 		key: 'menuBar/home',
@@ -242,21 +193,9 @@ const apiMenus: IAPIMenu[] = [
 		description: localize('view.viewTitle', "The contributed view title menu")
 	},
 	{
-		key: 'viewContainer/title',
-		id: MenuId.ViewContainerTitle,
-		description: localize('view.containerTitle', "The contributed view container title menu"),
-		proposed: 'contribViewContainerTitle'
-	},
-	{
 		key: 'view/item/context',
 		id: MenuId.ViewItemContext,
 		description: localize('view.itemContext', "The contributed view item context menu")
-	},
-	{
-		key: 'comments/comment/editorActions',
-		id: MenuId.CommentEditorActions,
-		description: localize('commentThread.editorActions', "The contributed comment editor actions"),
-		proposed: 'contribCommentEditorActionsMenu'
 	},
 	{
 		key: 'comments/commentThread/title',
@@ -270,19 +209,6 @@ const apiMenus: IAPIMenu[] = [
 		supportsSubmenus: false
 	},
 	{
-		key: 'comments/commentThread/additionalActions',
-		id: MenuId.CommentThreadAdditionalActions,
-		description: localize('commentThread.actions', "The contributed comment thread context menu, rendered as buttons below the comment editor"),
-		supportsSubmenus: true,
-		proposed: 'contribCommentThreadAdditionalMenu'
-	},
-	{
-		key: 'comments/commentThread/title/context',
-		id: MenuId.CommentThreadTitleContext,
-		description: localize('commentThread.titleContext', "The contributed comment thread title's peek context menu, rendered as a right click menu on the comment thread's peek title."),
-		proposed: 'contribCommentPeekContext'
-	},
-	{
 		key: 'comments/comment/title',
 		id: MenuId.CommentTitle,
 		description: localize('comment.title', "The contributed comment title menu")
@@ -294,82 +220,9 @@ const apiMenus: IAPIMenu[] = [
 		supportsSubmenus: false
 	},
 	{
-		key: 'comments/commentThread/comment/context',
-		id: MenuId.CommentThreadCommentContext,
-		description: localize('comment.commentContext', "The contributed comment context menu, rendered as a right click menu on the an individual comment in the comment thread's peek view."),
-		proposed: 'contribCommentPeekContext'
-	},
-	{
-		key: 'commentsView/commentThread/context',
-		id: MenuId.CommentsViewThreadActions,
-		description: localize('commentsView.threadActions', "The contributed comment thread context menu in the comments view"),
-		proposed: 'contribCommentsViewThreadMenus'
-	},
-	{
-		key: 'notebook/toolbar',
-		id: MenuId.NotebookToolbar,
-		description: localize('notebook.toolbar', "The contributed notebook toolbar menu")
-	},
-	{
-		key: 'notebook/kernelSource',
-		id: MenuId.NotebookKernelSource,
-		description: localize('notebook.kernelSource', "The contributed notebook kernel sources menu"),
-		proposed: 'notebookKernelSource'
-	},
-	{
-		key: 'notebook/cell/title',
-		id: MenuId.NotebookCellTitle,
-		description: localize('notebook.cell.title', "The contributed notebook cell title menu")
-	},
-	{
-		key: 'notebook/cell/execute',
-		id: MenuId.NotebookCellExecute,
-		description: localize('notebook.cell.execute', "The contributed notebook cell execution menu")
-	},
-	{
-		key: 'interactive/toolbar',
-		id: MenuId.InteractiveToolbar,
-		description: localize('interactive.toolbar', "The contributed interactive toolbar menu"),
-	},
-	{
-		key: 'interactive/cell/title',
-		id: MenuId.InteractiveCellTitle,
-		description: localize('interactive.cell.title', "The contributed interactive cell title menu"),
-	},
-	{
 		key: 'issue/reporter',
 		id: MenuId.IssueReporter,
 		description: localize('issue.reporter', "The contributed issue reporter menu")
-	},
-	{
-		key: 'testing/item/context',
-		id: MenuId.TestItem,
-		description: localize('testing.item.context', "The contributed test item menu"),
-	},
-	{
-		key: 'testing/item/gutter',
-		id: MenuId.TestItemGutter,
-		description: localize('testing.item.gutter.title', "The menu for a gutter decoration for a test item"),
-	},
-	{
-		key: 'testing/profiles/context',
-		id: MenuId.TestProfilesContext,
-		description: localize('testing.profiles.context.title', "The menu for configuring testing profiles."),
-	},
-	{
-		key: 'testing/item/result',
-		id: MenuId.TestPeekElement,
-		description: localize('testing.item.result.title', "The menu for an item in the Test Results view or peek."),
-	},
-	{
-		key: 'testing/message/context',
-		id: MenuId.TestMessageContext,
-		description: localize('testing.message.context.title', "A prominent button overlaying editor content where the message is displayed"),
-	},
-	{
-		key: 'testing/message/content',
-		id: MenuId.TestMessageContent,
-		description: localize('testing.message.content.title', "Context menu for the message in the results tree"),
 	},
 	{
 		key: 'extension/context',
@@ -411,12 +264,6 @@ const apiMenus: IAPIMenu[] = [
 		key: 'webview/context',
 		id: MenuId.WebviewContext,
 		description: localize('webview.context', "The webview context menu")
-	},
-	{
-		key: 'file/share',
-		id: MenuId.MenubarShare,
-		description: localize('menus.share', "Share submenu shown in the top level File menu."),
-		proposed: 'contribShareMenu'
 	},
 	{
 		key: 'editor/inlineCompletions/actions',
@@ -1034,12 +881,6 @@ menusExtensionPoint.setHandler(extensions => {
 					} else {
 						item.group = menuItem.group;
 					}
-				}
-
-				if (menu.id === MenuId.ViewContainerTitle && !menuItem.when?.includes('viewContainer == workbench.view.debug')) {
-					// Not a perfect check but enough to communicate that this proposed extension point is currently only for the debug view container
-					collector.error(localize('viewContainerTitle.when', "The {0} menu contribution must check {1} in its {2} clause.", '`viewContainer/title`', '`viewContainer == workbench.view.debug`', '"when"'));
-					continue;
 				}
 
 				item.when = ContextKeyExpr.deserialize(menuItem.when);

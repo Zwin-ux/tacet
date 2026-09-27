@@ -6,8 +6,9 @@ import fse from 'fs-extra';
 import path from 'path';
 import { run } from '../esbuild-webview-common.mts';
 
-const srcDir = path.join(import.meta.dirname, 'notebook');
-const outDir = path.join(import.meta.dirname, 'notebook-out');
+// Copies the KaTeX stylesheet and fonts used by the Markdown preview.
+const srcDir = path.join(import.meta.dirname, 'preview-styles');
+const outDir = path.join(import.meta.dirname, 'katex-out');
 
 function postBuild(outDir: string) {
 	fse.copySync(
@@ -27,9 +28,7 @@ function postBuild(outDir: string) {
 }
 
 run({
-	entryPoints: [
-		path.join(srcDir, 'katex.ts'),
-	],
+	entryPoints: [],
 	srcDir,
 	outdir: outDir,
 }, process.argv, postBuild);

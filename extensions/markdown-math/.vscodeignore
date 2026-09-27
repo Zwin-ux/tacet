@@ -1,5 +1,4 @@
 src/**
-notebook/**
 tsconfig*.json
 **/*.tsbuildinfo
 esbuild*

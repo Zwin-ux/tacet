@@ -9,11 +9,9 @@ import { DiffEditorWidget } from '../../../../editor/browser/widget/diffEditor/d
 import { localize } from '../../../../nls.js';
 import { AccessibleViewProviderId, AccessibleViewType, AccessibleContentProvider } from '../../../../platform/accessibility/browser/accessibleView.js';
 import { IAccessibleViewImplementation } from '../../../../platform/accessibility/browser/accessibleViewRegistry.js';
-import { ContextKeyEqualsExpr, IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
+import { ContextKeyEqualsExpr } from '../../../../platform/contextkey/common/contextkey.js';
 import { ServicesAccessor } from '../../../../platform/instantiation/common/instantiation.js';
-import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { AccessibilityVerbositySettingId } from '../../accessibility/browser/accessibilityConfiguration.js';
-import { getCommentCommandInfo } from '../../accessibility/browser/editorAccessibilityHelp.js';
 import { IEditorService } from '../../../services/editor/common/editorService.js';
 
 export class DiffEditorAccessibilityHelp implements IAccessibleViewImplementation {
@@ -24,8 +22,6 @@ export class DiffEditorAccessibilityHelp implements IAccessibleViewImplementatio
 	getProvider(accessor: ServicesAccessor) {
 		const editorService = accessor.get(IEditorService);
 		const codeEditorService = accessor.get(ICodeEditorService);
-		const keybindingService = accessor.get(IKeybindingService);
-		const contextKeyService = accessor.get(IContextKeyService);
 
 		if (!(editorService.activeTextEditorControl instanceof DiffEditorWidget)) {
 			return;
@@ -50,10 +46,6 @@ export class DiffEditorAccessibilityHelp implements IAccessibleViewImplementatio
 			diffEditorActiveAnnouncement,
 			localize('msg4', "To control which accessibility signals should be played, the following settings can be configured: {0}.", keys.join(', ')),
 		];
-		const commentCommandInfo = getCommentCommandInfo(keybindingService, contextKeyService, codeEditor);
-		if (commentCommandInfo) {
-			content.push(commentCommandInfo);
-		}
 		return new AccessibleContentProvider(
 			AccessibleViewProviderId.DiffEditor,
 			{ type: AccessibleViewType.Help },

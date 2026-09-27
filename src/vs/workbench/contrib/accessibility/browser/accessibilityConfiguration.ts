@@ -52,7 +52,6 @@ export const enum AccessibilityVerbositySettingId {
 	ReplEditor = 'accessibility.verbosity.replEditor',
 	Comments = 'accessibility.verbosity.comments',
 	DiffEditorActive = 'accessibility.verbosity.diffEditorActive',
-	Debug = 'accessibility.verbosity.debug',
 	Walkthrough = 'accessibility.verbosity.walkthrough',
 	SourceControl = 'accessibility.verbosity.sourceControl',
 	Find = 'accessibility.verbosity.find',
@@ -162,10 +161,6 @@ const configuration: IConfigurationNode = {
 			description: localize('verbosity.diffEditorActive', 'Indicate when a diff editor becomes the active editor.'),
 			...baseVerbosityProperty
 		},
-		[AccessibilityVerbositySettingId.Debug]: {
-			description: localize('verbosity.debug', 'Provide information about how to access the debug console accessibility help dialog when the debug console or run and debug viewlet is focused. Note that a reload of the window is required for this to take effect.'),
-			...baseVerbosityProperty
-		},
 		[AccessibilityVerbositySettingId.Walkthrough]: {
 			description: localize('verbosity.walkthrough', 'Provide information about how to open the walkthrough in an Accessible View.'),
 			...baseVerbosityProperty
@@ -262,20 +257,6 @@ const configuration: IConfigurationNode = {
 				}
 			},
 			'tags': ['accessibility']
-		},
-		'accessibility.signals.lineHasBreakpoint': {
-			...signalFeatureBase,
-			'description': localize('accessibility.signals.lineHasBreakpoint', "Plays a signal - sound (audio cue) and/or announcement (alert) - when the active line has a breakpoint."),
-			'properties': {
-				'sound': {
-					'description': localize('accessibility.signals.lineHasBreakpoint.sound', "Plays a sound when the active line has a breakpoint."),
-					...soundFeatureBase
-				},
-				'announcement': {
-					'description': localize('accessibility.signals.lineHasBreakpoint.announcement', "Announces when the active line has a breakpoint."),
-					...announcementFeatureBase
-				},
-			},
 		},
 		'accessibility.signals.lineHasInlineSuggestion': {
 			...defaultNoAnnouncement,
@@ -377,20 +358,6 @@ const configuration: IConfigurationNode = {
 				},
 			},
 		},
-		'accessibility.signals.onDebugBreak': {
-			...signalFeatureBase,
-			'description': localize('accessibility.signals.onDebugBreak', "Plays a signal - sound (audio cue) and/or announcement (alert) - when the debugger stopped on a breakpoint."),
-			'properties': {
-				'sound': {
-					'description': localize('accessibility.signals.onDebugBreak.sound', "Plays a sound when the debugger stopped on a breakpoint."),
-					...soundFeatureBase
-				},
-				'announcement': {
-					'description': localize('accessibility.signals.onDebugBreak.announcement', "Announces when the debugger stopped on a breakpoint."),
-					...announcementFeatureBase
-				},
-			}
-		},
 		'accessibility.signals.noInlayHints': {
 			...signalFeatureBase,
 			'description': localize('accessibility.signals.noInlayHints', "Plays a signal - sound (audio cue) and/or announcement (alert) - when trying to read a line with inlay hints that has no inlay hints."),
@@ -401,34 +368,6 @@ const configuration: IConfigurationNode = {
 				},
 				'announcement': {
 					'description': localize('accessibility.signals.noInlayHints.announcement', "Announces when trying to read a line with inlay hints that has no inlay hints."),
-					...announcementFeatureBase
-				},
-			}
-		},
-		'accessibility.signals.taskCompleted': {
-			...signalFeatureBase,
-			'description': localize('accessibility.signals.taskCompleted', "Plays a signal - sound (audio cue) and/or announcement (alert) - when a task is completed."),
-			'properties': {
-				'sound': {
-					'description': localize('accessibility.signals.taskCompleted.sound', "Plays a sound when a task is completed."),
-					...soundFeatureBase
-				},
-				'announcement': {
-					'description': localize('accessibility.signals.taskCompleted.announcement', "Announces when a task is completed."),
-					...announcementFeatureBase
-				},
-			}
-		},
-		'accessibility.signals.taskFailed': {
-			...signalFeatureBase,
-			'description': localize('accessibility.signals.taskFailed', "Plays a signal - sound (audio cue) and/or announcement (alert) - when a task fails (non-zero exit code)."),
-			'properties': {
-				'sound': {
-					'description': localize('accessibility.signals.taskFailed.sound', "Plays a sound when a task fails (non-zero exit code)."),
-					...soundFeatureBase
-				},
-				'announcement': {
-					'description': localize('accessibility.signals.taskFailed.announcement', "Announces when a task fails (non-zero exit code)."),
 					...announcementFeatureBase
 				},
 			}

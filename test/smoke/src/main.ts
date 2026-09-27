@@ -17,7 +17,6 @@ import { retry } from './utils';
 import { setup as setupDataLossTests } from './areas/workbench/data-loss.test';
 import { setup as setupPreferencesTests } from './areas/preferences/preferences.test';
 import { setup as setupSearchTests } from './areas/search/search.test';
-import { setup as setupNotebookTests } from './areas/notebook/notebook.test';
 import { setup as setupLanguagesTests } from './areas/languages/languages.test';
 import { setup as setupStatusbarTests } from './areas/statusbar/statusbar.test';
 import { setup as setupExtensionTests } from './areas/extensions/extensions.test';
@@ -26,7 +25,6 @@ import { setup as setupMultirootTests } from './areas/multiroot/multiroot.test';
 import { setup as setupLocalizationTests } from './areas/workbench/localization.test';
 import { setup as setupLaunchTests } from './areas/workbench/launch.test';
 import { setup as setupTerminalTests } from './areas/terminal/terminal.test';
-import { setup as setupTaskTests } from './areas/task/task.test';
 import { setup as setupChatTests } from './areas/chat/chatDisabled.test';
 import { setup as setupCopilotCliTests } from './areas/chat/copilotCli.test';
 import { setup as setupChatSandboxTests } from './areas/chat/chatSandbox.test';
@@ -429,10 +427,8 @@ describe(`VSCode Smoke Tests (${opts.web ? 'Web' : 'Electron'})`, () => {
 	if (!opts.web) { setupDataLossTests(() => { return { stableCodePath: opts['stable-build'], stableCodeVersion: opts['stable-version'] } /* Do not change, deferred for a reason! */; }, logger); }
 	setupPreferencesTests(logger);
 	setupSearchTests(logger);
-	if (!opts.web) { setupNotebookTests(logger); }
 	setupLanguagesTests(logger);
 	setupTerminalTests(logger);
-	setupTaskTests(logger);
 	setupStatusbarTests(logger);
 	if (quality !== Quality.Dev && quality !== Quality.OSS) { setupExtensionTests(logger); }
 	if (!opts.web && !opts.remote) { setupExtensionHostRestartTests(logger); }

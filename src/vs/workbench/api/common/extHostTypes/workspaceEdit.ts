@@ -7,7 +7,6 @@ import type * as vscode from 'vscode';
 import { coalesceInPlace } from '../../../../base/common/arrays.js';
 import { ResourceMap } from '../../../../base/common/map.js';
 import { URI } from '../../../../base/common/uri.js';
-import { CellEditType, ICellMetadataEdit, IDocumentMetadataEdit } from '../../../contrib/notebook/common/notebookCommon.js';
 import { NotebookEdit } from './notebooks.js';
 import { SnippetTextEdit } from './snippetTextEdit.js';
 import { es5ClassCompat } from './es5ClassCompat.js';
@@ -26,8 +25,6 @@ export interface IFileOperationOptions {
 export const enum FileEditType {
 	File = 1,
 	Text = 2,
-	Cell = 3,
-	CellReplace = 5,
 	Snippet = 6,
 }
 
@@ -55,23 +52,7 @@ export interface IFileSnippetTextEdit {
 	readonly keepWhitespace?: boolean;
 }
 
-export interface IFileCellEdit {
-	readonly _type: FileEditType.Cell;
-	readonly uri: URI;
-	readonly edit?: ICellMetadataEdit | IDocumentMetadataEdit;
-	readonly metadata?: vscode.WorkspaceEditEntryMetadata;
-}
-
-export interface ICellEdit {
-	readonly _type: FileEditType.CellReplace;
-	readonly metadata?: vscode.WorkspaceEditEntryMetadata;
-	readonly uri: URI;
-	readonly index: number;
-	readonly count: number;
-	readonly cells: vscode.NotebookCellData[];
-}
-
-export type WorkspaceEditEntry = IFileOperation | IFileTextEdit | IFileSnippetTextEdit | IFileCellEdit | ICellEdit;
+export type WorkspaceEditEntry = IFileOperation | IFileTextEdit | IFileSnippetTextEdit;
 
 @es5ClassCompat
 export class WorkspaceEdit implements vscode.WorkspaceEdit {
@@ -94,24 +75,6 @@ export class WorkspaceEdit implements vscode.WorkspaceEdit {
 
 	deleteFile(uri: vscode.Uri, options?: { readonly recursive?: boolean; readonly ignoreIfNotExists?: boolean }, metadata?: vscode.WorkspaceEditEntryMetadata): void {
 		this._edits.push({ _type: FileEditType.File, from: uri, to: undefined, options, metadata });
-	}
-
-	// --- notebook
-	private replaceNotebookMetadata(uri: URI, value: Record<string, unknown>, metadata?: vscode.WorkspaceEditEntryMetadata): void {
-		this._edits.push({ _type: FileEditType.Cell, metadata, uri, edit: { editType: CellEditType.DocumentMetadata, metadata: value } });
-	}
-
-	private replaceNotebookCells(uri: URI, startOrRange: vscode.NotebookRange, cellData: vscode.NotebookCellData[], metadata?: vscode.WorkspaceEditEntryMetadata): void {
-		const start = startOrRange.start;
-		const end = startOrRange.end;
-
-		if (start !== end || cellData.length > 0) {
-			this._edits.push({ _type: FileEditType.CellReplace, uri, index: start, count: end - start, cells: cellData, metadata });
-		}
-	}
-
-	private replaceNotebookCellMetadata(uri: URI, index: number, cellMetadata: Record<string, unknown>, metadata?: vscode.WorkspaceEditEntryMetadata): void {
-		this._edits.push({ _type: FileEditType.Cell, metadata, uri, edit: { editType: CellEditType.Metadata, index, metadata: cellMetadata } });
 	}
 
 	// --- text
@@ -139,14 +102,12 @@ export class WorkspaceEdit implements vscode.WorkspaceEdit {
 
 	set(uri: URI, edits: null | undefined | ReadonlyArray<TextEdit | SnippetTextEdit | NotebookEdit | [NotebookEdit, vscode.WorkspaceEditEntryMetadata | undefined] | [TextEdit | SnippetTextEdit, vscode.WorkspaceEditEntryMetadata | undefined]>): void {
 		if (!edits) {
-			// remove all text, snippet, or notebook edits for `uri`
+			// remove all text or snippet edits for `uri`
 			for (let i = 0; i < this._edits.length; i++) {
 				const element = this._edits[i];
 				switch (element._type) {
 					case FileEditType.Text:
 					case FileEditType.Snippet:
-					case FileEditType.Cell:
-					case FileEditType.CellReplace:
 						if (element.uri.toString() === uri.toString()) {
 							this._edits[i] = undefined!; // will be coalesced down below
 						}
@@ -169,14 +130,10 @@ export class WorkspaceEdit implements vscode.WorkspaceEdit {
 					edit = editOrTuple;
 				}
 				if (NotebookEdit.isNotebookCellEdit(edit)) {
-					if (edit.newCellMetadata) {
-						this.replaceNotebookCellMetadata(uri, edit.range.start, edit.newCellMetadata, metadata);
-					} else if (edit.newNotebookMetadata) {
-						this.replaceNotebookMetadata(uri, edit.newNotebookMetadata, metadata);
-					} else {
-						this.replaceNotebookCells(uri, edit.range, edit.newCells, metadata);
-					}
-				} else if (SnippetTextEdit.isSnippetTextEdit(edit)) {
+					// Margin has no notebooks: notebook edits have nothing to apply to
+					continue;
+				}
+				if (SnippetTextEdit.isSnippetTextEdit(edit)) {
 					this._edits.push({ _type: FileEditType.Snippet, uri, range: edit.range, edit: edit.snippet, metadata, keepWhitespace: edit.keepWhitespace });
 
 				} else {

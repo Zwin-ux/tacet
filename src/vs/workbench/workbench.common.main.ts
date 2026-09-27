@@ -78,7 +78,6 @@ import './services/textresourceProperties/common/textResourcePropertiesService.j
 import './services/textfile/common/textEditorService.js';
 import './services/language/common/languageService.js';
 import './services/model/common/modelService.js';
-import './services/notebook/common/notebookDocumentService.js';
 import './services/commands/common/commandService.js';
 import './services/themes/browser/workbenchThemeService.js';
 import './services/label/common/labelService.js';
@@ -180,7 +179,6 @@ registerSingleton(IWebWorkerService, WebWorkerService, InstantiationType.Delayed
 import './services/accounts/browser/defaultAccount.js';
 
 // Telemetry
-import './contrib/telemetry/browser/telemetry.contribution.js';
 
 // Preferences
 import './contrib/preferences/browser/preferences.contribution.js';
@@ -188,19 +186,6 @@ import './contrib/preferences/browser/keybindingsEditorContribution.js';
 import './contrib/preferences/browser/preferencesSearch.js';
 
 // Performance
-import './contrib/performance/browser/performance.contribution.js';
-
-// Notebook
-import './contrib/notebook/browser/notebook.contribution.js';
-
-// Interactive
-import './contrib/interactive/browser/interactive.contribution.js';
-
-// repl
-import './contrib/replNotebook/browser/repl.contribution.js';
-
-// Testing
-import './contrib/testing/browser/testing.contribution.js';
 
 // Logs
 import './contrib/logs/common/logs.contribution.js';
@@ -232,26 +217,16 @@ import './contrib/sash/browser/sash.contribution.js';
 
 // Git
 import './contrib/git/browser/git.contributions.js';
-import './contrib/github/browser/githubLinkPresentation.contribution.js';
 
 // SCM
 import './contrib/scm/browser/scm.contribution.js';
 import './contrib/scm/browser/quickDiff.contribution.js';
 import './contrib/scm/browser/scm.service.contribution.js';
 
-// Debug
-import './contrib/debug/browser/debug.contribution.js';
-import './contrib/debug/browser/debugEditorContribution.js';
-import './contrib/debug/browser/breakpointEditorContribution.js';
-import './contrib/debug/browser/callStackEditorContribution.js';
-import './contrib/debug/browser/repl.js';
-import './contrib/debug/browser/debugViewlet.js';
-
 // Markers
 import './contrib/markers/browser/markers.contribution.js';
 
 // Process Explorer
-import './contrib/processExplorer/browser/processExplorer.contribution.js';
 
 // Merge Editor
 import './contrib/mergeEditor/browser/mergeEditor.contribution.js';
@@ -263,7 +238,6 @@ import './contrib/multiDiffEditor/browser/multiDiffEditor.contribution.js';
 import './contrib/commands/common/commands.contribution.js';
 
 // Comments
-import './contrib/comments/browser/comments.contribution.js';
 
 // URL Support
 import './contrib/url/browser/url.contribution.js';
@@ -278,8 +252,6 @@ import './contrib/customEditor/browser/customEditor.contribution.js';
 import './contrib/externalUriOpener/common/externalUriOpener.contribution.js';
 
 // Extensions Management
-import './contrib/extensions/browser/extensions.contribution.js';
-import './contrib/extensions/browser/extensionsViewlet.js';
 
 // Output View
 import './contrib/output/browser/output.contribution.js';
@@ -295,14 +267,8 @@ import './contrib/externalTerminal/browser/externalTerminal.contribution.js';
 import './contrib/relauncher/browser/relauncher.contribution.js';
 
 // Modern UI (experimental)
-import './contrib/modernUI/browser/modernUI.contribution.js';
-
-// Tasks
-import './contrib/tasks/browser/task.contribution.js';
 
 // Remote
-import './contrib/remote/common/remote.contribution.js';
-import './contrib/remote/browser/remote.contribution.js';
 
 // Emmet
 import './contrib/emmet/browser/emmet.contribution.js';
@@ -335,20 +301,14 @@ import './contrib/inlayHints/browser/inlayHintsAccessibilty.js';
 import './contrib/themes/browser/themes.contribution.js';
 
 // Update
-import './contrib/update/browser/update.contribution.js';
 
 // Surveys
-import './contrib/surveys/browser/nps.contribution.js';
-import './contrib/surveys/browser/languageSurveys.contribution.js';
 
 // Welcome
-import './contrib/welcomeGettingStarted/browser/gettingStarted.contribution.js';
-import './contrib/welcomeWalkthrough/browser/walkThrough.contribution.js';
 import './contrib/welcomeViews/common/viewsWelcome.contribution.js';
 import './contrib/welcomeViews/common/newFile.contribution.js';
 
 // Onboarding (scenario engine)
-import './contrib/onboarding/browser/onboarding.contribution.js';
 
 // Call Hierarchy
 import './contrib/callHierarchy/browser/callHierarchy.contribution.js';
@@ -361,7 +321,6 @@ import './contrib/codeEditor/browser/outline/documentSymbolsOutline.js';
 import './contrib/outline/browser/outline.contribution.js';
 
 // Language Detection
-import './contrib/languageDetection/browser/languageDetection.contribution.js';
 
 // Language Status
 import './contrib/languageStatus/browser/languageStatus.contribution.js';
@@ -370,20 +329,16 @@ import './contrib/languageStatus/browser/languageStatus.contribution.js';
 import './contrib/authentication/browser/authentication.contribution.js';
 
 // User Data Sync
-import './contrib/userDataSync/browser/userDataSync.contribution.js';
 
 // User Data Profiles
 import './contrib/userDataProfile/browser/userDataProfile.contribution.js';
 
 // Continue Edit Session
-import './contrib/editSessions/browser/editSessions.contribution.js';
 
 // Code Actions
 import './contrib/codeActions/browser/codeActions.contribution.js';
 
 // Timeline
-import './contrib/timeline/browser/timeline.contribution.js';
-import './contrib/timeline/browser/timeline.service.contribution.js';
 
 // Local History
 import './contrib/localHistory/browser/localHistory.contribution.js';
@@ -401,16 +356,13 @@ import './contrib/list/browser/list.contribution.js';
 import './contrib/accessibilitySignals/browser/accessibilitySignal.contribution.js';
 
 // Bracket Pair Colorizer 2 Telemetry
-import './contrib/bracketPairColorizer2Telemetry/browser/bracketPairColorizer2Telemetry.contribution.js';
 
 // Accessibility
 import './contrib/accessibility/browser/accessibility.contribution.js';
 
 // Metered Connection
-import './contrib/meteredConnection/browser/meteredConnection.contribution.js';
 
 // Share
-import './contrib/share/browser/share.contribution.js';
 
 // Synchronized Scrolling
 import './contrib/scrollLocking/browser/scrollLocking.contribution.js';

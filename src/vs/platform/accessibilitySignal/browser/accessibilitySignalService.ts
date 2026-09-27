@@ -318,7 +318,6 @@ export class Sound {
 	public static readonly warning = Sound.register({ fileName: 'warning.mp3' });
 	public static readonly success = Sound.register({ fileName: 'success.mp3' });
 	public static readonly foldedArea = Sound.register({ fileName: 'foldedAreas.mp3' });
-	public static readonly break = Sound.register({ fileName: 'break.mp3' });
 	public static readonly quickFixes = Sound.register({ fileName: 'quickFixes.mp3' });
 	public static readonly taskCompleted = Sound.register({ fileName: 'taskCompleted.mp3' });
 	public static readonly taskFailed = Sound.register({ fileName: 'taskFailed.mp3' });
@@ -450,14 +449,6 @@ export class AccessibilitySignal {
 		announcementMessage: localize('accessibility.signals.lineHasFoldedArea', 'Folded'),
 		settingsKey: 'accessibility.signals.lineHasFoldedArea',
 	});
-	public static readonly break = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.lineHasBreakpoint.name', 'Breakpoint on Line'),
-		sound: Sound.break,
-		legacySoundSettingsKey: 'audioCues.lineHasBreakpoint',
-		legacyAnnouncementSettingsKey: 'accessibility.alert.breakpoint',
-		announcementMessage: localize('accessibility.signals.lineHasBreakpoint', 'Breakpoint'),
-		settingsKey: 'accessibility.signals.lineHasBreakpoint',
-	});
 	public static readonly inlineSuggestion = AccessibilitySignal.register({
 		name: localize('accessibilitySignals.lineHasInlineSuggestion.name', 'Inline Suggestion on Line'),
 		sound: Sound.quickFixes,
@@ -480,15 +471,6 @@ export class AccessibilitySignal {
 		settingsKey: 'accessibility.signals.terminalQuickFix',
 	});
 
-	public static readonly onDebugBreak = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.onDebugBreak.name', 'Debugger Stopped on Breakpoint'),
-		sound: Sound.break,
-		legacySoundSettingsKey: 'audioCues.onDebugBreak',
-		legacyAnnouncementSettingsKey: 'accessibility.alert.onDebugBreak',
-		announcementMessage: localize('accessibility.signals.onDebugBreak', 'Breakpoint'),
-		settingsKey: 'accessibility.signals.onDebugBreak',
-	});
-
 	public static readonly noInlayHints = AccessibilitySignal.register({
 		name: localize('accessibilitySignals.noInlayHints', 'No Inlay Hints on Line'),
 		sound: Sound.error,
@@ -496,24 +478,6 @@ export class AccessibilitySignal {
 		legacyAnnouncementSettingsKey: 'accessibility.alert.noInlayHints',
 		announcementMessage: localize('accessibility.signals.noInlayHints', 'No Inlay Hints'),
 		settingsKey: 'accessibility.signals.noInlayHints',
-	});
-
-	public static readonly taskCompleted = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.taskCompleted', 'Task Completed'),
-		sound: Sound.taskCompleted,
-		legacySoundSettingsKey: 'audioCues.taskCompleted',
-		legacyAnnouncementSettingsKey: 'accessibility.alert.taskCompleted',
-		announcementMessage: localize('accessibility.signals.taskCompleted', 'Task Completed'),
-		settingsKey: 'accessibility.signals.taskCompleted',
-	});
-
-	public static readonly taskFailed = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.taskFailed', 'Task Failed'),
-		sound: Sound.taskFailed,
-		legacySoundSettingsKey: 'audioCues.taskFailed',
-		legacyAnnouncementSettingsKey: 'accessibility.alert.taskFailed',
-		announcementMessage: localize('accessibility.signals.taskFailed', 'Task Failed'),
-		settingsKey: 'accessibility.signals.taskFailed',
 	});
 
 	public static readonly terminalCommandFailed = AccessibilitySignal.register({

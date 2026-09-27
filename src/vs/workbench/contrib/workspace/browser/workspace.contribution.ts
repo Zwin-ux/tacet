@@ -36,7 +36,6 @@ import { IStorageService, StorageScope, StorageTarget } from '../../../../platfo
 import { IHostService } from '../../../services/host/browser/host.js';
 import { IBannerItem, IBannerService } from '../../../services/banner/browser/bannerService.js';
 import { isVirtualWorkspace } from '../../../../platform/workspace/common/virtualWorkspace.js';
-import { LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID } from '../../extensions/common/extensions.js';
 import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
 import { WORKSPACE_TRUST_SETTING_TAG } from '../../preferences/common/preferences.js';
 import { IPreferencesService } from '../../../services/preferences/common/preferences.js';
@@ -639,7 +638,7 @@ export class WorkspaceTrustUXHandler extends Disposable implements IWorkbenchCon
 					value: localize(
 						{ key: 'status.tooltipUntrustedWindow2', comment: ['[abc]({n}) are links.  Only translate `features are disabled` and `window is not trusted`. Do not change brackets and parentheses or {n}'] },
 						"Running in Restricted Mode\n\nSome [features are disabled]({0}) because this [window is not trusted]({1}).",
-						`command:${LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID}`,
+						`command:${MANAGE_TRUST_COMMAND_ID}`,
 						`command:${MANAGE_TRUST_COMMAND_ID}`
 					),
 					isTrusted: true,
@@ -653,7 +652,7 @@ export class WorkspaceTrustUXHandler extends Disposable implements IWorkbenchCon
 					value: localize(
 						{ key: 'status.tooltipUntrustedFolder2', comment: ['[abc]({n}) are links.  Only translate `features are disabled` and `folder is not trusted`. Do not change brackets and parentheses or {n}'] },
 						"Running in Restricted Mode\n\nSome [features are disabled]({0}) because this [folder is not trusted]({1}).",
-						`command:${LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID}`,
+						`command:${MANAGE_TRUST_COMMAND_ID}`,
 						`command:${MANAGE_TRUST_COMMAND_ID}`
 					),
 					isTrusted: true,
@@ -667,7 +666,7 @@ export class WorkspaceTrustUXHandler extends Disposable implements IWorkbenchCon
 					value: localize(
 						{ key: 'status.tooltipUntrustedWorkspace2', comment: ['[abc]({n}) are links. Only translate `features are disabled` and `workspace is not trusted`. Do not change brackets and parentheses or {n}'] },
 						"Running in Restricted Mode\n\nSome [features are disabled]({0}) because this [workspace is not trusted]({1}).",
-						`command:${LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID}`,
+						`command:${MANAGE_TRUST_COMMAND_ID}`,
 						`command:${MANAGE_TRUST_COMMAND_ID}`
 					),
 					isTrusted: true,

@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type * as vscode from 'vscode';
-import { asArray } from '../../../base/common/arrays.js';
 import { encodeBase64, VSBuffer } from '../../../base/common/buffer.js';
 import { illegalArgument, SerializedError } from '../../../base/common/errors.js';
 import { IRelativePattern } from '../../../base/common/glob.js';
@@ -1274,12 +1273,6 @@ export enum TaskScope {
 	Workspace = 2
 }
 
-export enum TaskRunOn {
-	Default = 1,
-	FolderOpen = 2,
-	WorktreeCreated = 3,
-}
-
 export class CustomExecution implements vscode.CustomExecution {
 	private _callback: (resolvedDefinition: vscode.TaskDefinition) => Thenable<vscode.Pseudoterminal>;
 	constructor(callback: (resolvedDefinition: vscode.TaskDefinition) => Thenable<vscode.Pseudoterminal>) {
@@ -2536,11 +2529,15 @@ export enum DebugConsoleMode {
 	MergeWithParent = 1
 }
 
-export class DebugVisualization {
-	iconPath?: URI | { light: URI; dark: URI } | ThemeIcon;
-	visualization?: vscode.Command | vscode.TreeDataProvider<unknown>;
-
-	constructor(public name: string) { }
+export enum DebugConfigurationProviderTriggerKind {
+	/**
+	 * `DebugConfigurationProvider.provideDebugConfigurations` is called to provide the initial debug configurations for a newly created launch.json.
+	 */
+	Initial = 1,
+	/**
+	 * `DebugConfigurationProvider.provideDebugConfigurations` is called to provide dynamically generated debug configurations when the user asks for them through the UI (e.g. via the "Select and Start Debugging" command).
+	 */
+	Dynamic = 2
 }
 
 //#endregion
@@ -2627,25 +2624,6 @@ export enum ColorThemeKind {
 //#endregion Theming
 //#region Notebook
 
-export class CellErrorStackFrame {
-	/**
-	 * @param label The name of the stack frame
-	 * @param file The file URI of the stack frame
-	 * @param position The position of the stack frame within the file
-	 */
-	constructor(
-		public label: string,
-		public uri?: vscode.Uri,
-		public position?: Position,
-	) { }
-}
-
-export enum NotebookCellExecutionState {
-	Idle = 1,
-	Pending = 2,
-	Executing = 3,
-}
-
 export enum NotebookCellStatusBarAlignment {
 	Left = 1,
 	Right = 2
@@ -2670,48 +2648,7 @@ export enum NotebookControllerAffinity {
 	Preferred = 2
 }
 
-export enum NotebookControllerAffinity2 {
-	Default = 1,
-	Preferred = 2,
-	Hidden = -1
-}
-
-export class NotebookRendererScript {
-
-	public provides: readonly string[];
-
-	constructor(
-		public uri: vscode.Uri,
-		provides: string | readonly string[] = []
-	) {
-		this.provides = asArray(provides);
-	}
-}
-
-export class NotebookKernelSourceAction {
-	description?: string;
-	detail?: string;
-	command?: vscode.Command;
-	constructor(
-		public label: string
-	) { }
-}
-
-export enum NotebookVariablesRequestKind {
-	Named = 1,
-	Indexed = 2
-}
-
 //#endregion
-
-//#region Timeline
-
-@es5ClassCompat
-export class TimelineItem implements vscode.TimelineItem {
-	constructor(public label: string, public timestamp: number) { }
-}
-
-//#endregion Timeline
 
 //#region ExtensionContext
 
@@ -2784,27 +2721,10 @@ export class PortAttributes {
 //#endregion ports
 
 //#region Testing
-export enum TestResultState {
-	Queued = 1,
-	Running = 2,
-	Passed = 3,
-	Failed = 4,
-	Skipped = 5,
-	Errored = 6
-}
-
 export enum TestRunProfileKind {
 	Run = 1,
 	Debug = 2,
 	Coverage = 3,
-}
-
-export class TestRunProfileBase {
-	constructor(
-		public readonly controllerId: string,
-		public readonly profileId: number,
-		public readonly kind: vscode.TestRunProfileKind,
-	) { }
 }
 
 @es5ClassCompat
@@ -3037,9 +2957,6 @@ export class NotebookDiffEditorTabInput {
 
 export class TerminalEditorTabInput {
 	constructor() { }
-}
-export class InteractiveWindowInput {
-	constructor(readonly uri: URI, readonly inputBoxUri: URI) { }
 }
 
 export class TextMultiDiffTabInput {

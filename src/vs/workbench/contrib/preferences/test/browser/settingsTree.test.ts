@@ -47,7 +47,6 @@ class TestSettingRenderer extends AbstractSettingRenderer {
 			undefined!,
 			undefined!,
 			undefined!,
-			undefined!,
 			{ setupDelayedHover: () => Disposable.None } as never,
 			undefined!,
 		);

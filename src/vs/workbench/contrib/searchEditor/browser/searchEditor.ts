@@ -528,13 +528,7 @@ export class SearchEditor extends AbstractTextCodeEditor<SearchEditorViewState> 
 			matchWholeWord: this.queryEditorWidget.searchInput?.getWholeWords() ?? false,
 			useExcludeSettingsAndIgnoreFiles: this.inputPatternExcludes.useExcludesAndIgnoreFiles(),
 			onlyOpenEditors: this.inputPatternIncludes.onlySearchInOpenEditors(),
-			showIncludesExcludes: this.showingIncludesExcludes,
-			notebookSearchConfig: {
-				includeMarkupInput: this.queryEditorWidget.getNotebookFilters().markupInput,
-				includeMarkupPreview: this.queryEditorWidget.getNotebookFilters().markupPreview,
-				includeCodeInput: this.queryEditorWidget.getNotebookFilters().codeInput,
-				includeOutput: this.queryEditorWidget.getNotebookFilters().codeOutput,
-			}
+			showIncludesExcludes: this.showingIncludesExcludes
 		};
 	}
 
@@ -576,13 +570,7 @@ export class SearchEditor extends AbstractTextCodeEditor<SearchEditorViewState> 
 			},
 			surroundingContext: config.contextLines,
 			isSmartCase: this.searchConfig.smartCase,
-			expandPatterns: true,
-			notebookSearchConfig: {
-				includeMarkupInput: config.notebookSearchConfig.includeMarkupInput,
-				includeMarkupPreview: config.notebookSearchConfig.includeMarkupPreview,
-				includeCodeInput: config.notebookSearchConfig.includeCodeInput,
-				includeOutput: config.notebookSearchConfig.includeOutput,
-			}
+			expandPatterns: true
 		};
 
 		const folderResources = this.contextService.getWorkspace().folders;

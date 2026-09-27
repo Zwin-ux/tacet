@@ -24,14 +24,12 @@ import { LifecyclePhase } from '../../../services/lifecycle/common/lifecycle.js'
 import { IUserDataSyncWorkbenchService } from '../../../services/userDataSync/common/userDataSync.js';
 
 interface IConfiguration extends IWindowsConfiguration {
-	debug?: { console?: { wordWrap?: boolean } };
 	editor?: { accessibilitySupport?: 'on' | 'off' | 'auto' };
 	security?: { workspace?: { trust?: { enabled?: boolean } }; restrictUNCAccess?: boolean };
 	window: IWindowSettings;
 	workbench?: { enableExperiments?: boolean };
 	telemetry?: { feedback?: { enabled?: boolean } };
 	_extensionsGallery?: { enablePPE?: boolean };
-	accessibility?: { verbosity?: { debug?: boolean } };
 }
 
 export class SettingsChangeRelauncher extends Disposable implements IWorkbenchContribution {
@@ -48,7 +46,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 		'workbench.enableExperiments',
 		'_extensionsGallery.enablePPE',
 		'security.restrictUNCAccess',
-		'accessibility.verbosity.debug',
 		'telemetry.feedback.enabled'
 	];
 
@@ -63,7 +60,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 	private readonly experimentsEnabled = new ChangeObserver('boolean');
 	private readonly enablePPEExtensionsGallery = new ChangeObserver('boolean');
 	private readonly restrictUNCAccess = new ChangeObserver('boolean');
-	private readonly accessibilityVerbosityDebug = new ChangeObserver('boolean');
 	private readonly telemetryFeedbackEnabled = new ChangeObserver('boolean');
 
 	constructor(
@@ -140,9 +136,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 
 			// UNC host access restrictions
 			processChanged(this.restrictUNCAccess.handleChange(config?.security?.restrictUNCAccess));
-
-			// Debug accessibility verbosity
-			processChanged(this.accessibilityVerbosityDebug.handleChange(config?.accessibility?.verbosity?.debug));
 		}
 
 		// Experiments

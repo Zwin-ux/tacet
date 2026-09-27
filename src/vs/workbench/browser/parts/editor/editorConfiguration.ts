@@ -35,11 +35,6 @@ export class DynamicEditorConfigurations extends Disposable implements IWorkbenc
 		// registered yet via the editor resolver infrastructure
 
 		{
-			id: 'workbench.input.interactive',
-			label: localize('interactiveWindow', 'Interactive Window'),
-			priority: toRegisteredEditorPriorityInfo(RegisteredEditorPriority.builtin)
-		},
-		{
 			id: 'mainThreadWebview-markdown.preview',
 			label: localize('markdownPreview', "Markdown Preview"),
 			priority: toRegisteredEditorPriorityInfo(RegisteredEditorPriority.builtin)

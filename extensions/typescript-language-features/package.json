@@ -64,7 +64,6 @@
     "onCommand:_typescript.configurePlugin",
     "onCommand:_typescript.learnMoreAboutRefactorings",
     "onCommand:typescript.fileReferences",
-    "onTaskType:typescript",
     "onLanguage:jsonc",
     "onWalkthrough:nodejsWelcome"
   ],
@@ -256,48 +255,6 @@
             "markdownDeprecationMessage": "%typescript.locale.unifiedDeprecationMessage%",
             "scope": "window",
             "order": 3
-          },
-          "js/ts.tsc.autoDetect": {
-            "type": "string",
-            "default": "on",
-            "enum": [
-              "on",
-              "off",
-              "build",
-              "watch"
-            ],
-            "markdownEnumDescriptions": [
-              "%typescript.tsc.autoDetect.on%",
-              "%typescript.tsc.autoDetect.off%",
-              "%typescript.tsc.autoDetect.build%",
-              "%typescript.tsc.autoDetect.watch%"
-            ],
-            "description": "%typescript.tsc.autoDetect%",
-            "scope": "window",
-            "order": 4,
-            "keywords": [
-              "TypeScript"
-            ]
-          },
-          "typescript.tsc.autoDetect": {
-            "type": "string",
-            "default": "on",
-            "enum": [
-              "on",
-              "off",
-              "build",
-              "watch"
-            ],
-            "markdownEnumDescriptions": [
-              "%typescript.tsc.autoDetect.on%",
-              "%typescript.tsc.autoDetect.off%",
-              "%typescript.tsc.autoDetect.build%",
-              "%typescript.tsc.autoDetect.watch%"
-            ],
-            "description": "%typescript.tsc.autoDetect%",
-            "markdownDeprecationMessage": "%typescript.tsc.autoDetect.unifiedDeprecationMessage%",
-            "scope": "window",
-            "order": 4
           }
         }
       },
@@ -3028,101 +2985,7 @@
           "when": "tsSupportsFileReferences && resourceLangId == typescriptreact"
         }
       ]
-    },
-    "breakpoints": [
-      {
-        "language": "typescript"
-      },
-      {
-        "language": "typescriptreact"
-      }
-    ],
-    "taskDefinitions": [
-      {
-        "type": "typescript",
-        "required": [
-          "tsconfig"
-        ],
-        "properties": {
-          "tsconfig": {
-            "type": "string",
-            "description": "%taskDefinition.tsconfig.description%"
-          },
-          "option": {
-            "type": "string"
-          }
-        },
-        "when": "shellExecutionSupported"
-      }
-    ],
-    "problemPatterns": [
-      {
-        "name": "tsc",
-        "regexp": "^([^\\s].*)[\\(:](\\d+)[,:](\\d+)(?:\\):\\s+|\\s+-\\s+)(error|warning|info)\\s+TS(\\d+)\\s*:\\s*(.*)$",
-        "file": 1,
-        "line": 2,
-        "column": 3,
-        "severity": 4,
-        "code": 5,
-        "message": 6
-      }
-    ],
-    "problemMatchers": [
-      {
-        "name": "tsc",
-        "label": "%typescript.problemMatchers.tsc.label%",
-        "owner": "typescript",
-        "source": "ts",
-        "applyTo": "closedDocuments",
-        "fileLocation": [
-          "relative",
-          "${cwd}"
-        ],
-        "pattern": "$tsc"
-      },
-      {
-        "name": "tsgo-watch",
-        "label": "%typescript.problemMatchers.tsgo-watch.label%",
-        "owner": "typescript",
-        "source": "ts",
-        "applyTo": "closedDocuments",
-        "fileLocation": [
-          "relative",
-          "${cwd}"
-        ],
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "^build starting at .*$"
-          },
-          "endsPattern": {
-            "regexp": "^build finished in .*$"
-          }
-        }
-      },
-      {
-        "name": "tsc-watch",
-        "label": "%typescript.problemMatchers.tscWatch.label%",
-        "owner": "typescript",
-        "source": "ts",
-        "applyTo": "closedDocuments",
-        "fileLocation": [
-          "relative",
-          "${cwd}"
-        ],
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "^\\s*(?:message TS6032:|\\[?\\D*.{1,2}[:.].{1,2}[:.].{1,2}\\D*(├\\D*\\d{1,2}\\D+┤)?(?:\\]| -)) (Starting compilation in watch mode|File change detected\\. Starting incremental compilation)\\.\\.\\."
-          },
-          "endsPattern": {
-            "regexp": "^\\s*(?:message TS6042:|\\[?\\D*.{1,2}[:.].{1,2}[:.].{1,2}\\D*(├\\D*\\d{1,2}\\D+┤)?(?:\\]| -)) (?:Compilation complete\\.|Found \\d+ errors?\\.) Watching for file changes\\."
-          }
-        }
-      }
-    ]
+    }
   },
   "repository": {
     "type": "git",

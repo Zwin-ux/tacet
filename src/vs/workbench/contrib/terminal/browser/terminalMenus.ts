@@ -11,7 +11,6 @@ import { IMenu, MenuId, MenuRegistry } from '../../../../platform/actions/common
 import { ContextKeyExpr } from '../../../../platform/contextkey/common/contextkey.js';
 import { IExtensionTerminalProfile, ITerminalProfile, TerminalLocation, TerminalSettingId } from '../../../../platform/terminal/common/terminal.js';
 import { ResourceContextKey } from '../../../common/contextkeys.js';
-import { TaskExecutionSupportedContext } from '../../tasks/common/taskService.js';
 import { ICreateTerminalOptions, ITerminalLocationOptions, ITerminalService } from './terminal.js';
 import { TerminalCommandId, TERMINAL_VIEW_ID } from '../common/terminal.js';
 import { TerminalContextKeys, TerminalContextKeyStrings } from '../common/terminalContextKey.js';
@@ -347,30 +346,6 @@ export function setupTerminalMenus(): void {
 					},
 					group: '3_configure'
 				}
-			},
-			{
-				id: MenuId.TerminalNewDropdownContext,
-				item: {
-					command: {
-						id: 'workbench.action.tasks.runTask',
-						title: localize('workbench.action.tasks.runTask', "Run Task...")
-					},
-					when: TaskExecutionSupportedContext,
-					group: '4_tasks',
-					order: 1
-				},
-			},
-			{
-				id: MenuId.TerminalNewDropdownContext,
-				item: {
-					command: {
-						id: 'workbench.action.tasks.configureTaskRunner',
-						title: localize('workbench.action.tasks.configureTaskRunner', "Configure Tasks...")
-					},
-					when: TaskExecutionSupportedContext,
-					group: '4_tasks',
-					order: 2
-				},
 			}
 		]
 	);

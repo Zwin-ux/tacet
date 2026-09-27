@@ -53,8 +53,6 @@
         ],
         "filenames": [
           "settings.json",
-          "launch.json",
-          "tasks.json",
           "keybindings.json",
           "extensions.json",
           "argv.json",
@@ -114,18 +112,6 @@
       {
         "fileMatch": "/.vscode/settings.json",
         "url": "vscode://schemas/settings/folder"
-      },
-      {
-        "fileMatch": "/.vscode/launch.json",
-        "url": "vscode://schemas/launch"
-      },
-      {
-        "fileMatch": "/.vscode/tasks.json",
-        "url": "vscode://schemas/tasks"
-      },
-      {
-        "fileMatch": "%APP_SETTINGS_HOME%/tasks.json",
-        "url": "vscode://schemas/tasks"
       },
       {
         "fileMatch": "%APP_SETTINGS_HOME%/chatLanguageModels.json",

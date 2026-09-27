@@ -199,16 +199,6 @@ export const tocData: ITOCEntry<string> = {
 					settings: ['search.*']
 				},
 				{
-					id: 'features/debug',
-					label: localize('debug', "Debug"),
-					settings: ['debug.*', 'launch']
-				},
-				{
-					id: 'features/testing',
-					label: localize('testing', "Testing"),
-					settings: ['testing.*']
-				},
-				{
 					id: 'features/scm',
 					label: localize('scm', "Source Control"),
 					settings: ['scm.*']
@@ -222,11 +212,6 @@ export const tocData: ITOCEntry<string> = {
 					id: 'features/terminal',
 					label: localize('terminal', "Terminal"),
 					settings: ['terminal.*']
-				},
-				{
-					id: 'features/task',
-					label: localize('task', "Task"),
-					settings: ['task.*']
 				},
 				{
 					id: 'features/problems',
@@ -252,11 +237,6 @@ export const tocData: ITOCEntry<string> = {
 					id: 'features/timeline',
 					label: localize('timeline', "Timeline"),
 					settings: ['timeline.*']
-				},
-				{
-					id: 'features/notebook',
-					label: localize('notebook', 'Notebook'),
-					settings: ['notebook.*', 'interactiveWindow.*']
 				},
 				{
 					id: 'features/mergeEditor',

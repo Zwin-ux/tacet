@@ -51,7 +51,6 @@ import { FilePolicyService } from '../../../../../platform/policy/common/filePol
 import { runWithFakedTimers } from '../../../../../base/test/common/timeTravelScheduler.js';
 import { UserDataProfileService } from '../../../userDataProfile/common/userDataProfileService.js';
 import { IUserDataProfileService } from '../../../userDataProfile/common/userDataProfile.js';
-import { TasksSchemaProperties } from '../../../../contrib/tasks/common/tasks.js';
 import { RemoteSocketFactoryService } from '../../../../../platform/remote/common/remoteSocketFactoryService.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { PolicyCategory } from '../../../../../base/common/policy.js';
@@ -1984,7 +1983,7 @@ suite('WorkspaceConfigurationService - Folder', () => {
 
 	test('update workspace configuration', () => {
 		return testObject.updateValue('tasks.service.testSetting', 'value', ConfigurationTarget.WORKSPACE)
-			.then(() => assert.strictEqual(testObject.getValue(TasksSchemaProperties.ServiceTestSetting), 'value'));
+			.then(() => assert.strictEqual(testObject.getValue('tasks.service.testSetting'), 'value'));
 	});
 
 	test('update resource configuration', () => {
@@ -2053,7 +2052,7 @@ suite('WorkspaceConfigurationService - Folder', () => {
 
 	test('update tasks configuration', () => {
 		return testObject.updateValue('tasks', { 'version': '1.0.0', tasks: [{ 'taskName': 'myTask' }] }, ConfigurationTarget.WORKSPACE)
-			.then(() => assert.deepStrictEqual(testObject.getValue(TasksSchemaProperties.Tasks), { 'version': '1.0.0', tasks: [{ 'taskName': 'myTask' }] }));
+			.then(() => assert.deepStrictEqual(testObject.getValue('tasks'), { 'version': '1.0.0', tasks: [{ 'taskName': 'myTask' }] }));
 	});
 
 	test('update user configuration should trigger change event before promise is resolve', () => {
@@ -3165,7 +3164,7 @@ suite('WorkspaceConfigurationService-Multiroot', () => {
 		};
 		await jsonEditingServce.write((workspaceContextService.getWorkspace().configuration!), [{ path: ['tasks'], value: expectedTasksConfiguration }], true);
 		await testObject.reloadConfiguration();
-		const actual = testObject.getValue(TasksSchemaProperties.Tasks);
+		const actual = testObject.getValue('tasks');
 		assert.deepStrictEqual(actual, expectedTasksConfiguration);
 	}));
 
@@ -3290,7 +3289,7 @@ suite('WorkspaceConfigurationService-Multiroot', () => {
 	test('update tasks configuration in a folder', () => runWithFakedTimers<void>({ useFakeTimers: true }, async () => {
 		const workspace = workspaceContextService.getWorkspace();
 		await testObject.updateValue('tasks', { 'version': '1.0.0', tasks: [{ 'taskName': 'myTask' }] }, { resource: workspace.folders[0].uri }, ConfigurationTarget.WORKSPACE_FOLDER);
-		assert.deepStrictEqual(testObject.getValue(TasksSchemaProperties.Tasks, { resource: workspace.folders[0].uri }), { 'version': '1.0.0', tasks: [{ 'taskName': 'myTask' }] });
+		assert.deepStrictEqual(testObject.getValue('tasks', { resource: workspace.folders[0].uri }), { 'version': '1.0.0', tasks: [{ 'taskName': 'myTask' }] });
 	}));
 
 	test('update launch configuration in a workspace', () => runWithFakedTimers<void>({ useFakeTimers: true }, async () => {
@@ -3303,7 +3302,7 @@ suite('WorkspaceConfigurationService-Multiroot', () => {
 		const workspace = workspaceContextService.getWorkspace();
 		const tasks = { 'version': '2.0.0', tasks: [{ 'label': 'myTask' }] };
 		await testObject.updateValue('tasks', tasks, { resource: workspace.folders[0].uri }, ConfigurationTarget.WORKSPACE, { donotNotifyError: true });
-		assert.deepStrictEqual(testObject.getValue(TasksSchemaProperties.Tasks), tasks);
+		assert.deepStrictEqual(testObject.getValue('tasks'), tasks);
 	}));
 
 	test('configuration of newly added folder is available on configuration change event', () => runWithFakedTimers<void>({ useFakeTimers: true }, async () => {

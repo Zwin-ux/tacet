@@ -22,9 +22,7 @@ import { CustomTreeView, TreeViewPane } from '../../browser/parts/views/treeView
 import { ViewPaneContainer } from '../../browser/parts/views/viewPaneContainer.js';
 import { IWorkbenchContribution, WorkbenchPhase, registerWorkbenchContribution2 } from '../../common/contributions.js';
 import { ICustomViewDescriptor, IViewContainersRegistry, IViewDescriptor, IViewsRegistry, ViewContainer, Extensions as ViewContainerExtensions, ViewContainerLocation } from '../../common/views.js';
-import { VIEWLET_ID as DEBUG } from '../../contrib/debug/common/debug.js';
 import { VIEWLET_ID as EXPLORER } from '../../contrib/files/common/files.js';
-import { VIEWLET_ID as REMOTE } from '../../contrib/remote/browser/remoteExplorer.js';
 import { VIEWLET_ID as SCM } from '../../contrib/scm/common/scm.js';
 import { WebviewViewPane } from '../../contrib/webviewView/browser/webviewViewPane.js';
 import { Extensions as ExtensionFeaturesRegistryExtensions, IExtensionFeatureTableRenderer, IExtensionFeaturesRegistry, IRenderedData, IRowData, ITableData } from '../../services/extensionManagement/common/extensionFeatures.js';
@@ -160,7 +158,7 @@ const viewDescriptor: IJSONSchema = {
 			],
 			default: 'visible',
 			enumDescriptions: [
-				localize('vscode.extension.contributes.view.initialState.visible', "The default initial state for the view. In most containers the view will be expanded, however; some built-in containers (explorer, scm, and debug) show all contributed views collapsed regardless of the `visibility`."),
+				localize('vscode.extension.contributes.view.initialState.visible', "The default initial state for the view. In most containers the view will be expanded, however; some built-in containers (explorer and scm) show all contributed views collapsed regardless of the `visibility`."),
 				localize('vscode.extension.contributes.view.initialState.hidden', "The view will not be shown in the view container, but will be discoverable through the views menu and other view entry points and can be un-hidden by the user."),
 				localize('vscode.extension.contributes.view.initialState.collapsed', "The view will show in the view container, but will be collapsed.")
 			]
@@ -215,20 +213,8 @@ const viewsContribution: IJSONSchema = {
 			items: viewDescriptor,
 			default: []
 		},
-		'debug': {
-			description: localize('views.debug', "Contributes views to Debug container in the Activity bar"),
-			type: 'array',
-			items: viewDescriptor,
-			default: []
-		},
 		'scm': {
 			description: localize('views.scm', "Contributes views to SCM container in the Activity bar"),
-			type: 'array',
-			items: viewDescriptor,
-			default: []
-		},
-		'test': {
-			description: localize('views.test', "Contributes views to Test container in the Activity bar"),
 			type: 'array',
 			items: viewDescriptor,
 			default: []
@@ -517,7 +503,7 @@ class ViewsExtensionHandler implements IWorkbenchContribution {
 						containerIcon: icon || viewContainer?.icon,
 						containerTitle: item.contextualTitle || (viewContainer && (typeof viewContainer.title === 'string' ? viewContainer.title : viewContainer.title.value)),
 						canToggleVisibility: true,
-						canMoveView: viewContainer?.id !== REMOTE,
+						canMoveView: true,
 						treeView: type === ViewType.Tree ? this.instantiationService.createInstance(CustomTreeView, item.id, item.name, extension.description.identifier.value) : undefined,
 						collapsed: this.showCollapsed(container) || initialVisibility === InitialVisibility.Collapsed,
 						order: order,
@@ -528,7 +514,6 @@ class ViewsExtensionHandler implements IWorkbenchContribution {
 						remoteAuthority: item.remoteName || (<any>item).remoteAuthority, // TODO@roblou - delete after remote extensions are updated
 						virtualWorkspace: item.virtualWorkspace,
 						hideByDefault: initialVisibility === InitialVisibility.Hidden,
-						workspace: viewContainer?.id === REMOTE ? true : undefined,
 						weight,
 						accessibilityHelpContent
 					};
@@ -622,9 +607,7 @@ class ViewsExtensionHandler implements IWorkbenchContribution {
 	private getViewContainer(value: string): ViewContainer | undefined {
 		switch (value) {
 			case 'explorer': return this.viewContainersRegistry.get(EXPLORER);
-			case 'debug': return this.viewContainersRegistry.get(DEBUG);
 			case 'scm': return this.viewContainersRegistry.get(SCM);
-			case 'remote': return this.viewContainersRegistry.get(REMOTE);
 			default: return this.viewContainersRegistry.get(`workbench.view.extension.${value}`);
 		}
 	}
@@ -633,7 +616,6 @@ class ViewsExtensionHandler implements IWorkbenchContribution {
 		switch (container.id) {
 			case EXPLORER:
 			case SCM:
-			case DEBUG:
 				return true;
 		}
 		return false;

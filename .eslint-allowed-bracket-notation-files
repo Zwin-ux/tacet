@@ -376,12 +376,6 @@ src/vs/platform/terminal/node/terminalEnvironment.ts
 src/vs/platform/terminal/node/terminalProcess.ts
 src/vs/platform/terminal/node/terminalProfiles.ts
 src/vs/platform/terminal/test/node/terminalEnvironment.test.ts
-src/vs/workbench/contrib/tasks/browser/abstractTaskService.ts
-src/vs/workbench/contrib/tasks/browser/taskQuickPick.ts
-src/vs/workbench/contrib/tasks/browser/terminalTaskSystem.ts
-src/vs/workbench/contrib/tasks/common/jsonSchema_v1.ts
-src/vs/workbench/contrib/tasks/common/jsonSchema_v2.ts
-src/vs/workbench/contrib/tasks/common/problemMatcher.ts
 src/vs/workbench/contrib/terminal/browser/terminalActions.ts
 src/vs/workbench/contrib/terminal/common/terminalEnvironment.ts
 src/vs/workbench/contrib/terminal/test/browser/terminalInstance.test.ts
@@ -393,21 +387,6 @@ src/vs/workbench/contrib/terminalContrib/history/test/common/history.test.ts
 src/vs/workbench/contrib/terminalContrib/suggest/test/browser/terminalCompletionService.test.ts
 
 # Debug (7 files)
-src/vs/workbench/contrib/debug/browser/debugAdapterManager.ts
-src/vs/workbench/contrib/debug/browser/debugConfigurationManager.ts
-src/vs/workbench/contrib/debug/common/debugger.ts
-src/vs/workbench/contrib/debug/node/debugAdapter.ts
-src/vs/workbench/contrib/debug/test/browser/repl.test.ts
-src/vs/workbench/contrib/debug/test/node/debugAdapter.test.ts
-src/vs/workbench/contrib/debug/test/node/debugger.test.ts
-
-# Notebooks (6 files)
-extensions/ipynb/src/deserializers.ts
-src/vs/workbench/contrib/notebook/browser/contrib/cellCommands/cellCommands.ts
-src/vs/workbench/contrib/notebook/browser/contrib/layout/layoutActions.ts
-src/vs/workbench/contrib/notebook/browser/notebookEditor.ts
-src/vs/workbench/contrib/notebook/browser/notebookOptions.ts
-src/vs/workbench/contrib/notebook/browser/view/renderers/backLayerWebView.ts
 
 # Extension host, API, and extension management (20 files)
 extensions/vscode-api-tests/src/singlefolder-tests/browser.cdp.test.ts

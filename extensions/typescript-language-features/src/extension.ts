@@ -23,7 +23,6 @@ import { DiskTypeScriptVersionProvider } from './tsServer/versionProvider.electr
 import { ActiveJsTsEditorTracker } from './ui/activeJsTsEditorTracker';
 import { suggestNativePreview } from './ui/suggestNativePreview';
 import { onCaseInsensitiveFileSystem } from './utils/fs.electron';
-import { Lazy } from './utils/lazy';
 import { getPackageInfo } from './utils/packageInfo';
 import * as temp from './utils/temp.electron';
 import { conditionalRegistration, requireGlobalUnifiedConfig, requireHasVsCodeExtension } from './languageFeatures/util/dependentRegistration';
@@ -96,10 +95,6 @@ export function activate(
 
 		// Register features
 		registerBaseCommands(commandManager, lazyClientHost, pluginManager, activeJsTsEditorTracker);
-
-		import('./task/taskProvider').then(module => {
-			disposables.add(module.register(new Lazy(() => lazyClientHost.value.serviceClient)));
-		});
 
 		disposables.add(lazilyActivateClient(lazyClientHost, pluginManager, activeJsTsEditorTracker));
 

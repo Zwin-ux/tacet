@@ -6,7 +6,6 @@
 export * from './activityBar';
 export * from './application';
 export * from './code';
-export * from './debug';
 export * from './editor';
 export * from './editors';
 export * from './explorer';
@@ -26,7 +25,6 @@ export * from './viewlet';
 export * from './localization';
 export * from './modelConfigPicker';
 export * from './workbench';
-export * from './task';
 export * from './chat';
 export * from './agentsWindow';
 export { getDevElectronPath, getBuildElectronPath, getBuildProductPath, getBuildVersion } from './electron';

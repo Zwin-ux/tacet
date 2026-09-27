@@ -16,7 +16,6 @@ import { IQuickInputService, IQuickPickItem, IQuickPickSeparator } from '../../.
 import { AllowedExtension, IAuthenticationService } from '../../../../services/authentication/common/authentication.js';
 import { IAuthenticationQueryService, IAccountQuery } from '../../../../services/authentication/common/authenticationQuery.js';
 import { IExtensionService } from '../../../../services/extensions/common/extensions.js';
-import { IExtensionsWorkbenchService } from '../../../extensions/common/extensions.js';
 
 export class ManageTrustedExtensionsForAccountAction extends Action2 {
 	constructor() {
@@ -40,11 +39,6 @@ interface TrustedExtensionsQuickPickItem extends IQuickPickItem {
 }
 
 class ManageTrustedExtensionsForAccountActionImpl {
-	private readonly _viewDetailsButton = {
-		tooltip: localize('viewExtensionDetails', "View extension details"),
-		iconClass: ThemeIcon.asClassName(Codicon.info),
-	};
-
 	private readonly _managePreferencesButton = {
 		tooltip: localize('accountPreferences', "Manage account preferences for this extension"),
 		iconClass: ThemeIcon.asClassName(Codicon.settingsGear),
@@ -57,7 +51,6 @@ class ManageTrustedExtensionsForAccountActionImpl {
 		@IAuthenticationService private readonly _authenticationService: IAuthenticationService,
 		@IAuthenticationQueryService private readonly _authenticationQueryService: IAuthenticationQueryService,
 		@ICommandService private readonly _commandService: ICommandService,
-		@IExtensionsWorkbenchService private readonly _extensionsWorkbenchService: IExtensionsWorkbenchService
 	) { }
 
 	async run(options?: { providerId: string; accountLabel: string }) {
@@ -176,7 +169,7 @@ class ManageTrustedExtensionsForAccountActionImpl {
 			description,
 			tooltip,
 			disabled,
-			buttons: [this._viewDetailsButton, this._managePreferencesButton],
+			buttons: [this._managePreferencesButton],
 			picked: extension.allowed === undefined || extension.allowed
 		};
 	}
@@ -212,8 +205,6 @@ class ManageTrustedExtensionsForAccountActionImpl {
 		disposableStore.add(quickPick.onDidTriggerItemButton(e => {
 			if (e.button === this._managePreferencesButton) {
 				this._commandService.executeCommand('_manageAccountPreferencesForExtension', e.item.extension.id, accountQuery.providerId);
-			} else if (e.button === this._viewDetailsButton) {
-				this._extensionsWorkbenchService.open(e.item.extension.id);
 			}
 		}));
 

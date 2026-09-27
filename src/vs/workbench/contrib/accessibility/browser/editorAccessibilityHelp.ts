@@ -9,12 +9,8 @@ import { ICodeEditorService } from '../../../../editor/browser/services/codeEdit
 import { EditorOption } from '../../../../editor/common/config/editorOptions.js';
 import { AccessibilityHelpNLS } from '../../../../editor/common/standaloneStrings.js';
 import { ICommandService } from '../../../../platform/commands/common/commands.js';
-import { IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
-import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { AccessibilityHelpAction } from './accessibleViewActions.js';
-import { CommentAccessibilityHelpNLS } from '../../comments/browser/commentsAccessibility.js';
-import { CommentContextKeys } from '../../comments/common/commentContextKeys.js';
 import { NEW_UNTITLED_FILE_COMMAND_ID } from '../../files/browser/fileConstants.js';
 import { IAccessibleViewService, IAccessibleViewContentProvider, AccessibleViewProviderId, IAccessibleViewOptions, AccessibleViewType } from '../../../../platform/accessibility/browser/accessibleView.js';
 import { AccessibilityVerbositySettingId } from './accessibilityConfiguration.js';
@@ -49,8 +45,6 @@ class EditorAccessibilityHelpProvider extends Disposable implements IAccessibleV
 	verbositySettingKey = AccessibilityVerbositySettingId.Editor;
 	constructor(
 		private readonly _editor: ICodeEditor,
-		@IKeybindingService private readonly _keybindingService: IKeybindingService,
-		@IContextKeyService private readonly _contextKeyService: IContextKeyService,
 		@IAccessibilityService private readonly accessibilityService: IAccessibilityService,
 		@IConfigurationService private readonly _configurationService: IConfigurationService,
 	) {
@@ -86,11 +80,6 @@ class EditorAccessibilityHelpProvider extends Disposable implements IAccessibleV
 		content.push(AccessibilityHelpNLS.announceCursorPosition);
 		content.push(AccessibilityHelpNLS.focusNotifications);
 
-		const commentCommandInfo = getCommentCommandInfo(this._keybindingService, this._contextKeyService, this._editor);
-		if (commentCommandInfo) {
-			content.push(commentCommandInfo);
-		}
-
 		content.push(AccessibilityHelpNLS.suggestActions);
 		content.push(AccessibilityHelpNLS.acceptSuggestAction);
 		content.push(AccessibilityHelpNLS.toggleSuggestionFocus);
@@ -108,18 +97,6 @@ class EditorAccessibilityHelpProvider extends Disposable implements IAccessibleV
 		content.push(AccessibilityHelpNLS.intellisense);
 		content.push(AccessibilityHelpNLS.showOrFocusHover);
 		content.push(AccessibilityHelpNLS.goToSymbol);
-		content.push(AccessibilityHelpNLS.startDebugging);
-		content.push(AccessibilityHelpNLS.setBreakpoint);
-		content.push(AccessibilityHelpNLS.debugExecuteSelection);
-		content.push(AccessibilityHelpNLS.addToWatch);
 		return content.join('\n');
 	}
-}
-
-export function getCommentCommandInfo(keybindingService: IKeybindingService, contextKeyService: IContextKeyService, editor: ICodeEditor): string | undefined {
-	const editorContext = contextKeyService.getContext(editor.getDomNode()!);
-	if (editorContext.getValue<boolean>(CommentContextKeys.activeEditorHasCommentingRange.key)) {
-		return [CommentAccessibilityHelpNLS.intro, CommentAccessibilityHelpNLS.addComment, CommentAccessibilityHelpNLS.nextCommentThread, CommentAccessibilityHelpNLS.previousCommentThread, CommentAccessibilityHelpNLS.nextRange, CommentAccessibilityHelpNLS.previousRange].join('\n');
-	}
-	return;
 }

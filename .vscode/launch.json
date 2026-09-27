@@ -661,7 +661,7 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceRoot}/extensions/debug-auto-launch"
+				"--extensionDevelopmentPath=${workspaceRoot}/extensions/markdown-language-features"
 			]
 		},
 		{

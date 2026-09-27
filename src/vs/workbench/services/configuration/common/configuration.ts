@@ -21,8 +21,6 @@ export const profileSettingsSchemaId = 'vscode://schemas/settings/profile';
 export const machineSettingsSchemaId = 'vscode://schemas/settings/machine';
 export const workspaceSettingsSchemaId = 'vscode://schemas/settings/workspace';
 export const folderSettingsSchemaId = 'vscode://schemas/settings/folder';
-export const launchSchemaId = 'vscode://schemas/launch';
-export const tasksSchemaId = 'vscode://schemas/tasks';
 
 export const APPLICATION_SCOPES = [ConfigurationScope.APPLICATION, ConfigurationScope.APPLICATION_MACHINE];
 export const PROFILE_SCOPES = [ConfigurationScope.MACHINE, ConfigurationScope.WINDOW, ConfigurationScope.RESOURCE, ConfigurationScope.LANGUAGE_OVERRIDABLE, ConfigurationScope.MACHINE_OVERRIDABLE];

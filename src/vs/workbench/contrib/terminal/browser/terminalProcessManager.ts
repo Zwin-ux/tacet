@@ -33,7 +33,6 @@ import { IWorkbenchEnvironmentService } from '../../../services/environment/comm
 import { IHistoryService } from '../../../services/history/common/history.js';
 import { IPathService } from '../../../services/path/common/pathService.js';
 import { IRemoteAgentService } from '../../../services/remote/common/remoteAgentService.js';
-import { TaskSettingId } from '../../tasks/common/tasks.js';
 import Severity from '../../../../base/common/severity.js';
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
 import { IEnvironmentVariableCollection, IMergedEnvironmentVariableCollection } from '../../../../platform/terminal/common/environmentVariable.js';
@@ -286,7 +285,7 @@ export class TerminalProcessManager extends Disposable implements ITerminalProce
 
 				// this is a copy of what the merged environment collection is on the remote side
 				const env = await this._resolveEnvironment(backend, variableResolver, shellLaunchConfig);
-				const shouldPersist = ((this._configurationService.getValue(TaskSettingId.Reconnection) && shellLaunchConfig.reconnectionProperties) || !shellLaunchConfig.isFeatureTerminal) && this._terminalConfigurationService.config.enablePersistentSessions && !shellLaunchConfig.isTransient;
+				const shouldPersist = !shellLaunchConfig.isFeatureTerminal && this._terminalConfigurationService.config.enablePersistentSessions && !shellLaunchConfig.isTransient;
 				if (shellLaunchConfig.attachPersistentProcess) {
 					const result = await backend.attachToProcess(shellLaunchConfig.attachPersistentProcess.id);
 					if (result) {
@@ -526,7 +525,7 @@ export class TerminalProcessManager extends Disposable implements ITerminalProce
 			workspaceFolder: this._cwdWorkspaceFolder,
 			isScreenReaderOptimized: this._accessibilityService.isScreenReaderOptimized()
 		};
-		const shouldPersist = ((this._configurationService.getValue(TaskSettingId.Reconnection) && shellLaunchConfig.reconnectionProperties) || !shellLaunchConfig.isFeatureTerminal) && this._terminalConfigurationService.config.enablePersistentSessions && !shellLaunchConfig.isTransient;
+		const shouldPersist = !shellLaunchConfig.isFeatureTerminal && this._terminalConfigurationService.config.enablePersistentSessions && !shellLaunchConfig.isTransient;
 		return await backend.createProcess(shellLaunchConfig, initialCwd, cols, rows, this._terminalConfigurationService.config.unicodeVersion, env, options, shouldPersist);
 	}
 

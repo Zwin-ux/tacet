@@ -20,12 +20,12 @@ import { CONTEXT_FIND_WIDGET_NOT_VISIBLE } from '../../../../editor/contrib/find
 import { IClipboardService } from '../../../../platform/clipboard/common/clipboardService.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { ContextKeyExpr, IContextKey, IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
-import { IContextMenuService, IContextViewService } from '../../../../platform/contextview/browser/contextView.js';
+import { IContextViewService } from '../../../../platform/contextview/browser/contextView.js';
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { KeybindingsRegistry, KeybindingWeight } from '../../../../platform/keybinding/common/keybindingsRegistry.js';
 import { ISearchConfigurationProperties } from '../../../services/search/common/search.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
-import { ContextScopedReplaceInput } from '../../../../platform/history/browser/contextScopedHistoryWidget.js';
+import { ContextScopedFindInput, ContextScopedReplaceInput } from '../../../../platform/history/browser/contextScopedHistoryWidget.js';
 import { isSearchViewFocused, getSearchView } from './searchActionsBase.js';
 import * as Constants from '../common/constants.js';
 import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
@@ -36,15 +36,8 @@ import { searchReplaceAllIcon, searchHideReplaceIcon, searchShowContextIcon, sea
 import { ToggleSearchEditorContextLinesCommandId } from '../../searchEditor/browser/constants.js';
 import { showHistoryKeybindingHint } from '../../../../platform/history/browser/historyWidgetKeybindingHint.js';
 import { defaultInputBoxStyles, defaultToggleStyles } from '../../../../platform/theme/browser/defaultStyles.js';
-import { NotebookFindFilters } from '../../notebook/browser/contrib/find/findFilters.js';
-import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
-import { IEditorService } from '../../../services/editor/common/editorService.js';
-import { NotebookEditorInput } from '../../notebook/common/notebookEditorInput.js';
-import { GroupModelChangeKind } from '../../../common/editor.js';
-import { SearchFindInput } from './searchFindInput.js';
 import { getDefaultHoverDelegate } from '../../../../base/browser/ui/hover/hoverDelegateFactory.js';
 import { IDisposable, MutableDisposable } from '../../../../base/common/lifecycle.js';
-import { NotebookFindScopeType } from '../../notebook/common/notebookCommon.js';
 
 /** Specified in searchview.css */
 const SingleLineInputHeight = 26;
@@ -62,14 +55,6 @@ export interface ISearchWidgetOptions {
 	showContextToggle?: boolean;
 	inputBoxStyles: IInputBoxStyles;
 	toggleStyles: IToggleStyles;
-	notebookOptions?: NotebookToggleState;
-}
-
-interface NotebookToggleState {
-	isInNotebookMarkdownInput: boolean;
-	isInNotebookMarkdownPreview: boolean;
-	isInNotebookCellInput: boolean;
-	isInNotebookCellOutput: boolean;
 }
 
 class ReplaceAllAction extends Action {
@@ -122,7 +107,7 @@ export class SearchWidget extends Widget {
 
 	domNode: HTMLElement | undefined;
 
-	searchInput: SearchFindInput | undefined;
+	searchInput: ContextScopedFindInput | undefined;
 	searchInputFocusTracker: dom.IFocusTracker | undefined;
 	private searchInputBoxFocused: IContextKey<boolean>;
 
@@ -179,7 +164,6 @@ export class SearchWidget extends Widget {
 	private showContextToggle!: Toggle;
 	public contextLinesInput!: InputBox;
 
-	private _notebookFilters: NotebookFindFilters;
 	private readonly _toggleReplaceButtonListener: MutableDisposable<IDisposable>;
 
 	constructor(
@@ -191,44 +175,11 @@ export class SearchWidget extends Widget {
 		@IClipboardService private readonly clipboardServce: IClipboardService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IAccessibilityService private readonly accessibilityService: IAccessibilityService,
-		@IContextMenuService private readonly contextMenuService: IContextMenuService,
-		@IInstantiationService private readonly instantiationService: IInstantiationService,
-		@IEditorService private readonly editorService: IEditorService,
 	) {
 		super();
 		this.replaceActive = Constants.SearchContext.ReplaceActiveKey.bindTo(this.contextKeyService);
 		this.searchInputBoxFocused = Constants.SearchContext.SearchInputBoxFocusedKey.bindTo(this.contextKeyService);
 		this.replaceInputBoxFocused = Constants.SearchContext.ReplaceInputBoxFocusedKey.bindTo(this.contextKeyService);
-
-		const notebookOptions = options.notebookOptions ??
-		{
-			isInNotebookMarkdownInput: true,
-			isInNotebookMarkdownPreview: true,
-			isInNotebookCellInput: true,
-			isInNotebookCellOutput: true
-		};
-		this._notebookFilters = this._register(
-			new NotebookFindFilters(
-				notebookOptions.isInNotebookMarkdownInput,
-				notebookOptions.isInNotebookMarkdownPreview,
-				notebookOptions.isInNotebookCellInput,
-				notebookOptions.isInNotebookCellOutput,
-				{ findScopeType: NotebookFindScopeType.None }
-			));
-
-		this._register(
-			this._notebookFilters.onDidChange(() => {
-				if (this.searchInput) {
-					this.searchInput.updateFilterStyles();
-				}
-			}));
-		this._register(this.editorService.onDidEditorsChange((e) => {
-			if (this.searchInput &&
-				e.event.editor instanceof NotebookEditorInput &&
-				(e.event.kind === GroupModelChangeKind.EDITOR_OPEN || e.event.kind === GroupModelChangeKind.EDITOR_CLOSE)) {
-				this.searchInput.filterVisible = this._hasNotebookOpen();
-			}
-		}));
 
 		this._replaceHistoryDelayer = new Delayer<void>(500);
 		this._toggleReplaceButtonListener = this._register(new MutableDisposable<IDisposable>());
@@ -243,15 +194,6 @@ export class SearchWidget extends Widget {
 
 		this._register(this.accessibilityService.onDidChangeScreenReaderOptimized(() => this.updateAccessibilitySupport()));
 		this.updateAccessibilitySupport();
-	}
-
-	private _hasNotebookOpen(): boolean {
-		const editors = this.editorService.editors;
-		return editors.some(editor => editor instanceof NotebookEditorInput);
-	}
-
-	getNotebookFilters() {
-		return this._notebookFilters;
 	}
 
 	focus(select: boolean = true, focusReplace: boolean = false, suppressGlobalSearchBuffer = false): void {
@@ -460,15 +402,11 @@ export class SearchWidget extends Widget {
 		const searchInputContainer = dom.append(parent, dom.$('.search-container.input-box'));
 
 		this.searchInput = this._register(
-			new SearchFindInput(
+			new ContextScopedFindInput(
 				searchInputContainer,
 				this.contextViewService,
 				inputOptions,
-				this.contextKeyService,
-				this.contextMenuService,
-				this.instantiationService,
-				this._notebookFilters,
-				this._hasNotebookOpen()
+				this.contextKeyService
 			)
 		);
 
