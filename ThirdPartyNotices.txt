@@ -3445,9 +3445,9 @@ TACET ADDITIONS
 The entries above are generated from upstream Code OSS (Microsoft) and
 describe upstream's dependency set. The entries below cover third-party
 components that Tacet adds. They are bundled into the Tacet welcome
-extension (extensions/margin-welcome/media/welcome.js and welcome.css) or
+extension (extensions/tacet-welcome/media/welcome.js and welcome.css) or
 shipped as fonts. Versions are those locked in
-extensions/margin-welcome/webview/package-lock.json.
+extensions/tacet-welcome/webview/package-lock.json.
 =========================================================
 
 ---------------------------------------------------------
@@ -3579,7 +3579,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 Animate UI components (registry copy, lightly adapted)
 https://animate-ui.com
-Files: extensions/margin-welcome/webview/src/components/animate-ui/
+Files: extensions/tacet-welcome/webview/src/components/animate-ui/
 
 These files are NOT plain MIT. They are under "MIT + Commons Clause".
 Tacet uses them as part of an application, as the license permits. Do not
