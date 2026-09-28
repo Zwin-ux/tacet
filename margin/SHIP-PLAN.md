@@ -58,6 +58,23 @@ Each is an acceptance check on the milestone named.
 
 Rulings on the research's contradictions: source view is not an Extra (C1); first boot warns when Documents is synced by OneDrive and offers a PC-only folder (C2); the terminal is opt-in, not "one keystroke away" by default (C3); local history must be good since git is gone (C4); first launch shows the first boot, and Esc lands on a draft with no account or network (C5); downloaded `.md` files (Mark of the Web) open in Read (C10); public positioning leads with reading and safety, with "no AI" as a supporting fact (C11). Spelling (C9): owner decided 2026-09-27 — an opt-in "Check spelling" on the first-boot Extras step, off by default, squiggles only, never autocorrect.
 
+## Agent files (`design/AGENT-FILES.md`, owner direction 2026-09-27)
+
+Margin is **the plain editor for the files your agents read**: CLAUDE.md, AGENTS.md, copilot-instructions, rule files (.mdc, .instructions.md, Windsurf, Cline), Claude settings/hooks, MCP configs, commands/prompts, SKILL.md folders, subagents, GEMINI.md. AI-free: no model calls, nothing runs, no MCP discovery, no scanning of agent home folders.
+
+| # | Feature | Milestone |
+| --- | --- | --- |
+| AF1 | Recognition by path (right mode, `.mdc` and `llms.txt` as Markdown), no new chrome | M6 |
+| AF2 | Front matter as an editable property block in Write; raw YAML in Code; byte-exact round-trip over a 300-file corpus | M6 |
+| AF3 | Spec checks as quiet notices with one-click fixes; never block save | M6 |
+| AF4 | Safety: skill scripts never run; hidden Unicode shown and removable (Rules File Backdoor); HTML comments visible; secret-looking keys in MCP configs flagged | M6 |
+| AF5 | Length counts in the title menu; notice at 90 % of a published limit | M6 |
+| AF6 | New from template (skill, AGENTS.md, CLAUDE.md, rule per tool, prompt, subagent); static text | M7 |
+| AF7 | Skill folder view + "Agent files" shelf section; link-aware skill rename; follow `@path`, `${CLAUDE_SKILL_DIR}`, `#file:`; broken-link notice | M7 |
+| AF8 | Local JSON schemas for MCP and Claude settings; zero network; Ctrl+P finds a skill by `name` | M7 |
+
+Coordinator rulings (owner may override): the "Agent files" shelf section appears automatically only when a folder the user opened contains such files, with a setting to hide it (contextual, not an always-on extra, so R9 holds); the section is called "Agent files"; bundle the SchemaStore Claude settings schema (Apache-2.0, keep its notice) and refresh it each release.
+
 ## Milestones and gates
 
 | # | Milestone | What "done" means (gate) | State |
