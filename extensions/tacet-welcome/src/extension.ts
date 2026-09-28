@@ -206,7 +206,7 @@ class FirstBoot {
 				extrasLine: t('All are off. You can turn them on later in Settings.'),
 				statusLine: t('Show a status line'),
 				lineNumbers: t('Show line numbers in Code view'),
-				terminal: t('Open a terminal with Ctrl+`'),
+				terminal: process.platform === 'darwin' ? t('Open a terminal with Control-`') : t('Open a terminal with Ctrl+`'),
 				spelling: t('Check spelling'),
 				startWriting: t('Start writing'),
 			},
