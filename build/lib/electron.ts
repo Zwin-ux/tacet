@@ -14,7 +14,6 @@ import { getVersion } from './getVersion.ts';
 import { downloadFeedPackage } from './azureFeed.ts';
 import electron from '@vscode/gulp-electron';
 
-type DarwinDocumentSuffix = 'document' | 'script' | 'file' | 'source code';
 type DarwinDocumentType = {
 	name: string;
 	role: string;
@@ -23,10 +22,6 @@ type DarwinDocumentType = {
 	iconFile: string;
 	utis?: string[];
 };
-
-function isDocumentSuffix(str?: string): str is DarwinDocumentSuffix {
-	return str === 'document' || str === 'script' || str === 'file' || str === 'source code';
-}
 
 const root = path.dirname(path.dirname(import.meta.dirname));
 const product = JSON.parse(fs.readFileSync(path.join(root, 'product.json'), 'utf8'));
@@ -45,62 +40,19 @@ function createTemplate(input: string): (params: Record<string, string>) => stri
 const darwinCreditsTemplate = product.darwinCredits && createTemplate(fs.readFileSync(path.join(root, product.darwinCredits), 'utf8'));
 
 /**
- * Generate a `DarwinDocumentType` given a list of file extensions, an icon name, and an optional suffix or file type name.
- * @param extensions A list of file extensions, such as `['bat', 'cmd']`
- * @param icon A sentence-cased file type name that matches the lowercase name of a darwin icon resource.
- * For example, `'HTML'` instead of `'html'`, or `'Java'` instead of `'java'`.
- * This parameter is lowercased before it is used to reference an icon file.
- * @param nameOrSuffix An optional suffix or a string to use as the file type. If a suffix is provided,
- * it is used with the icon parameter to generate a file type string. If nothing is provided,
- * `'document'` is used with the icon parameter to generate file type string.
- *
- * For example, if you call `darwinBundleDocumentType(..., 'HTML')`, the resulting file type is `"HTML document"`,
- * and the `'html'` darwin icon is used.
- *
- * If you call `darwinBundleDocumentType(..., 'Javascript', 'file')`, the resulting file type is `"Javascript file"`.
- * and the `'javascript'` darwin icon is used.
- *
- * If you call `darwinBundleDocumentType(..., 'bat', 'Windows command script')`, the file type is `"Windows command script"`,
- * and the `'bat'` darwin icon is used.
+ * Tacet is a notes app: it owns Markdown and plain text (role `Editor`) and is only offered for a
+ * short list of text-ish types (role `Viewer`, which Launch Services ranks below `Editor`).
+ * `@vscode/gulp-electron` cannot emit `LSHandlerRank`, so `Viewer` stands in for `Alternate`.
  */
-function darwinBundleDocumentType(extensions: string[], icon: string, nameOrSuffix?: string | DarwinDocumentSuffix, utis?: string[]): DarwinDocumentType {
-	// If given a suffix, generate a name from it. If not given anything, default to 'document'
-	if (isDocumentSuffix(nameOrSuffix) || !nameOrSuffix) {
-		nameOrSuffix = icon.charAt(0).toUpperCase() + icon.slice(1) + ' ' + (nameOrSuffix ?? 'document');
-	}
-
+function darwinBundleDocumentType(name: string, extensions: string[], icon: string, role: 'Editor' | 'Viewer', utis?: string[]): DarwinDocumentType {
 	return {
-		name: nameOrSuffix,
-		role: 'Editor',
-		ostypes: ['TEXT', 'utxt', 'TUTX', '****'],
+		name,
+		role,
+		ostypes: ['TEXT', 'utxt', 'TUTX'],
 		extensions,
-		iconFile: 'resources/darwin/' + icon.toLowerCase() + '.icns',
+		iconFile: 'resources/darwin/' + icon + '.icns',
 		utis
 	};
-}
-
-/**
- * Generate several `DarwinDocumentType`s with unique names and a shared icon.
- * @param types A map of file type names to their associated file extensions.
- * @param icon A darwin icon resource to use. For example, `'HTML'` would refer to `resources/darwin/html.icns`
- *
- * Examples:
- * ```
- * darwinBundleDocumentTypes({ 'C header file': 'h', 'C source code': 'c' },'c')
- * darwinBundleDocumentTypes({ 'React source code': ['jsx', 'tsx'] }, 'react')
- * ```
- */
-function darwinBundleDocumentTypes(types: { [name: string]: string | string[] }, icon: string): DarwinDocumentType[] {
-	return Object.keys(types).map((name: string): DarwinDocumentType => {
-		const extensions = types[name];
-		return {
-			name,
-			role: 'Editor',
-			ostypes: ['TEXT', 'utxt', 'TUTX', '****'],
-			extensions: Array.isArray(extensions) ? extensions : [extensions],
-			iconFile: 'resources/darwin/' + icon + '.icns'
-		};
-	});
 }
 
 const { electronVersion, msBuildId } = getElectronVersion();
@@ -152,82 +104,13 @@ export const config = {
 	darwinHelpBookFolder: 'VS Code HelpBook',
 	darwinHelpBookName: 'VS Code HelpBook',
 	darwinBundleDocumentTypes: [
-		...darwinBundleDocumentTypes({ 'C header file': 'h', 'C source code': 'c' }, 'c'),
-		...darwinBundleDocumentTypes({ 'Git configuration file': ['gitattributes', 'gitconfig', 'gitignore'] }, 'config'),
-		...darwinBundleDocumentTypes({ 'HTML template document': ['asp', 'aspx', 'cshtml', 'jshtm', 'jsp', 'phtml', 'shtml'] }, 'html'),
-		darwinBundleDocumentType(['bat', 'cmd'], 'bat', 'Windows command script'),
-		darwinBundleDocumentType(['bowerrc'], 'Bower'),
-		darwinBundleDocumentType(['config', 'editorconfig', 'ini', 'cfg'], 'config', 'Configuration file'),
-		darwinBundleDocumentType(['hh', 'hpp', 'hxx', 'h++'], 'cpp', 'C++ header file'),
-		darwinBundleDocumentType(['cc', 'cpp', 'cxx', 'c++'], 'cpp', 'C++ source code'),
-		darwinBundleDocumentType(['m'], 'default', 'Objective-C source code'),
-		darwinBundleDocumentType(['mm'], 'cpp', 'Objective-C++ source code'),
-		darwinBundleDocumentType(['cs', 'csx'], 'csharp', 'C# source code'),
-		darwinBundleDocumentType(['css'], 'css', 'CSS'),
-		darwinBundleDocumentType(['go'], 'go', 'Go source code'),
-		darwinBundleDocumentType(['htm', 'html', 'xhtml'], 'HTML'),
-		darwinBundleDocumentType(['jade'], 'Jade'),
-		darwinBundleDocumentType(['jav', 'java'], 'Java'),
-		darwinBundleDocumentType(['js', 'jscsrc', 'jshintrc', 'mjs', 'cjs'], 'Javascript', 'file'),
-		darwinBundleDocumentType(['json'], 'JSON'),
-		darwinBundleDocumentType(['less'], 'Less'),
-		darwinBundleDocumentType(['markdown', 'md', 'mdoc', 'mdown', 'mdtext', 'mdtxt', 'mdwn', 'mkd', 'mkdn'], 'Markdown'),
-		darwinBundleDocumentType(['php'], 'PHP', 'source code'),
-		darwinBundleDocumentType(['ps1', 'psd1', 'psm1'], 'Powershell', 'script'),
-		darwinBundleDocumentType(['py', 'pyi'], 'Python', 'script'),
-		darwinBundleDocumentType(['gemspec', 'rb', 'erb'], 'Ruby', 'source code'),
-		darwinBundleDocumentType(['scss', 'sass'], 'SASS', 'file'),
-		darwinBundleDocumentType(['sql'], 'SQL', 'script'),
-		darwinBundleDocumentType(['ts'], 'TypeScript', 'file'),
-		darwinBundleDocumentType(['tsx', 'jsx'], 'React', 'source code'),
-		darwinBundleDocumentType(['vue'], 'Vue', 'source code'),
-		darwinBundleDocumentType(['ascx', 'csproj', 'dtd', 'plist', 'wxi', 'wxl', 'wxs', 'xml', 'xaml'], 'XML'),
-		darwinBundleDocumentType(['eyaml', 'eyml', 'yaml', 'yml'], 'YAML'),
-		darwinBundleDocumentType([
-			'bash', 'bash_login', 'bash_logout', 'bash_profile', 'bashrc',
-			'profile', 'rhistory', 'rprofile', 'sh', 'zlogin', 'zlogout',
-			'zprofile', 'zsh', 'zshenv', 'zshrc'
-		], 'Shell', 'script'),
-		// Default icon with specified names
-		...darwinBundleDocumentTypes({
-			'Clojure source code': ['clj', 'cljs', 'cljx', 'clojure'],
-			'VS Code workspace file': 'code-workspace',
-			'CoffeeScript source code': 'coffee',
-			'Comma Separated Values': 'csv',
-			'CMake script': 'cmake',
-			'Dart script': 'dart',
-			'Diff file': 'diff',
-			'Dockerfile': 'dockerfile',
-			'Gradle file': 'gradle',
-			'Groovy script': 'groovy',
-			'Makefile': ['makefile', 'mk'],
-			'Lua script': 'lua',
-			'Pug document': 'pug',
-			'Jupyter': 'ipynb',
-			'Lockfile': 'lock',
-			'Log file': 'log',
-			'Plain Text File': 'txt',
-			'Xcode project file': 'xcodeproj',
-			'Xcode workspace file': 'xcworkspace',
-			'Visual Basic script': 'vb',
-			'R source code': 'r',
-			'Rust source code': 'rs',
-			'Restructured Text document': 'rst',
-			'LaTeX document': ['tex', 'cls'],
-			'F# source code': 'fs',
-			'F# signature file': 'fsi',
-			'F# script': ['fsx', 'fsscript'],
-			'SVG document': ['svg'],
-			'TOML document': 'toml',
-			'Swift source code': 'swift',
-		}, 'default'),
-		// Default icon with default name
-		darwinBundleDocumentType([
-			'containerfile', 'ctp', 'dot', 'edn', 'handlebars', 'hbs', 'ml', 'mli',
-			'pl', 'pl6', 'pm', 'pm6', 'pod', 'pp', 'properties', 'psgi', 'rt', 't'
-		], 'default', product.nameLong + ' document'),
-		// Folder support ()
-		darwinBundleDocumentType([], 'default', 'Folder', ['public.folder'])
+		// Owned: what Finder opens with a double-click. `.mdc` is the Cursor rule format (Markdown).
+		darwinBundleDocumentType('Markdown document', ['md', 'markdown', 'mdown', 'mkd', 'mkdn', 'mdwn', 'mdtext', 'mdtxt', 'mdoc', 'mdc'], 'tacet-md', 'Editor'),
+		darwinBundleDocumentType('Plain text document', ['txt', 'text', 'log'], 'tacet-txt', 'Editor'),
+		// Offered in Open With only; Tacet's Code mode edits these but never claims them.
+		darwinBundleDocumentType('Data and configuration file', ['json', 'yaml', 'yml', 'toml', 'ini', 'csv'], 'tacet-txt', 'Viewer'),
+		// Folder support (drop a folder on the Dock icon)
+		darwinBundleDocumentType('Folder', [], 'default', 'Editor', ['public.folder'])
 	],
 	darwinBundleURLTypes: [{
 		role: 'Viewer',
