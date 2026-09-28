@@ -40,7 +40,9 @@ const skipPrelaunch = process.argv.includes('--skip-prelaunch');
 const onlyArg = process.argv.indexOf('--only');
 const only = onlyArg > 0 ? process.argv[onlyArg + 1].split(',') : undefined;
 const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-const scratch = join(tmpdir(), `tacet-${tag}-${stamp}`);
+// macOS caps Unix socket paths at 103 chars and Electron puts its IPC socket in the profile,
+// so keep the scratch root short there (os.tmpdir() under /var/folders is already ~50 chars).
+const scratch = process.platform === 'darwin' ? join('/tmp', `td-${stamp.slice(-6)}`) : join(tmpdir(), `tacet-${tag}-${stamp}`);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const isMac = process.platform === 'darwin';
@@ -88,7 +90,7 @@ function makeFixtures(sc, files) {
 // ---- Scratch profile + app harness ------------------------------------------------------------
 
 function mkScenario(name) {
-	const dir = underScratch(join(scratch, name));
+	const dir = underScratch(join(scratch, `s${allScenarios.length + 1}`)); // short: see scratch
 	const sc = { name, dir, profile: join(dir, 'profile'), ext: join(dir, 'ext'), fixtures: join(dir, 'fixtures'), launches: 0, apps: [] };
 	allScenarios.push(sc);
 	for (const d of [sc.profile, sc.ext, sc.fixtures]) {
@@ -108,7 +110,6 @@ function writeSettings(profile) {
 function freePort() {
 	return new Promise((res, rej) => {
 		const server = createServer();
-		server.unref();
 		server.on('error', rej);
 		server.listen(0, '127.0.0.1', () => {
 			const { port } = server.address();
@@ -191,22 +192,27 @@ async function launch(sc, { open = [], profile = sc.profile } = {}) {
 	return app;
 }
 
-// Normal exit through the Quit command (palette), falling back to Browser.close; reports which worked.
+// Normal exit: 'Close Window' from the palette (the palette has no Quit on macOS; Cmd+Q is a native menu
+// accelerator CDP keys cannot reach). Closing the last window quits on Windows and Linux; on macOS the app
+// stays running without a window, as Mac apps do, and is then stopped. Hot exit backs drafts up on close.
+// Falls back to Browser.close; reports which worked.
 async function quitApp(app) {
 	const t0 = Date.now();
-	const gone = () => app.disconnected || app.exited;
+	const gone = () => app.disconnected || app.exited || app.page.isClosed();
 	const waitGone = async ms => { for (let end = Date.now() + ms; Date.now() < end && !gone();) { await sleep(300); } return gone(); };
-	let method = 'palette-quit';
+	let method = 'palette-close-window';
+	// Each press gets a deadline: once the app quits, Playwright may never settle a pending call.
+	const soon = p => Promise.race([p.catch(() => undefined), sleep(1500)]);
 	try {
-		await app.page.keyboard.press(`${KEY.mod}+Shift+p`);
+		await soon(app.page.keyboard.press(`${KEY.mod}+Shift+p`));
 		await sleep(700);
-		await app.page.keyboard.type(isWin ? 'Exit' : 'Quit', { delay: 30 });
+		await soon(app.page.keyboard.type('Close Window', { delay: 30 }));
 		await sleep(700);
-		await app.page.keyboard.press('Enter');
+		await soon(app.page.keyboard.press('Enter'));
 	} catch { /* fall through */ }
 	if (!await waitGone(30_000)) {
 		method = 'Browser.close';
-		try { await (await app.browser.newBrowserCDPSession()).send('Browser.close'); } catch { /* ignore */ }
+		await soon((async () => (await app.browser.newBrowserCDPSession()).send('Browser.close'))());
 		if (!await waitGone(15_000)) {
 			method = 'killed (quit did not exit)';
 		}
@@ -730,6 +736,7 @@ async function main() {
 	results.failed = Object.entries(results.checks).filter(([, c]) => c.status !== 'PASS').map(([n]) => n);
 	results.finished = new Date().toISOString();
 	writeFileSync(join(evidence, `${tag}-durability.json`), JSON.stringify(results, null, '\t') + '\n');
+	resultsWritten = true;
 	if (results.failed.length) {
 		console.error(`Durability ${tag} FAILED: ${results.failed.join(', ')}`);
 		process.exitCode = 1;
@@ -739,6 +746,17 @@ async function main() {
 process.on('exit', () => { // last resort: restore permissions on the read-only fixture
 	for (const fn of cleanups) {
 		try { fn(); } catch { /* ignore */ }
+	}
+});
+
+// A pending Playwright call on a closed app can leave nothing to keep Node running; without this guard
+// the gate would end silently with exit code 0 (a false pass). Fail instead if no results were written.
+let resultsWritten = false;
+process.on('beforeExit', () => {
+	if (!resultsWritten) {
+		console.error('Durability gate ended before writing results (a CDP call never settled).');
+		process.exitCode = 1;
+		resultsWritten = true;
 	}
 });
 
