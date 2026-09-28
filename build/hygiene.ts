@@ -23,6 +23,8 @@ const copyrightHeaderLines = [
 	' *--------------------------------------------------------------------------------------------*/',
 ];
 
+const tacetCopyrightLine = ' *  Copyright (c) Mazen Zwin and Tacet contributors. All rights reserved.';
+
 interface VinylFileWithLines extends VinylFile {
 	__lines: string[];
 }
@@ -148,7 +150,8 @@ export function hygiene(some: NodeJS.ReadWriteStream | string[] | undefined, run
 		const lines = file.__lines;
 
 		for (let i = 0; i < copyrightHeaderLines.length; i++) {
-			if (lines[i] !== copyrightHeaderLines[i]) {
+			// Tacet: files written for Tacet carry its own copyright line; upstream files keep Microsoft's.
+			if (lines[i] !== copyrightHeaderLines[i] && !(i === 1 && lines[i] === tacetCopyrightLine)) {
 				console.error(file.relative + ': Missing or bad copyright statement');
 				errorCount++;
 				break;

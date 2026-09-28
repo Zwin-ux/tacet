@@ -143,8 +143,8 @@ const electronAssetResolver = electronFeed
 export const config = {
 	version: electronVersion,
 	productAppName: product.nameLong,
-	companyName: 'Microsoft Corporation',
-	copyright: 'Copyright (C) 2026 Microsoft. All rights reserved',
+	companyName: 'Mazen Zwin',
+	copyright: 'Copyright (C) 2026 Mazen Zwin and Tacet contributors. Based on Code - OSS, Copyright (C) Microsoft Corporation. MIT License.',
 	darwinExecutable: product.nameShort,
 	darwinIcon: 'resources/darwin/code.icns',
 	darwinBundleIdentifier: product.darwinBundleIdentifier,

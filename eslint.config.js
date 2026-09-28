@@ -150,6 +150,28 @@ export default defineConfig(
 			]
 		},
 	},
+	// Tacet-authored code carries Tacet's copyright line (upstream files keep Microsoft's).
+	{
+		files: [
+			'src/vs/workbench/contrib/margin/**/*.{js,mjs,ts,tsx,mts}',
+			'extensions/margin/**/*.{js,mjs,ts,tsx,mts}',
+			'extensions/margin-welcome/**/*.{js,mjs,ts,tsx,mts}',
+			'tacet/tools/**/*.{js,mjs,ts,mts}',
+		],
+		ignores: ['extensions/margin-welcome/webview/src/components/animate-ui/**'],
+		rules: {
+			'header/header': [
+				2,
+				'block',
+				[
+					'---------------------------------------------------------------------------------------------',
+					' *  Copyright (c) Mazen Zwin and Tacet contributors. All rights reserved.',
+					' *  Licensed under the MIT License. See License.txt in the project root for license information.',
+					' *--------------------------------------------------------------------------------------------'
+				]
+			]
+		}
+	},
 	// Disallow bracket notation for property names that can use dot notation.
 	{
 		files: [
