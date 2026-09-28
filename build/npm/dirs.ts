@@ -32,7 +32,6 @@ export const dirs = [
 	'extensions/media-preview',
 	'extensions/merge-conflict',
 	'extensions/mermaid-markdown-features',
-	'extensions/microsoft-authentication',
 	'extensions/php-language-features',
 	'extensions/references-view',
 	'extensions/search-result',

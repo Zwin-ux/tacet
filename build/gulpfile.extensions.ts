@@ -70,7 +70,6 @@ const compilations = [
 	'extensions/merge-conflict/tsconfig.json',
 	'extensions/mermaid-markdown-features/tsconfig.json',
 	'extensions/terminal-suggest/tsconfig.json',
-	'extensions/microsoft-authentication/tsconfig.json',
 	'extensions/php-language-features/tsconfig.json',
 	'extensions/references-view/tsconfig.json',
 	'extensions/search-result/tsconfig.json',
