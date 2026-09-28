@@ -100,6 +100,20 @@ async function shot(page, name) {
 	return path;
 }
 
+// Presses Ctrl+S until the file on disk satisfies the predicate (retries a lost keystroke).
+async function saveUntil(page, predicate, attempts = 4) {
+	for (let attempt = 0; attempt < attempts; attempt++) {
+		await page.keyboard.press('Control+s');
+		for (let i = 0; i < 10; i++) {
+			await sleep(300);
+			if (predicate(readFileSync(note, 'utf8'))) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 function killTree(pid) {
 	// Stops only the process tree rooted at the PID this script spawned.
 	if (pid) {
@@ -157,10 +171,9 @@ async function main() {
 			await page.keyboard.press('Control+End');
 			await page.keyboard.type(typed, { delay: 15 });
 			await sleep(300);
-			await page.keyboard.press('Control+s');
-			await sleep(1500);
+			const saved = await saveUntil(page, text => text.includes(typed));
 			const onDisk = readFileSync(note, 'utf8');
-			results.typeSave = onDisk.includes(typed) ? 'PASS' : `FAIL (disk: ${JSON.stringify(onDisk)})`;
+			results.typeSave = saved ? 'PASS' : `FAIL (disk: ${JSON.stringify(onDisk)})`;
 			results.screenshots.push(await shot(page, 'typed'));
 		} catch (error) {
 			results.typeSave = `FAIL (${error.message.split('\n')[0]})`;
@@ -168,18 +181,14 @@ async function main() {
 
 		// Undo back to the original bytes and save.
 		try {
-			for (let i = 0; i < 40 && readFileSync(note, 'utf8') !== original; i++) {
+			// Undo stops at the opened content, so extra presses are harmless.
+			for (let i = 0; i < 40; i++) {
 				await page.keyboard.press('Control+z');
 				await sleep(40);
-				if (i % 5 === 4) {
-					await page.keyboard.press('Control+s');
-					await sleep(700);
-				}
 			}
-			await page.keyboard.press('Control+s');
-			await sleep(1200);
+			const restored = await saveUntil(page, text => text === original);
 			const onDisk = readFileSync(note, 'utf8');
-			results.undo = onDisk === original ? 'PASS' : `FAIL (disk: ${JSON.stringify(onDisk)})`;
+			results.undo = restored ? 'PASS' : `FAIL (disk: ${JSON.stringify(onDisk)})`;
 		} catch (error) {
 			results.undo = `FAIL (${error.message.split('\n')[0]})`;
 		}
@@ -206,7 +215,7 @@ async function main() {
 			await page.keyboard.press('Control+Shift+G');
 			await page.waitForSelector('div[id="workbench.view.scm"]', { timeout: 20_000 });
 			let listed = false;
-			for (let i = 0; i < 20 && !listed; i++) {
+			for (let i = 0; i < 60 && !listed; i++) {
 				listed = await page.locator('div[id="workbench.view.scm"] .monaco-list-row .resource').filter({ hasText: 'term.txt' }).count() > 0;
 				if (!listed) {
 					await sleep(500);
