@@ -37,7 +37,7 @@ const original = '# Smoke note\n\nFirst line of the note.\n';
 const typed = 'Typed by the smoke gate.';
 
 const results = { tag, started: new Date().toISOString() };
-const REQUIRED_CHECKS = ['launch', 'typeSave', 'undo', 'terminal', 'git'];
+const REQUIRED_CHECKS = ['launch', 'writingLayout', 'typeSave', 'undo', 'terminal', 'git'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function freePort() {
@@ -159,7 +159,15 @@ async function main() {
 		await sleep(6000);
 		results.screenshots = [await shot(page, 'launch')];
 		// The dev window takes focus when it opens; physical keystrokes typed elsewhere can land in it.
-		results.foreignInputBeforeTyping = await page.locator('.tab.dirty').count() > 0;
+		results.foreignInputBeforeTyping = (await page.title()).startsWith('●');
+
+		// Writing layout by default: no status bar, no panel, no tabs.
+		const layout = {
+			statusBarVisible: await page.locator('.part.statusbar').first().isVisible().catch(() => false),
+			panelVisible: await page.locator('.part.panel').first().isVisible().catch(() => false),
+			tabs: await page.locator('.tabs-container .tab').count()
+		};
+		results.writingLayout = !layout.statusBarVisible && !layout.panelVisible && layout.tabs === 0 ? 'PASS' : `FAIL (${JSON.stringify(layout)})`;
 
 		// Type and save.
 		try {

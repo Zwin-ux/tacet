@@ -42,3 +42,9 @@
 	border-color: var(--vscode-checkbox-selectBorder) !important;
 	color: var(--vscode-checkbox-foreground) !important;
 }
+
+/* Empty editor (design guide 9.1): a blank page, no product letterpress */
+
+.monaco-workbench .part.editor > .content .editor-group-container > .editor-group-watermark-wrapper .editor-group-watermark .letterpress {
+	display: none;
+}
