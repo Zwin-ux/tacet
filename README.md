@@ -6,6 +6,32 @@ An AI-free, notes-first desktop editor built from Code OSS. Paper-white, precise
 
 This repository currently contains the **requirements, design system, generated concepts, interactive design study, implementation plan, and pinned upstream source**. It is **not a built or release-qualified desktop app**.
 
+## Build and run
+
+One branch builds both platforms. Node must match `.nvmrc` (24.18.0).
+
+**macOS** (Apple silicon or Intel; Xcode command line tools):
+
+```sh
+nvm use                                   # 24.18.0
+VSCODE_INSTALL_CONCURRENCY=3 npm ci
+npm run compile
+./scripts/code.sh                         # dev build
+node margin/tools/smoke.mjs mac --skip-prelaunch   # smoke gate
+```
+
+**Windows** (x64; Visual Studio 2022 with C++ and Spectre-mitigated libraries, see [STATE](margin/STATE.md)):
+
+```powershell
+nvm use 24.18.0
+$env:VSCODE_INSTALL_CONCURRENCY=3; npm ci
+npm run compile
+.\scripts\code.bat
+node margin\tools\smoke.mjs win --skip-prelaunch
+```
+
+Package: `npm run gulp vscode-darwin-arm64-min` (macOS) or `npm run gulp vscode-win32-x64-min` (Windows).
+
 ## Start here
 
 1. [Opus build handoff](margin/OPUS-HANDOFF.md): the execution prompt and first assignment.
@@ -34,7 +60,7 @@ Images are generated concept art. Written specifications govern behavior and mea
 
 ## Decisions already made
 
-- Windows first. Apple-level care adapted to Windows conventions.
+- Windows and macOS from one branch. Apple-level care adapted to each platform's conventions.
 - White is the default identity. Accessibility and system high contrast still work.
 - No sign-in, mandatory vault, cloud service, or AI features.
 - Real files; original paths, text, encodings, and Markdown remain under the user's control.

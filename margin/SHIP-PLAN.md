@@ -17,6 +17,8 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 | 2026-09-27 | First boot is a React webview built with Animate UI + Motion (`extensions/margin-welcome`). Workbench chrome keeps plain CSS motion. |
 | 2026-09-27 | **As simple as possible: no status bar by default.** The window is the title bar and the page. Save state moves to the title (dirty dot next to the document name). Power features are opt-in during first boot, all off by default. |
 | 2026-09-27 | Design uses Codex (concept art) and Higgsfield (motion, custom assets, hero) freely. |
+| 2026-09-28 | **macOS is a first-class target next to Windows.** Open source ships as **one `main` branch** that builds both, with a Mac and a Windows quickstart in the README and a .dmg + Windows installer per release. No per-platform branches. |
+| 2026-09-28 | Margin is the flagship project on mazenzwin.com (replaces Atlas). |
 
 ## Open-source launch (owner, 2026-09-27)
 
