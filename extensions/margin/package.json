@@ -17,7 +17,10 @@
       "workbench.preferredLightColorTheme": "Margin Light",
       "workbench.preferredDarkColorTheme": "Margin Dark",
       "workbench.preferredHighContrastLightColorTheme": "Margin High Contrast Light",
-      "window.autoDetectColorScheme": true
+      "window.autoDetectColorScheme": true,
+      "window.commandCenter": false,
+      "workbench.layoutControl.enabled": false,
+      "workbench.navigationControl.enabled": false
     }
   },
   "repository": {
