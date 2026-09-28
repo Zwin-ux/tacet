@@ -315,7 +315,7 @@ const nativeExtensions = [
 ];
 
 const excludedExtensions = [
-	'copilot', // Margin is AI-free: never package a copilot extension, even if one reappears
+	'copilot', // Tacet is AI-free: never package a copilot extension, even if one reappears
 	'vscode-api-tests',
 	'vscode-colorize-tests',
 	'vscode-colorize-perf-tests',

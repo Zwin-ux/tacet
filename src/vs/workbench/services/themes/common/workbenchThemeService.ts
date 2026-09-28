@@ -39,10 +39,10 @@ export enum ThemeSettings {
 }
 
 export namespace ThemeSettingDefaults {
-	export const COLOR_THEME_DARK = 'Margin Dark';
-	export const COLOR_THEME_LIGHT = 'Margin Light';
+	export const COLOR_THEME_DARK = 'Tacet Dark';
+	export const COLOR_THEME_LIGHT = 'Tacet Light';
 	export const COLOR_THEME_HC_DARK = 'Default High Contrast';
-	export const COLOR_THEME_HC_LIGHT = 'Margin High Contrast Light';
+	export const COLOR_THEME_HC_LIGHT = 'Tacet High Contrast Light';
 
 	export const FILE_ICON_THEME = 'vs-seti';
 	export const PRODUCT_ICON_THEME = 'Default';

@@ -159,7 +159,7 @@ export class WorkbenchThemeService extends Disposable implements IWorkbenchTheme
 			}
 		}
 		if (!themeData) {
-			const colorScheme = this.settings.getPreferredColorScheme() ?? ColorScheme.LIGHT; // Margin: first paint is the white page
+			const colorScheme = this.settings.getPreferredColorScheme() ?? ColorScheme.LIGHT; // Tacet: first paint is the white page
 			themeData = ColorThemeData.createUnloadedThemeForThemeType(colorScheme, defaultColorMap);
 		}
 		themeData.setCustomizations(this.settings);

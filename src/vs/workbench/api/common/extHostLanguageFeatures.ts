@@ -2166,7 +2166,7 @@ export class ExtHostLanguageFeatures extends CoreDisposable implements extHostPr
 	private readonly _proxy: extHostProtocol.MainThreadLanguageFeaturesShape;
 	private readonly _adapter = new Map<number, AdapterData>();
 
-	// Margin ships no AI completion providers, so unification is permanently off.
+	// Tacet ships no AI completion providers, so unification is permanently off.
 	readonly inlineCompletionsUnificationState: vscode.InlineCompletionsUnificationState = Object.freeze({
 		codeUnification: false,
 		modelUnification: false,

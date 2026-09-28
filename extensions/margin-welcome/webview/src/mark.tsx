@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-// The animated Margin mark (design/assets/animated/margin-mark-draw.svg): pen-stroke draw once,
-// 880 ms; reduced motion: 200 ms fade. Decorative next to the "Margin" heading.
+// The animated Tacet mark (design/assets/animated/margin-mark-draw.svg): pen-stroke draw once,
+// 880 ms; reduced motion: 200 ms fade. Decorative next to the "Tacet" heading.
 
 export function MarginMark({ size = 36 }: { size?: number }) {
 	return (

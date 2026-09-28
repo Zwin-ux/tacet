@@ -149,7 +149,7 @@ export class MainThreadTextEditors implements MainThreadTextEditorsShape {
 				return constObservable(undefined);
 			}
 
-			// TextEditor - Margin has no source control, so a plain text editor has no quick diff
+			// TextEditor - Tacet has no source control, so a plain text editor has no quick diff
 			if (isITextModel(editorModel)) {
 				return constObservable(undefined);
 			}
@@ -349,7 +349,7 @@ export class MainThreadTextEditors implements MainThreadTextEditorsShape {
 			return Promise.resolve(diffEditor.getLineChanges() || []);
 		}
 
-		// Margin has no source control, so a plain text editor has no line changes
+		// Tacet has no source control, so a plain text editor has no line changes
 		return Promise.resolve([]);
 	}
 }

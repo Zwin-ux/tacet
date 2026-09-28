@@ -362,7 +362,7 @@ class Editor extends Disposable {
 				redo: () => this.#vscode.postMessage({ type: 'history', command: 'redo' }),
 			},
 		}));
-		// Margin: stop a line-end move (End) at the line break instead of past it; see
+		// Tacet: stop a line-end move (End) at the line break instead of past it; see
 		// clampLineEndMove. The capture listener runs before the controller's keydown
 		// handler and the bubble listener after it.
 		const keyboardPlatform = keyboardPlatformOf(navigator.userAgent);

@@ -24,7 +24,7 @@ function sameChord(a: Omit<KeyboardBinding, 'action'>, b: Omit<KeyboardBinding, 
 }
 
 describe('Markdown editor webview keyboard routing', () => {
-	// Regression (Margin R3): chords routed through the host arrive after the text typed
+	// Regression (Tacet R3): chords routed through the host arrive after the text typed
 	// behind them, so Ctrl+End + typing split the text ('note.T\nyped ...').
 	it('handles every editor chord in the webview and forwards none to the host', () => {
 		const bindings = webviewKeyboardRouting.keyboardProfile?.bindings ?? [];
@@ -61,7 +61,7 @@ describe('Markdown editor line-end move', () => {
 		], [true, true, true, false, false, 'windows']);
 	});
 
-	// Regression (Margin R3): End from a heading, paragraph or list item landed on the
+	// Regression (Tacet R3): End from a heading, paragraph or list item landed on the
 	// blank line after the block, so typing split the block.
 	it('stops before the line break it would cross', () => {
 		const headingEnd = note.indexOf('\n');

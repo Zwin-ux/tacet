@@ -72,7 +72,7 @@ export function isOneDrivePath(p: string, env: NodeJS.ProcessEnv): boolean {
 export async function notesLocations(env: NodeJS.ProcessEnv = process.env): Promise<NotesLocations> {
 	const documents = await documentsFolder(env);
 	const documentsNotes = path.join(documents, 'Notes');
-	const localNotes = path.join(env[ENV_HOME] || os.homedir(), 'Margin');
+	const localNotes = path.join(env[ENV_HOME] || os.homedir(), 'Tacet');
 	return {
 		documentsNotes,
 		documentsNotesExists: exists(documentsNotes),

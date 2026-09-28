@@ -21,7 +21,7 @@ export interface CenteredViewState {
 }
 
 const defaultState: CenteredViewState = {
-	targetWidth: 744, // Margin: 680 text measure + 32 on each side
+	targetWidth: 744, // Tacet: 680 text measure + 32 on each side
 	leftMarginRatio: 0.1909,
 	rightMarginRatio: 0.1909,
 };

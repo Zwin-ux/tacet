@@ -164,7 +164,7 @@ export const indentationFilter = Object.freeze<string[]>([
 	'!extensions/ipynb/notebook-out/**',
 	'!extensions/notebook-renderers/renderer-out/*.js',
 	'!extensions/simple-browser/media/*.js',
-	// Margin first boot: Animate UI registry code (MIT + Commons Clause notice kept in its folder) and the built webview bundle
+	// Tacet first boot: Animate UI registry code (MIT + Commons Clause notice kept in its folder) and the built webview bundle
 	'!extensions/margin-welcome/webview/src/components/animate-ui/**',
 	'!extensions/margin-welcome/webview/src/hooks/**',
 	'!extensions/margin-welcome/webview/src/lib/get-strict-context.tsx',
@@ -224,7 +224,7 @@ export const copyrightFilter = Object.freeze<string[]>([
 	// vendored third-party libraries
 	'!src/vs/base/common/lit-html/**',
 	'!src/vs/base/common/signals-core/**',
-	// Margin first boot: Animate UI registry code (MIT + Commons Clause notice kept in its folder) and the built webview bundle
+	// Tacet first boot: Animate UI registry code (MIT + Commons Clause notice kept in its folder) and the built webview bundle
 	'!extensions/margin-welcome/webview/src/components/animate-ui/**',
 	'!extensions/margin-welcome/webview/src/hooks/**',
 	'!extensions/margin-welcome/webview/src/lib/get-strict-context.tsx',

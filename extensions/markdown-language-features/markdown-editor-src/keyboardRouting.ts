@@ -8,7 +8,7 @@ import { commands, vscodeKeyboardProfile, type EditorControllerOptions, type Key
 /**
  * Keyboard routing for the Markdown editor webview.
  *
- * Margin: every editor chord (cursor movement, Enter, Backspace, Delete, undo, ...)
+ * Tacet: every editor chord (cursor movement, Enter, Backspace, Delete, undo, ...)
  * runs synchronously in the webview, in the same event order as typed text.
  *
  * The upstream wiring forwarded these chords to the workbench keybinding service,

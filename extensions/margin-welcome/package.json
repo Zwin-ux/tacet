@@ -32,16 +32,16 @@
       {
         "command": "margin.firstBoot.show",
         "title": "%command.showSetup%",
-        "category": "Margin"
+        "category": "Tacet"
       },
       {
         "command": "margin.firstBoot.showImportReport",
         "title": "%command.showImportReport%",
-        "category": "Margin"
+        "category": "Tacet"
       }
     ],
     "configuration": {
-      "title": "Margin",
+      "title": "Tacet",
       "properties": {
         "margin.document.fontSize": {
           "type": "number",

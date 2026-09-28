@@ -130,7 +130,7 @@ export class WorkspaceEdit implements vscode.WorkspaceEdit {
 					edit = editOrTuple;
 				}
 				if (NotebookEdit.isNotebookCellEdit(edit)) {
-					// Margin has no notebooks: notebook edits have nothing to apply to
+					// Tacet has no notebooks: notebook edits have nothing to apply to
 					continue;
 				}
 				if (SnippetTextEdit.isSnippetTextEdit(edit)) {

@@ -498,7 +498,7 @@ export abstract class AbstractExtHostExtensionService extends Disposable impleme
 
 	private _loadExtensionContext(extensionDescription: IExtensionDescription, extensionInternalStore: DisposableStore): Promise<vscode.ExtensionContext> {
 
-		// Margin ships no language models; access is never granted.
+		// Tacet ships no language models; access is never granted.
 		const languageModelAccessInformation: vscode.LanguageModelAccessInformation = Object.freeze({ onDidChange: Event.None, canSendRequest: () => undefined });
 		const globalState = extensionInternalStore.add(new ExtensionGlobalMemento(extensionDescription, this._storage));
 		const workspaceState = extensionInternalStore.add(new ExtensionMemento(extensionDescription.identifier.value, false, this._storage));

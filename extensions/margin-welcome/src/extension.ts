@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-// Margin first boot (margin/design/FIRST-BOOT.md). A React + Animate UI webview that runs once on
+// Tacet first boot (margin/design/FIRST-BOOT.md). A React + Animate UI webview that runs once on
 // the first launch. Each step writes only its own settings when the user continues; Skip writes
 // nothing except the completion flag.
 
@@ -34,8 +34,8 @@ const REPORT_KEY = 'margin.firstBoot.importReport';
 const ENV_OFF = 'MARGIN_FIRST_BOOT';
 
 const DEFAULT_FONT_SIZE = 17;
-const LIGHT_CANDIDATES = ['Margin Light', 'Light Modern', 'Default Light Modern'];
-const DARK_CANDIDATES = ['Margin Dark', 'Dark Modern', 'Default Dark Modern'];
+const LIGHT_CANDIDATES = ['Tacet Light', 'Light Modern', 'Default Light Modern'];
+const DARK_CANDIDATES = ['Tacet Dark', 'Dark Modern', 'Default Dark Modern'];
 const THEME_KEYS = ['workbench.colorTheme', 'window.autoDetectColorScheme', 'workbench.preferredLightColorTheme', 'workbench.preferredDarkColorTheme'];
 
 const EXTRA_KEYS: Record<keyof Extras, string> = {
@@ -176,7 +176,7 @@ class FirstBoot {
 				back: t('Back'),
 				skip: t('Skip setup'),
 				esc: t('Esc'),
-				lookHeading: 'Margin',
+				lookHeading: 'Tacet',
 				lookLine: t('Choose how the page looks. You can change this later in Settings.'),
 				theme: t('Theme'),
 				system: t('System'),
@@ -188,16 +188,16 @@ class FirstBoot {
 				reset: t('Reset'),
 				sample: t('Leave the phone in the kitchen. Open the window.'),
 				importHeading: t('Use your VS Code settings?'),
-				importLine: t('Margin can copy your keyboard shortcuts and editor settings. Your VS Code files do not change.'),
-				defaults: t('Start with Margin defaults'),
+				importLine: t('Tacet can copy your keyboard shortcuts and editor settings. Your VS Code files do not change.'),
+				defaults: t('Start with Tacet defaults'),
 				shortcuts: t('Keyboard shortcuts'),
 				editorSettings: t('Editor settings'),
-				noExtensions: t('Margin does not copy extensions.'),
+				noExtensions: t('Tacet does not copy extensions.'),
 				copyAndContinue: t('Copy and continue'),
 				notesHeading: t('Where your notes live'),
-				notesLine: t('New notes are drafts. Margin keeps them safe until you save them to a folder.'),
+				notesLine: t('New notes are drafts. Tacet keeps them safe until you save them to a folder.'),
 				notesDocuments: t('Notes folder in Documents'),
-				willCreate: t('Margin makes this folder'),
+				willCreate: t('Tacet makes this folder'),
 				oneDriveLine: t('Documents is synced by OneDrive. Your notes will sync too.'),
 				notesLocal: t('Keep notes only on this PC'),
 				notesCustom: t('A folder I choose'),
@@ -384,7 +384,7 @@ function reduceMotion(): 'on' | 'off' | 'auto' {
 	return value === 'on' || value === 'off' ? value : 'auto';
 }
 
-/** Margin's user folder (settings.json, keybindings.json): globalStorage is <User>/globalStorage/<id>. */
+/** Tacet's user folder (settings.json, keybindings.json): globalStorage is <User>/globalStorage/<id>. */
 function userDir(context: vscode.ExtensionContext): string {
 	return path.dirname(path.dirname(context.globalStorageUri.fsPath));
 }

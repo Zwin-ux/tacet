@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-// Margin first boot (design/FIRST-BOOT.md): Look, Bring your settings (only when a source
+// Tacet first boot (design/FIRST-BOOT.md): Look, Bring your settings (only when a source
 // exists), Where your notes live, Extras; then the page clears. Enter continues, Esc skips.
 
 import * as React from 'react';

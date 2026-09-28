@@ -46,7 +46,7 @@ body {
 }
 
 .monaco-workbench {
-	/* Margin: Windows 11 body size (14/20); code-dense surfaces set their own size */
+	/* Tacet: Windows 11 body size (14/20); code-dense surfaces set their own size */
 	font-size: 14px;
 	line-height: 1.4286em;
 	position: relative;

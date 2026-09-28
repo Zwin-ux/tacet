@@ -1,4 +1,4 @@
-# Margin
+# Tacet
 
 **A quiet place for your files.**
 
@@ -50,7 +50,7 @@ Package: `npm run gulp vscode-darwin-arm64-min` (macOS) or `npm run gulp vscode-
 
 Open [the interactive design study](margin/prototype/index.html) in a browser. It uses sample notes and browser storage. It is not the native app or a persistence qualification harness. The sample terminal runs nothing.
 
-![Margin writing concept](margin/concepts/01-writing.png)
+![Tacet writing concept](margin/concepts/01-writing.png)
 
 - [Capture, find, read, and recover](margin/concepts/02-everyday-states.png)
 - [Code and compact windows](margin/concepts/03-code-and-compact.png)

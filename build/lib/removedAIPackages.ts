@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 /**
- * Margin is AI-free. Returns a glob filter that drops every package that only
+ * Tacet is AI-free. Returns a glob filter that drops every package that only
  * served removed AI features (Copilot, agent SDKs, on-device dictation, agent
  * sandbox), so a packaging run can never bundle them even if they are still
  * present in a node_modules folder.

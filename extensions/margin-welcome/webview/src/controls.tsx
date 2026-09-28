@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-// Margin controls for the first boot. Built on Animate UI primitives (Radix + Motion) from
-// components/animate-ui, restyled to Margin tokens and FIRST-BOOT.md §10 motion values:
+// Tacet controls for the first boot. Built on Animate UI primitives (Radix + Motion) from
+// components/animate-ui, restyled to Tacet tokens and FIRST-BOOT.md §10 motion values:
 // no spring overshoot, no scale-in from 0, no hover scale.
 
 import * as React from 'react';

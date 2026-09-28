@@ -497,7 +497,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			Object.freeze(env);
 		}
 
-		// namespace: tests — Margin ships no testing. Controllers can be created so that
+		// namespace: tests — Tacet ships no testing. Controllers can be created so that
 		// extensions activate, but no test is ever run.
 		const tests = createUnavailableTestsApi();
 
@@ -927,7 +927,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			}) {
 				return extHostWebviewViews.registerWebviewViewProvider(extension, viewId, provider, options?.webviewOptions);
 			},
-			// Margin ships no notebooks: there is never a notebook editor.
+			// Tacet ships no notebooks: there is never a notebook editor.
 			activeNotebookEditor: undefined,
 			onDidChangeActiveNotebookEditor: Event.None,
 			visibleNotebookEditors: [],
@@ -935,7 +935,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			onDidChangeNotebookEditorSelection: Event.None,
 			onDidChangeNotebookEditorVisibleRanges: Event.None,
 			showNotebookDocument(): Thenable<vscode.NotebookEditor> {
-				return Promise.reject(new Error('Notebooks are not available in Margin.'));
+				return Promise.reject(new Error('Notebooks are not available in Tacet.'));
 			},
 			registerExternalUriOpener(id: string, opener: vscode.ExternalUriOpener, metadata: vscode.ExternalUriOpenerMetadata) {
 				checkProposedApiEnabled(extension, 'externalUriOpener');
@@ -947,12 +947,12 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			},
 			registerQuickDiffProvider(selector: vscode.DocumentSelector, quickDiffProvider: vscode.QuickDiffProvider, id: string, label: string, rootUri?: vscode.Uri): vscode.Disposable {
 				checkProposedApiEnabled(extension, 'quickDiffProvider');
-				// Margin has no source control: providers are accepted and ignored.
+				// Tacet has no source control: providers are accepted and ignored.
 				return new extHostTypes.Disposable(() => { });
 			},
 			createSourceControlDiffInformation(uri: vscode.Uri): vscode.SourceControlDiffInformationProvider {
 				checkProposedApiEnabled(extension, 'textEditorDiffInformation');
-				// Margin has no source control: there is never diff information.
+				// Tacet has no source control: there is never diff information.
 				return { diffInformation: undefined, onDidChange: Event.None, dispose: () => { } };
 			},
 			get linkPresentationRules(): readonly vscode.LinkPresentationRule[] {
@@ -1171,11 +1171,11 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			onWillSaveTextDocument: (listener, thisArgs?, disposables?) => {
 				return _asExtensionEvent(extHostDocumentSaveParticipant.getOnWillSaveTextDocumentEvent(extension))(listener, thisArgs, disposables);
 			},
-			// Margin ships no notebooks: serializers are accepted so that extensions
+			// Tacet ships no notebooks: serializers are accepted so that extensions
 			// activate, but no notebook document is ever opened.
 			notebookDocuments: [],
 			openNotebookDocument(): Thenable<vscode.NotebookDocument> {
-				return Promise.reject(new Error('Notebooks are not available in Margin.'));
+				return Promise.reject(new Error('Notebooks are not available in Tacet.'));
 			},
 			onDidSaveNotebookDocument: Event.None,
 			onDidChangeNotebookDocument: Event.None,
@@ -1325,7 +1325,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			},
 		};
 
-		// namespace: scm — Margin has no source control. There is no input box and
+		// namespace: scm — Tacet has no source control. There is no input box and
 		// no source control can be created.
 		const scm: typeof vscode.scm = {
 			get inputBox() {
@@ -1335,12 +1335,12 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 				return undefined!; // Strict null override - Deprecated api
 			},
 			createSourceControl(): vscode.SourceControl {
-				throw new Error('Source control is not available in Margin.');
+				throw new Error('Source control is not available in Tacet.');
 			}
 		};
 
 		// namespace: comments
-		// namespace: comments — Margin has no comments UI. Controllers and threads can be
+		// namespace: comments — Tacet has no comments UI. Controllers and threads can be
 		// created so that extensions activate, but nothing is ever shown.
 		const comments: typeof vscode.comments = {
 			createCommentController(id: string, label: string): vscode.CommentController {
@@ -1362,15 +1362,15 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			}
 		};
 
-		// namespace: debug — Margin ships no debugger. Providers are accepted and ignored;
+		// namespace: debug — Tacet ships no debugger. Providers are accepted and ignored;
 		// no session is ever started.
 		const debug = createUnavailableDebugApi();
 
-		// namespace: tasks — Margin ships no tasks. Providers are accepted and ignored;
+		// namespace: tasks — Tacet ships no tasks. Providers are accepted and ignored;
 		// no task exists and none can be executed.
 		const tasks = createUnavailableTasksApi();
 
-		// namespace: notebooks — Margin ships no notebooks. Controllers can be created so
+		// namespace: notebooks — Tacet ships no notebooks. Controllers can be created so
 		// that extensions activate, but no cell is ever executed.
 		const notebooks: typeof vscode.notebooks = {
 			createNotebookController(id: string, notebookType: string, label: string, handler?: vscode.NotebookController['executeHandler']): vscode.NotebookController {
@@ -1379,7 +1379,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 					notebookType,
 					label,
 					executeHandler: handler ?? (() => { }),
-					createNotebookCellExecution: () => { throw new Error('Notebooks are not available in Margin.'); },
+					createNotebookCellExecution: () => { throw new Error('Notebooks are not available in Tacet.'); },
 					onDidChangeSelectedNotebooks: Event.None,
 					updateNotebookAffinity: () => { },
 					dispose() { }
@@ -1422,7 +1422,7 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			}
 		};
 
-		// namespace: chat — Margin ships no chat. Participants can be created so that
+		// namespace: chat — Tacet ships no chat. Participants can be created so that
 		// extensions activate, but no request is ever routed to them.
 		const chat: typeof vscode.chat = {
 			createChatParticipant(id: string, handler: vscode.ChatRequestHandler): vscode.ChatParticipant {
@@ -1435,13 +1435,13 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			}
 		};
 
-		// namespace: lm — Margin ships no language models, tools, or MCP servers.
+		// namespace: lm — Tacet ships no language models, tools, or MCP servers.
 		const lm: typeof vscode.lm = {
 			selectChatModels: () => Promise.resolve([]),
 			onDidChangeChatModels: Event.None,
 			registerLanguageModelChatProvider: () => new extHostTypes.Disposable(() => { }),
 			registerTool: () => new extHostTypes.Disposable(() => { }),
-			invokeTool: (name: string) => Promise.reject(new Error(`Language model tool '${name}' is not available: Margin does not include AI features.`)),
+			invokeTool: (name: string) => Promise.reject(new Error(`Language model tool '${name}' is not available: Tacet does not include AI features.`)),
 			tools: [],
 			registerMcpServerDefinitionProvider: () => new extHostTypes.Disposable(() => { })
 		};

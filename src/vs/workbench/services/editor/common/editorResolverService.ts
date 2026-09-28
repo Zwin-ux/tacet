@@ -51,7 +51,7 @@ function markdownEditorAgentsWindowDefault(markdownDefaultEditor?: boolean): str
 }
 
 /**
- * Margin: Markdown opens as a rendered, writable document. This is a code default (not an extension
+ * Tacet: Markdown opens as a rendered, writable document. This is a code default (not an extension
  * configuration default) so that it already applies to files opened at startup.
  */
 export const marginEditorAssociationsDefault: Readonly<Record<string, string>> = {

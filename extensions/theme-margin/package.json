@@ -14,19 +14,19 @@
   "contributes": {
     "themes": [
       {
-        "id": "Margin Light",
+        "id": "Tacet Light",
         "label": "%marginLightThemeLabel%",
         "uiTheme": "vs",
         "path": "./themes/margin-light-color-theme.json"
       },
       {
-        "id": "Margin Dark",
+        "id": "Tacet Dark",
         "label": "%marginDarkThemeLabel%",
         "uiTheme": "vs-dark",
         "path": "./themes/margin-dark-color-theme.json"
       },
       {
-        "id": "Margin High Contrast Light",
+        "id": "Tacet High Contrast Light",
         "label": "%marginHcLightThemeLabel%",
         "uiTheme": "hc-light",
         "path": "./themes/margin-hc-light-color-theme.json"

@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-/* Margin first boot. Colors come from the host theme (--vscode-*), so Margin Light, Margin Dark
- * and the Contrast Themes drive the page. Fallbacks are Margin Light (design/tokens.json). */
+/* Tacet first boot. Colors come from the host theme (--vscode-*), so Tacet Light, Tacet Dark
+ * and the Contrast Themes drive the page. Fallbacks are Tacet Light (design/tokens.json). */
 
 @import "tailwindcss";
 @import "./margin-mark.css";

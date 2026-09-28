@@ -800,12 +800,12 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 			},
 			[LayoutSettings.SHADOWS]: {
 				'type': 'boolean',
-				'default': false, // Margin: docked parts carry no shadow (design guide 2.6)
+				'default': false, // Tacet: docked parts carry no shadow (design guide 2.6)
 				'description': localize('shadows', "Controls whether shadow effects are shown around the side panels and other workbench elements.")
 			},
 			[LayoutSettings.MODERN_UI]: {
 				'type': 'boolean',
-				'default': false, // Margin: no floating cards; the page and the shelf are one sheet
+				'default': false, // Tacet: no floating cards; the page and the shelf are one sheet
 				'description': localize('modernUI', "Controls whether the Modern UI Update is enabled. When on, the side bars and bottom panel are shown as floating cards with rounded corners and gaps, and a set of refreshed workbench styles is applied, matching the Agents window design."),
 				experiment: { mode: 'auto' },
 			},
@@ -893,7 +893,7 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 						localize('window.menuBarVisibility.compact.web', "Menu is displayed as a compact button in the side bar.") :
 						localize({ key: 'window.menuBarVisibility.compact', comment: ['{0}, {1} is a placeholder for a setting identifier.'] }, "Menu is displayed as a compact button in the side bar. This value is ignored when {0} is {1} and {2} is either {3} or {4}.", '`#window.titleBarStyle#`', '`native`', '`#window.menuStyle#`', '`native`', '`inherit`')
 				],
-				'default': isWeb ? 'compact' : 'toggle', // Margin: Alt reveals the menu row
+				'default': isWeb ? 'compact' : 'toggle', // Tacet: Alt reveals the menu row
 				'scope': ConfigurationScope.APPLICATION,
 				'markdownDescription': isMacintosh ?
 					localize('menuBarVisibility.mac', "Control the visibility of the menu bar. A setting of 'toggle' means that the menu bar is hidden and executing `Focus Application Menu` will show it. A setting of 'compact' will move the menu into the side bar.") :

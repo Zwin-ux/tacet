@@ -13,10 +13,10 @@
   ],
   "contributes": {
     "configurationDefaults": {
-      "workbench.colorTheme": "Margin Light",
-      "workbench.preferredLightColorTheme": "Margin Light",
-      "workbench.preferredDarkColorTheme": "Margin Dark",
-      "workbench.preferredHighContrastLightColorTheme": "Margin High Contrast Light",
+      "workbench.colorTheme": "Tacet Light",
+      "workbench.preferredLightColorTheme": "Tacet Light",
+      "workbench.preferredDarkColorTheme": "Tacet Dark",
+      "workbench.preferredHighContrastLightColorTheme": "Tacet High Contrast Light",
       "window.autoDetectColorScheme": true,
       "window.commandCenter": false,
       "workbench.layoutControl.enabled": false,

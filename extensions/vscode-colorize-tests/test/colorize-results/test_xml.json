@@ -2368,7 +2368,7 @@
 		}
 	},
 	{
-		"c": "inputButton.Margin",
+		"c": "inputButton.Tacet",
 		"t": "text.xml meta.tag.xml string.quoted.double.xml",
 		"r": {
 			"dark_plus": "string: #CE9178",

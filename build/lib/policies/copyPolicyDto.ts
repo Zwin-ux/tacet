@@ -10,7 +10,7 @@ const sourceFile = path.join(import.meta.dirname, '../../../src/vs/workbench/con
 const destFile = path.join(import.meta.dirname, 'policyDto.ts');
 
 try {
-	// Margin: the policy export contribution is removed from src, so the
+	// Tacet: the policy export contribution is removed from src, so the
 	// checked-in copy next to this script is the source of truth. Copy only
 	// when the upstream source still exists.
 	if (!fs.existsSync(sourceFile)) {

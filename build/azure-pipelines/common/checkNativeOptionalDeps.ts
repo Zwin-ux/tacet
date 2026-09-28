@@ -54,7 +54,7 @@ export function findMissingNativeOptionalDep(nodeModulesDir: string, basePackage
 // is never persisted.
 
 // Base packages whose per-platform package (`<base>-<platform>-<arch>`) is
-// required whenever the base package itself is installed. Margin: the only
+// required whenever the base package itself is installed. Tacet: the only
 // entries were AI agent SDKs, which are removed, so the list is empty.
 const NATIVE_OPTIONAL_DEP_BASE_PACKAGES: readonly string[] = [];
 

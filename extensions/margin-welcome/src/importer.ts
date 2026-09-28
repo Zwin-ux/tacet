@@ -51,7 +51,7 @@ export interface ImportPlan {
 /** Settings a user may bring over. Everything else is left behind. */
 const ALLOWED_PREFIXES = ['editor.', 'files.', 'search.', '[', 'diffEditor.ignoreTrimWhitespace', 'terminal.integrated.fontSize', 'terminal.integrated.fontFamily', 'terminal.integrated.fontWeight', 'terminal.integrated.lineHeight', 'terminal.integrated.cursorStyle', 'terminal.integrated.cursorBlinking', 'keyboard.dispatch'];
 
-/** Never copied (FIRST-BOOT section 4): Margin owns the look and the writing layout. */
+/** Never copied (FIRST-BOOT section 4): Tacet owns the look and the writing layout. */
 const DENIED_KEYS = new Set([
 	'workbench.colorTheme', 'workbench.iconTheme', 'workbench.productIconTheme', 'workbench.statusBar.visible',
 	'workbench.preferredLightColorTheme', 'workbench.preferredDarkColorTheme', 'window.autoDetectColorScheme',
@@ -107,16 +107,16 @@ function isRegistered(key: string): boolean {
 /** Why a settings key is not copied, or undefined when it is. */
 function settingSkipReason(key: string): string | undefined {
 	if (DENIED_KEYS.has(key) || DENIED_PREFIXES.some(p => key.startsWith(p))) {
-		return vscode.l10n.t('Margin sets this itself.');
+		return vscode.l10n.t('Tacet sets this itself.');
 	}
 	if (key.split('.').some(seg => DENIED_SEGMENTS.has(seg.toLowerCase()))) {
-		return vscode.l10n.t('Not part of Margin.');
+		return vscode.l10n.t('Not part of Tacet.');
 	}
 	if (!ALLOWED_PREFIXES.some(p => key.startsWith(p))) {
 		return vscode.l10n.t('Not an editor setting.');
 	}
 	if (!isRegistered(key)) {
-		return vscode.l10n.t('Margin does not have this setting.');
+		return vscode.l10n.t('Tacet does not have this setting.');
 	}
 	return undefined;
 }
@@ -173,7 +173,7 @@ export function planImport(source: SourceInfo, commands: Set<string>): ImportPla
 			}
 			const base = e.command.replace(/^-/, '');
 			if (DENIED_COMMAND.test(base) || !commands.has(base)) {
-				plan.skipped.push({ item: `${e.key} ${e.command}`, reason: vscode.l10n.t('Margin does not have this command.') });
+				plan.skipped.push({ item: `${e.key} ${e.command}`, reason: vscode.l10n.t('Tacet does not have this command.') });
 				continue;
 			}
 			const kept: KeybindingEntry = { key: e.key, command: e.command };
@@ -196,7 +196,7 @@ export interface ImportResult {
 	report: string;
 }
 
-/** Applies the plan to Margin's user settings and keybindings. Never touches the source files. */
+/** Applies the plan to Tacet's user settings and keybindings. Never touches the source files. */
 export async function applyImport(plan: ImportPlan, userDir: string, withShortcuts: boolean, withSettings: boolean): Promise<ImportResult> {
 	const copiedSettings: string[] = [];
 	const failed: { item: string; reason: string }[] = [];
@@ -248,7 +248,7 @@ export async function applyImport(plan: ImportPlan, userDir: string, withShortcu
 	return { shortcuts: copiedShortcuts.length, settings: copiedSettings.length, notApplied, report: lines.join('\n') + '\n' };
 }
 
-/** Appends entries to Margin's user keybindings.json, keeping what is there (comments included). */
+/** Appends entries to Tacet's user keybindings.json, keeping what is there (comments included). */
 function appendKeybindings(file: string, entries: KeybindingEntry[]): void {
 	const block = entries.map(e => '\t' + JSON.stringify(e)).join(',\n');
 	let text = '';
@@ -259,11 +259,11 @@ function appendKeybindings(file: string, entries: KeybindingEntry[]): void {
 	}
 	const existing = text.trim() ? parseJsonc(text) : [];
 	if (!Array.isArray(existing)) {
-		throw new Error(vscode.l10n.t('Margin keybindings.json is not a list; nothing was changed.'));
+		throw new Error(vscode.l10n.t('Tacet keybindings.json is not a list; nothing was changed.'));
 	}
 	let next: string;
 	if (!text.trim() || existing.length === 0 && text.lastIndexOf(']') < 0) {
-		next = `// ${vscode.l10n.t('Copied from VS Code by Margin first boot.')}\n[\n${block}\n]\n`;
+		next = `// ${vscode.l10n.t('Copied from VS Code by Tacet first boot.')}\n[\n${block}\n]\n`;
 	} else {
 		const close = text.lastIndexOf(']');
 		const head = text.slice(0, close).replace(/\s*$/, '');

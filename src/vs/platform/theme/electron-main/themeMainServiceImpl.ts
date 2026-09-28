@@ -210,7 +210,7 @@ export class ThemeMainService extends Disposable implements IThemeMainService {
 	}
 
 	private getStoredBaseTheme(): ThemeTypeSelector {
-		// Margin: without a stored theme, the first window paints the light page
+		// Tacet: without a stored theme, the first window paints the light page
 		const baseTheme = this.stateService.getItem<ThemeTypeSelector>(THEME_STORAGE_KEY, ThemeTypeSelector.VS).split(' ')[0];
 		switch (baseTheme) {
 			case ThemeTypeSelector.VS_DARK: return ThemeTypeSelector.VS_DARK;

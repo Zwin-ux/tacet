@@ -21,7 +21,7 @@ body {
 	overflow: auto;
 }
 
-/* Margin (guide 4.30): overlay-style scrollbars. No arrow buttons, no track fill, a round
+/* Tacet (guide 4.30): overlay-style scrollbars. No arrow buttons, no track fill, a round
    thumb that shows while the pointer is over the document. */
 #editor::-webkit-scrollbar {
 	width: 10px;

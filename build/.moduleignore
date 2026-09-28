@@ -221,7 +221,7 @@ zone.js/dist/**
 @xterm/xterm-addon-*/out/**
 @xterm/xterm-addon-*/out-test/**
 
-# Margin is AI-free: never ship packages that only served removed AI features.
+# Tacet is AI-free: never ship packages that only served removed AI features.
 @github/copilot/**
 @github/copilot-*/**
 @vscode/copilot-api/**

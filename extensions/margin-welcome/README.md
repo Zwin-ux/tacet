@@ -1,6 +1,6 @@
-# Margin First Boot
+# Tacet First Boot
 
-Margin's first-time setup (design spec: `margin/design/FIRST-BOOT.md`, milestone M3). Four short
+Tacet's first-time setup (design spec: `margin/design/FIRST-BOOT.md`, milestone M3). Four short
 pages on the same white page the user will write on: Look (theme, text size), Bring your settings
 (copy from VS Code; shown only when a VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf user
 folder exists), Where your notes live, Extras (all off). Enter continues, Esc skips, and the setup
@@ -9,7 +9,7 @@ ends on a new draft with the caret.
 ## Behavior
 
 - Runs once, on the first launch without a file or folder argument. The completion flag is
-  `margin.firstBoot.completed` in the extension's global state. `Margin: Show Setup` runs it again.
+  `margin.firstBoot.completed` in the extension's global state. `Tacet: Show Setup` runs it again.
 - Each step writes only its own settings, when the user continues. `Skip setup` keeps what was
   already confirmed, undoes an unconfirmed theme preview, and writes nothing else except the flag.
 - Settings written: `window.autoDetectColorScheme`, `workbench.preferredLightColorTheme`,
@@ -20,12 +20,12 @@ ends on a new draft with the caret.
   M4 to M6.
 - Import (`src/importer.ts`) only reads the source folder. Settings: an allowlist (`editor.*`,
   `files.*`, `search.*`, a few terminal font keys, language blocks) minus anything AI, account, git,
-  debug, tasks, remote, sync or extensions related, minus keys Margin sets itself, and only keys
-  Margin registers. Keybindings: entries whose command exists in Margin, appended to Margin's user
+  debug, tasks, remote, sync or extensions related, minus keys Tacet sets itself, and only keys
+  Tacet registers. Keybindings: entries whose command exists in Tacet, appended to Tacet's user
   `keybindings.json`. JSONC with comments and trailing commas is read; a file that cannot be parsed
-  is reported, not fatal. `Margin: Show Import Report` lists what was copied and what was not.
+  is reported, not fatal. `Tacet: Show Import Report` lists what was copied and what was not.
 - Notes (`src/notes.ts`): the default is `Documents\Notes` (the real Documents shell folder from the
-  registry). If OneDrive syncs Documents, the page says so and offers `%USERPROFILE%\Margin`.
+  registry). If OneDrive syncs Documents, the page says so and offers `%USERPROFILE%\Tacet`.
   The folder is made when setup finishes.
 - `MARGIN_FIRST_BOOT=off` in the environment stops the automatic run (for harnesses that open a bare
   window). `MARGIN_FIRSTBOOT_DOCUMENTS` and `MARGIN_FIRSTBOOT_HOME` replace the Documents and home
@@ -36,7 +36,7 @@ ends on a new draft with the caret.
 - `src/`: extension host side (webview panel with a strict CSP; init data and all strings are
   rendered into the page, so the first frame needs no round trip). Strings use `vscode.l10n`.
 - `webview/`: a separate npm project. Vite + React 19 + TypeScript + Tailwind v4 + Motion, with
-  Animate UI primitives (`src/components/animate-ui/`) restyled to Margin tokens. Colors come from
+  Animate UI primitives (`src/components/animate-ui/`) restyled to Tacet tokens. Colors come from
   the host theme's `--vscode-*` variables.
 - `media/`: the prebuilt bundle (`welcome.js`, `welcome.css`). It is committed, so the product build
   does not need Vite. Packaging bundles `src/extension.ts` to `dist/extension.js` (`esbuild.mts`).

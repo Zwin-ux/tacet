@@ -15,6 +15,6 @@
    </character>
     <VisualState.Setters>
         <Setter Target="inputPanel.Orientation" Value="Vertical"/>
-        <Setter Target="inputButton.Margin" Value="0,4,0,0"/>
+        <Setter Target="inputButton.Tacet" Value="0,4,0,0"/>
     </VisualState.Setters>
 </project>

@@ -1,11 +1,11 @@
 {
-	"displayName": "Margin First Boot",
-	"description": "First-time setup for Margin: look, VS Code settings, notes folder and extras.",
+	"displayName": "Tacet First Boot",
+	"description": "First-time setup for Tacet: look, VS Code settings, notes folder and extras.",
 	"command.showSetup": "Show Setup",
 	"command.showImportReport": "Show Import Report",
 	"config.document.fontSize": "Text size of documents in Write and Read, in pixels.",
 	"config.notes.folder": "Folder where Save puts new notes. Empty: Save asks for a folder.",
 	"config.code.lineNumbers": "Show line numbers in Code view. Write and Read never show them.",
 	"config.terminal.shortcut": "Ctrl+` opens and closes the terminal.",
-	"config.spelling.enabled": "Underline misspelled words. Margin never changes your text."
+	"config.spelling.enabled": "Underline misspelled words. Tacet never changes your text."
 }

@@ -36,7 +36,7 @@ export interface IWorkbenchEnvironmentService extends IEnvironmentService {
 	readonly skipWelcome: boolean;
 	readonly disableWorkspaceTrust: boolean;
 	/**
-	 * Always `false`: Margin has no agents (sessions) window. Kept only until
+	 * Always `false`: Tacet has no agents (sessions) window. Kept only until
 	 * the remaining consumers outside the services layer drop their checks.
 	 */
 	readonly isSessionsWindow: boolean;

@@ -297,7 +297,7 @@ export function getWindowControlsStyle(configurationService: IConfigurationServi
 export const DEFAULT_CUSTOM_TITLEBAR_HEIGHT = 35; // includes space for command center
 
 /**
- * Height of the Margin title bar on Windows and Linux (one row: mark, document title, controls, caption buttons).
+ * Height of the Tacet title bar on Windows and Linux (one row: mark, document title, controls, caption buttons).
  */
 export const MARGIN_TITLEBAR_HEIGHT = 48;
 

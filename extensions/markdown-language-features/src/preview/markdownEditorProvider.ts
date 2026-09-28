@@ -541,7 +541,7 @@ export class MarkdownEditorProvider extends Disposable implements vscode.CustomT
 			if (e.document.uri.toString() !== document.uri.toString()) {
 				return;
 			}
-			// Margin: a change with no content changes is a dirty-state flip (first edit after open or
+			// Tacet: a change with no content changes is a dirty-state flip (first edit after open or
 			// save, undo back to saved). The text is unchanged, so publishing it would only advance the
 			// epoch and discard the keystrokes the webview already has in flight.
 			if (e.contentChanges.length === 0) {
@@ -562,7 +562,7 @@ export class MarkdownEditorProvider extends Disposable implements vscode.CustomT
 		const highlight = this.#wireHighlight(editorWebview);
 		const quickDiff = originalDocument
 			? this.#wireDocumentDiff(originalDocument, document, editorWebview)
-			: vscode.Disposable.from(); // Margin has no source control, so there is no quick diff gutter
+			: vscode.Disposable.from(); // Tacet has no source control, so there is no quick diff gutter
 		const reloadWebview = (): void => {
 			webviewReady = false;
 			void editQueue.enqueueBarrier(async epoch => {
@@ -945,7 +945,7 @@ export class MarkdownEditorProvider extends Disposable implements vscode.CustomT
 			content: document.getText(),
 			documentVersion: document.version,
 			editEpoch,
-			readonly: this.#globalState.get(MarkdownEditorProvider.#readonlyStateKey, false), // Margin: documents open writable
+			readonly: this.#globalState.get(MarkdownEditorProvider.#readonlyStateKey, false), // Tacet: documents open writable
 			richLinksEnabled: vscode.workspace.getConfiguration('markdown').get<boolean>('experimental.richLinks.enabled', true),
 			linkPresentationRules: vscode.window.linkPresentationRules.map(rule => ({
 				id: rule.id,

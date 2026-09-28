@@ -8,12 +8,12 @@ import { CancellationToken } from '../../../base/common/cancellation.js';
 import { Event } from '../../../base/common/event.js';
 import { Disposable } from './extHostTypes.js';
 
-// Margin does not include a debugger, tasks or testing. The implementations below keep the
+// Tacet does not include a debugger, tasks or testing. The implementations below keep the
 // stable `vscode.debug`, `vscode.tasks` and `vscode.tests` shapes so that extensions still
 // activate, but nothing is ever debugged, run as a task or run as a test.
 
 function notAvailable(feature: string): Error {
-	return new Error(`${feature} is not available in Margin.`);
+	return new Error(`${feature} is not available in Tacet.`);
 }
 
 /**

@@ -1332,7 +1332,7 @@ export interface SCMHistoryItemRefsChangeEventDto {
 }
 
 /**
- * Validation severity for the source control input box. Kept here because Margin removes the SCM contribution.
+ * Validation severity for the source control input box. Kept here because Tacet removes the SCM contribution.
  */
 export const enum InputValidationType {
 	Error = 0,

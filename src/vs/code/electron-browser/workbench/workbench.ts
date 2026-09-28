@@ -80,7 +80,7 @@ import { getPartsSplashColors } from './partsSplash.js';
 				shellForeground = '#22252B';
 			}
 		} else {
-			// Margin: the first paint is the white page
+			// Tacet: the first paint is the white page
 			baseTheme = 'vs';
 			shellBackground = '#FFFFFF';
 			shellForeground = '#22252B';
