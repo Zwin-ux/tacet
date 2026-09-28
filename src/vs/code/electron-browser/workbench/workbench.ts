@@ -72,13 +72,18 @@ import { getPartsSplashColors } from './partsSplash.js';
 		} else if (configuration.autoDetectColorScheme) {
 			if (configuration.colorScheme.dark) {
 				baseTheme = 'vs-dark';
-				shellBackground = '#1E1E1E';
-				shellForeground = '#CCCCCC';
+				shellBackground = '#1B1C1F';
+				shellForeground = '#E7E9EC';
 			} else {
 				baseTheme = 'vs';
 				shellBackground = '#FFFFFF';
-				shellForeground = '#000000';
+				shellForeground = '#22252B';
 			}
+		} else {
+			// Margin: the first paint is the white page
+			baseTheme = 'vs';
+			shellBackground = '#FFFFFF';
+			shellForeground = '#22252B';
 		}
 
 		const style = document.createElement('style');
@@ -105,7 +110,7 @@ import { getPartsSplashColors } from './partsSplash.js';
 
 			const splash = document.createElement('div');
 			splash.id = 'monaco-parts-splash';
-			splash.className = baseTheme ?? 'vs-dark';
+			splash.className = baseTheme ?? 'vs';
 
 			if (layoutInfo.windowBorder && colorInfo.windowBorder) {
 				const borderElement = document.createElement('div');

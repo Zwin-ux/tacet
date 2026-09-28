@@ -1,0 +1,27 @@
+{
+  "name": "margin",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "10.0.0",
+  "publisher": "vscode",
+  "license": "MIT",
+  "engines": {
+    "vscode": "*"
+  },
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "configurationDefaults": {
+      "workbench.colorTheme": "Margin Light",
+      "workbench.preferredLightColorTheme": "Margin Light",
+      "workbench.preferredDarkColorTheme": "Margin Dark",
+      "workbench.preferredHighContrastLightColorTheme": "Margin High Contrast Light",
+      "window.autoDetectColorScheme": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/vscode.git"
+  }
+}

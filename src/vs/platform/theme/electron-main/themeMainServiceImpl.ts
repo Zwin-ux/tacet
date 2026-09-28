@@ -21,7 +21,7 @@ import { IThemeMainService } from './themeMainService.js';
 // These default colors match our default themes
 // editor background color ("Dark Modern", etc...)
 const DEFAULT_BG_LIGHT = '#FFFFFF';
-const DEFAULT_BG_DARK = '#1F1F1F';
+const DEFAULT_BG_DARK = '#1B1C1F';
 const DEFAULT_BG_HC_BLACK = '#000000';
 const DEFAULT_BG_HC_LIGHT = '#FFFFFF';
 
@@ -210,12 +210,13 @@ export class ThemeMainService extends Disposable implements IThemeMainService {
 	}
 
 	private getStoredBaseTheme(): ThemeTypeSelector {
-		const baseTheme = this.stateService.getItem<ThemeTypeSelector>(THEME_STORAGE_KEY, ThemeTypeSelector.VS_DARK).split(' ')[0];
+		// Margin: without a stored theme, the first window paints the light page
+		const baseTheme = this.stateService.getItem<ThemeTypeSelector>(THEME_STORAGE_KEY, ThemeTypeSelector.VS).split(' ')[0];
 		switch (baseTheme) {
-			case ThemeTypeSelector.VS: return ThemeTypeSelector.VS;
+			case ThemeTypeSelector.VS_DARK: return ThemeTypeSelector.VS_DARK;
 			case ThemeTypeSelector.HC_BLACK: return ThemeTypeSelector.HC_BLACK;
 			case ThemeTypeSelector.HC_LIGHT: return ThemeTypeSelector.HC_LIGHT;
-			default: return ThemeTypeSelector.VS_DARK;
+			default: return ThemeTypeSelector.VS;
 		}
 	}
 
