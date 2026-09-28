@@ -246,8 +246,9 @@ function killTree(pid) {
 		return;
 	}
 	if (isMac) {
-		// The launcher is spawned detached, so its PID leads the process group.
+		// Electron leaves the launcher's process group, so match this run's unique scratch path instead.
 		try { process.kill(-pid, 'SIGTERM'); } catch { /* already gone */ }
+		spawnSync('pkill', ['-f', scratch], { stdio: 'ignore' });
 	} else {
 		spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore' });
 	}
