@@ -33,11 +33,11 @@ const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
 const scratch = join(tmpdir(), `margin-${tag}-${stamp}`);
 const fixtures = join(scratch, 'fixtures');
 const note = join(fixtures, 'note.md');
-const original = '# Smoke note\n\nFirst line of the note.\n';
+const original = '# Smoke note\n\nFirst line of the note.\n\n- first item\n- second item\n\nLast line of the note.\n';
 const typed = 'Typed by the smoke gate.';
 
 const results = { tag, started: new Date().toISOString() };
-const REQUIRED_CHECKS = ['launch', 'writingLayout', 'richEditor', 'typeSave', 'undo', 'terminal', 'git'];
+const REQUIRED_CHECKS = ['launch', 'writingLayout', 'richEditor', 'typeSave', 'undo', 'typingCases', 'terminal', 'git'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function freePort() {
@@ -113,6 +113,122 @@ async function saveUntil(page, predicate, attempts = 4) {
 		}
 	}
 	return false;
+}
+
+// The rich editor's text as its EditContext holds it (what the page shows).
+async function richEditorText(page) {
+	for (const frame of page.frames()) {
+		if (!frame.url().startsWith('vscode-webview://')) {
+			continue;
+		}
+		const text = await frame.evaluate(() => document.querySelector('.md-editor')?.editContext?.text).catch(() => undefined);
+		if (typeof text === 'string') {
+			return text;
+		}
+	}
+	return undefined;
+}
+
+async function pressSequence(page, keys, delay) {
+	for (const key of keys) {
+		if (key.length === 1) {
+			await page.keyboard.type(key);
+		} else {
+			await page.keyboard.press(key);
+		}
+		await sleep(delay);
+	}
+}
+
+async function undoToOriginal(page) {
+	for (let round = 0; round < 3; round++) {
+		for (let i = 0; i < 40; i++) {
+			await page.keyboard.press('Control+z');
+			await sleep(30);
+		}
+		if (await saveUntil(page, text => text === original, 1)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+async function runTypingCases(page) {
+	const content = page.frameLocator('iframe.webview').first().frameLocator('#active-frame').locator('.md-editor').first();
+	const click = text => content.getByText(text, { exact: true }).click();
+	const cases = [
+		{
+			name: 'end-10ms',
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+End'); await page.keyboard.type('Fast at ten.', { delay: 10 }); },
+			expect: original + 'Fast at ten.'
+		},
+		{
+			name: 'start',
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+Home'); await page.keyboard.type('Start ', { delay: 10 }); },
+			expect: original.replace('# Smoke note', '# Start Smoke note')
+		},
+		{
+			name: 'after-heading',
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+Home'); await page.keyboard.press('End'); await page.keyboard.type(' title', { delay: 10 }); },
+			expect: original.replace('# Smoke note', '# Smoke note title')
+		},
+		{
+			name: 'middle',
+			run: async () => { await click('First line of the note.'); await page.keyboard.press('Home'); await pressSequence(page, ['Control+ArrowRight', 'Control+ArrowRight', ...' mid'], 10); },
+			expect: original.replace('First line of', 'First line mid of')
+		},
+		{
+			name: 'after-list-item',
+			run: async () => { await click('second item'); await page.keyboard.press('End'); await pressSequence(page, [...' more', 'Enter', ...'third item'], 10); },
+			expect: original.replace('- second item\n', '- second item more\n- third item\n')
+		},
+		{
+			name: 'enter-backspace-10ms',
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+End'); await pressSequence(page, [...'abc', 'Backspace', 'd', 'Enter', 'Enter', ...'next'], 10); },
+			expect: null // Enter at the document end is a paragraph break; checked below by shape.
+		},
+		{
+			name: 'composition',
+			run: async () => {
+				await click('Last line of the note.');
+				await page.keyboard.press('Control+End');
+				const cdp = await page.context().newCDPSession(page);
+				try {
+					await cdp.send('Input.imeSetComposition', { text: 'n', selectionStart: 1, selectionEnd: 1 });
+					await sleep(30);
+					await cdp.send('Input.imeSetComposition', { text: 'に', selectionStart: 1, selectionEnd: 1 });
+					await sleep(30);
+					await cdp.send('Input.insertText', { text: '日本' });
+				} finally {
+					await cdp.detach().catch(() => undefined);
+				}
+				await page.keyboard.type(' text', { delay: 10 });
+			},
+			expect: original + '日本 text'
+		}
+	];
+	const report = {};
+	for (const testCase of cases) {
+		let outcome;
+		try {
+			await testCase.run();
+			await sleep(300);
+			const matches = testCase.expect === null
+				? text => /^[\s\S]*Last line of the note\.\n\s*abd\n+next\n?$/.test(text) && text.startsWith(original.slice(0, -1))
+				: text => text === testCase.expect;
+			const saved = await saveUntil(page, matches, 2);
+			const disk = readFileSync(note, 'utf8');
+			const shown = await richEditorText(page);
+			outcome = saved && shown === disk ? 'PASS' : `FAIL (disk: ${JSON.stringify(disk)}, shown: ${JSON.stringify(shown)})`;
+		} catch (error) {
+			outcome = `FAIL (${error.message.split('\n')[0]})`;
+		}
+		const restored = await undoToOriginal(page);
+		report[testCase.name] = restored ? outcome : `${outcome}; undo FAIL (disk: ${JSON.stringify(readFileSync(note, 'utf8'))})`;
+	}
+	const failed = Object.entries(report).filter(([, value]) => value !== 'PASS');
+	results.typingCaseDetail = report;
+	return failed.length ? `FAIL (${failed.map(([name]) => name).join(', ')})` : `PASS (${Object.keys(report).length} cases, each undone to the original bytes)`;
 }
 
 function killTree(pid) {
@@ -196,11 +312,12 @@ async function main() {
 				await content.getByText('First line of the note.').click();
 				await sleep(500);
 			}
+			// Ctrl+End then type at once: the chord must land before the first character
+			// (regression: 'note.T\nyped ...' when editor chords were routed through the host).
 			await page.keyboard.press('Control+End');
-			// Rich editor: 15 ms per key split the line once (sync race, R3 finding); type at a human pace.
-			await page.keyboard.type(typed, { delay: hasMonaco ? 15 : 50 });
+			await page.keyboard.type(typed, { delay: 50 });
 			await sleep(300);
-			const saved = await saveUntil(page, text => text.includes(typed));
+			const saved = await saveUntil(page, text => text === original + typed);
 			const onDisk = readFileSync(note, 'utf8');
 			results.typeSave = saved ? 'PASS' : `FAIL (disk: ${JSON.stringify(onDisk)})`;
 			results.screenshots.push(await shot(page, 'typed'));
@@ -220,6 +337,14 @@ async function main() {
 			results.undo = restored ? 'PASS' : `FAIL (disk: ${JSON.stringify(onDisk)})`;
 		} catch (error) {
 			results.undo = `FAIL (${error.message.split('\n')[0]})`;
+		}
+
+		// Rich editor typing cases: each types, saves, checks the bytes on disk and that
+		// the editor shows the same text, then undoes back to the original bytes.
+		if (results.noteEditor === 'rich') {
+			results.typingCases = await runTypingCases(page);
+		} else {
+			results.typingCases = 'FAIL (note did not open in the rich editor)';
 		}
 
 		// Terminal.

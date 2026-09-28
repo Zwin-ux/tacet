@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
+import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react';
 
 import { getStrictContext } from '@/lib/get-strict-context';

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { AsyncClipboardStrategy, CommentModeController, CommentsModel, CommentsView, EditorController, EditorModel, EditorView, GutterMarker, OffsetRange, Selection, StringEdit, StringReplacement, StringValue, commands, findNodeOffsetById, vscodeHostKeyboardProfile, vscodeLocalKeyboardProfile, type CodeBlockAstNode, type LinkPresentationKind } from '@vscode/markdown-editor';
+import { AsyncClipboardStrategy, CommentModeController, CommentsModel, CommentsView, EditorController, EditorModel, EditorView, GutterMarker, OffsetRange, Selection, StringEdit, StringReplacement, StringValue, commands, findNodeOffsetById, type CodeBlockAstNode, type LinkPresentationKind } from '@vscode/markdown-editor';
 import { VirtualizedIframeEmbeddedEditorFactory, type IframeEmbeddedEditorHostTransport, type IframeEmbeddedEditorProvider, type IframeEmbeddedEditorProviderSelector, type ResolvedIframeEmbeddedEditor } from '@vscode/markdown-editor/web-editors';
 import { Disposable, autorun, observableValue, transaction } from '@vscode/observables';
 import 'katex/dist/katex.min.css';
@@ -14,6 +14,7 @@ import '@vscode/markdown-editor/commentWidget.css';
 import './markdownEditor.css';
 import { WebviewSyntaxHighlighter } from './syntaxHighlighter';
 import { WebviewLinkPresentationProvider } from './linkPresentationProvider';
+import { clampLineEndMove, isVisualLineEndChord, keyboardPlatformOf, webviewKeyboardRouting } from './keyboardRouting';
 
 interface VsCodeApi {
 	postMessage(message: unknown): void;
@@ -355,13 +356,44 @@ class Editor extends Disposable {
 		// from the Edit menu, dirty state and hot exit.
 		this.#controller = this._register(new EditorController(model, view, {
 			clipboardStrategy: new AsyncClipboardStrategy(),
-			keyboardProfile: vscodeLocalKeyboardProfile,
-			forwardedKeyboardProfile: vscodeHostKeyboardProfile,
+			...webviewKeyboardRouting,
 			historyStrategy: {
 				undo: () => this.#vscode.postMessage({ type: 'history', command: 'undo' }),
 				redo: () => this.#vscode.postMessage({ type: 'history', command: 'redo' }),
 			},
 		}));
+		// Margin: stop a line-end move (End) at the line break instead of past it; see
+		// clampLineEndMove. The capture listener runs before the controller's keydown
+		// handler and the bubble listener after it.
+		const keyboardPlatform = keyboardPlatformOf(navigator.userAgent);
+		let lineEndMoveStart: number | undefined;
+		const beforeKeyDown = (event: KeyboardEvent): void => {
+			lineEndMoveStart = !event.isComposing && isVisualLineEndChord(event, keyboardPlatform) ? model.selection.get()?.active : undefined;
+		};
+		const afterKeyDown = (event: KeyboardEvent): void => {
+			const from = lineEndMoveStart;
+			lineEndMoveStart = undefined;
+			const selection = model.selection.get();
+			if (from === undefined || !selection) {
+				return;
+			}
+			const active = clampLineEndMove(model.sourceText.get().value, from, selection.active);
+			if (active !== selection.active) {
+				transaction(tx => {
+					model.selectionSource.set('user', tx);
+					model.selection.set(event.shiftKey ? selection.withActive(active) : Selection.collapsed(active), tx);
+				});
+			}
+		};
+		view.element.addEventListener('keydown', beforeKeyDown, true);
+		view.element.addEventListener('keydown', afterKeyDown);
+		this._register({
+			dispose: () => {
+				view.element.removeEventListener('keydown', beforeKeyDown, true);
+				view.element.removeEventListener('keydown', afterKeyDown);
+			},
+		});
+
 		let lastEditorFocus: boolean | undefined;
 		const postEditorFocus = (): void => {
 			const focused = document.hasFocus() && document.activeElement === view.element;

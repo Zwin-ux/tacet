@@ -1,6 +1,6 @@
 # Margin first boot
 
-Status: design spec v2, 2026-09-27 (v2: no status bar anywhere, optional Extras step, animated mark on step 1). Owner: margin/design.
+Status: design spec v2.1, 2026-09-27 (v2: no status bar anywhere, optional Extras step, animated mark on step 1; v2.1: Markdown source view row removed and OneDrive honesty on step 3, from CRITICISM.md C1, C2; `Check spelling` Extra, owner decision). Owner: margin/design. Built in `extensions/margin-welcome` (M3); test gate `margin/tools/first-boot.mjs`.
 Basis: [docs/10-REBUILD.md](../docs/10-REBUILD.md) revision 2026-09-27 (first boot is a React webview built with Animate UI in `extensions/margin-welcome`; git removed), [REFERENCES-V2.md](REFERENCES-V2.md) §6, owner direction 2026-09-27 (title bar + page only by default; the status line is an opt-in extra), [ANIMATION-GATE.md](ANIMATION-GATE.md), and [DESIGN-GUIDE.md](DESIGN-GUIDE.md) for everything not changed here. DESIGN-GUIDE §4.28 ("no first-run surface") and §4.18 (footer always on) conflict with this file; the guide owner must fold the changes in. This file does not edit the guide.
 
 Renders: [assets/first-boot/](assets/first-boot/). Motion: [motion/MOTION.md](motion/MOTION.md) (M-07), mark: [assets/animated/](assets/animated/). Written numbers beat the renders.
@@ -60,6 +60,7 @@ Shown only if at least one source folder exists: `%APPDATA%\Code\User`, `%APPDAT
 | Heading | `Where your notes live` |
 | Line | `New notes are drafts. Margin keeps them safe until you save them to a folder.` |
 | Choice | Radio rows, 44 tall, same anatomy as step 2: `Notes folder in Documents` / `C:\Users\Alex\Documents\Notes` (real path; if missing, add ` · Margin makes this folder` in ink3), and `A folder I choose` / text button `Choose Folder…` (accent). The picker is the native folder dialog. Cancelled with no folder picked: selection returns to row 1. Default row 1. |
+| OneDrive (from CRITICISM.md C2) | Documents is often synced by OneDrive (Known Folder Move), which would break the no-cloud promise without the user knowing. Detect it: the Documents shell folder (`HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders` `Personal`, expanded) is under `%OneDrive%`, `%OneDriveConsumer%` or `%OneDriveCommercial%`, or under a folder named `OneDrive` / `OneDrive - <org>`. If so: one plain line under row 1, 12/16 ink2, `Documents is synced by OneDrive. Your notes will sync too.`, and an extra row between rows 1 and 2: `Keep notes only on this PC` / `%USERPROFILE%\Margin` (same ` · Margin makes this folder` rule). Row 1 stays the default: do not block, just be honest. |
 | Buttons | Primary `Continue  Enter`, secondary `Back`. |
 | Writes | `margin.notes.folder: "<absolute path>"` (default Save location for drafts); the folder is added to the shelf's Folders. The Notes folder is created when setup finishes, never earlier. Drafts storage does not change. |
 | Initial focus | The selected radio row. |
@@ -72,11 +73,12 @@ Everything here is off. Enter keeps it that way; the step costs one keystroke.
 | --- | --- |
 | Heading | `Extras` |
 | Line | `All are off. You can turn them on later in Settings.` |
-| Rows | Four switch rows, each one line, 40 tall, full 560 width, padding 0 12, radius 6, hover fill hoverCanvas, no border at rest. Label 14/20 ink at left; Windows 11 toggle switch at the right end (guide §4.25: 40 x 20 track; off: 1px control edge, ink2 knob 12; on: accent fill, white knob 14). No descriptions, no icons. |
+| Rows | Four switch rows (v2.1: the Markdown source view row is removed, `Check spelling` is added), each one line, 40 tall, full 560 width, padding 0 12, radius 6, hover fill hoverCanvas, no border at rest. Label 14/20 ink at left; Windows 11 toggle switch at the right end (guide §4.25: 40 x 20 track; off: 1px control edge, ink2 knob 12; on: accent fill, white knob 14). No descriptions, no icons. |
 | Row 1 | `Show a status line` -> `workbench.statusBar.visible: true` (the footer of guide §4.18: save state and word count in Write/Read; Ln/Col and language in Code). Default `false`. |
 | Row 2 | `Show line numbers in Code view` -> `margin.code.lineNumbers: true` (sets `editor.lineNumbers: "on"` for the Code view only; Write and Read never show them). Default `false`. |
 | Row 3 | `Open a terminal with Ctrl+\`` -> `margin.terminal.shortcut: true` (registers `workbench.action.terminal.toggleTerminal` on Ctrl+\`, which Margin does not bind by default). Default `false`. |
-| Row 4 | `Show Markdown source view` -> `margin.markdown.sourceView: true` (adds `Code` to the mode picker for Markdown files; without it `.md` shows Write and Read only). Default `false`. |
+| Row 4 | `Check spelling` -> `margin.spelling.enabled: true` (owner decision 2026-09-27). Squiggle underlines only; Margin never autocorrects or changes text. Default `false`. The fork has no spell checker yet (Electron `spellcheck: false` in `windows.ts`); M6 implements it against this setting. |
+| Removed (from CRITICISM.md C1) | `Show Markdown source view`. Source view for `.md` is always one key away (`Write ▾` -> `Code`, and its keybinding), never behind a switch: hidden characters and formatting are the top Notepad-Markdown complaint. There is no `margin.markdown.sourceView` setting. |
 | Buttons | Primary `Start writing  Enter`, secondary `Back`. |
 | Writes | Only the rows switched on; nothing is written for rows left off. |
 | Initial focus | Row 1. |
@@ -145,3 +147,7 @@ Reduced motion: wrap the tree in `MotionConfig reducedMotion="always"` when the 
 ## 11. What first boot never does
 
 No sign-in, no account slot, no telemetry prompt, no "What's new", no feature list, no sample note, no illustration, no progress dots or bars, no confetti, no "You're all set", no tips, no status bar. The last button says `Start writing`, and Margin answers with a white page and a caret.
+
+## 12. Build notes (M3, 2026-09-27)
+
+The settings `margin.document.fontSize`, `margin.notes.folder`, `margin.code.lineNumbers`, `margin.terminal.shortcut` and `margin.spelling.enabled` are registered by `extensions/margin-welcome`; their consumers (Write/Read size, Save location, Code view, spell checking) land in M4 to M6. `margin.terminal.shortcut` gates a `Ctrl+\`` binding, but the core terminal still binds `Ctrl+\`` by default until the engineering lane removes it. The completion flag lives in the extension's global state (`margin.firstBoot.completed`), and the palette command is `Margin: Show Setup`. The workbench half of the landing (title-bar controls fade in, `Start writing.` placeholder, the one-time `Ctrl+O opens a file.` hint) is M4; today the webview fades out and a new untitled draft opens with the caret.

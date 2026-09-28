@@ -1,8 +1,8 @@
 {
   "name": "margin-welcome",
   "publisher": "vscode",
-  "displayName": "Margin Welcome",
-  "description": "First-boot welcome screen for Margin (spike: Animate UI in a webview).",
+  "displayName": "%displayName%",
+  "description": "%description%",
   "version": "10.0.0",
   "license": "MIT",
   "private": true,
@@ -18,7 +18,9 @@
       "supported": true
     }
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "*"
+  ],
   "main": "./out/extension",
   "scripts": {
     "compile": "gulp compile-extension:margin-welcome",
@@ -28,9 +30,53 @@
   "contributes": {
     "commands": [
       {
-        "command": "margin.welcome.show",
-        "title": "Show Welcome",
+        "command": "margin.firstBoot.show",
+        "title": "%command.showSetup%",
         "category": "Margin"
+      },
+      {
+        "command": "margin.firstBoot.showImportReport",
+        "title": "%command.showImportReport%",
+        "category": "Margin"
+      }
+    ],
+    "configuration": {
+      "title": "Margin",
+      "properties": {
+        "margin.document.fontSize": {
+          "type": "number",
+          "default": 17,
+          "minimum": 12,
+          "maximum": 28,
+          "description": "%config.document.fontSize%"
+        },
+        "margin.notes.folder": {
+          "type": "string",
+          "default": "",
+          "description": "%config.notes.folder%"
+        },
+        "margin.code.lineNumbers": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.code.lineNumbers%"
+        },
+        "margin.terminal.shortcut": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.terminal.shortcut%"
+        },
+        "margin.spelling.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.spelling.enabled%"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "key": "ctrl+`",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "config.margin.terminal.shortcut"
       }
     ]
   }

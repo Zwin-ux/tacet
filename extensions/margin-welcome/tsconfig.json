@@ -3,7 +3,7 @@
 	"compilerOptions": {
 		"rootDir": "./src",
 		"outDir": "./out",
-		"types": []
+		"types": ["node"]
 	},
 	"include": [
 		"src/**/*",

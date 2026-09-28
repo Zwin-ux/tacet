@@ -7,7 +7,14 @@ import tailwindcss from '@tailwindcss/vite';
 // No code splitting, no hashed names, no remote assets.
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
+  resolve: {
+    alias: [
+      { find: '@', replacement: path.resolve(import.meta.dirname, 'src') },
+      // Bundle trim: route 'motion/react' through the LazyMotion shim (src/lib/motion-lazy.ts).
+      { find: /^motion\/react$/, replacement: path.resolve(import.meta.dirname, 'src/lib/motion-lazy.ts') },
+      { find: /^motion-react-full$/, replacement: 'framer-motion' },
+    ],
+  },
   base: './',
   build: {
     outDir: path.resolve(import.meta.dirname, '../media'),

@@ -1,1 +1,9 @@
-export { cn } from "cn"
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+/** Joins class names. No class merging: Margin components never pass conflicting utilities. */
+export function cn(...parts: (string | false | null | undefined)[]): string {
+	return parts.filter(Boolean).join(' ');
+}

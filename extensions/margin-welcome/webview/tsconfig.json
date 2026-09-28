@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "types": ["vite/client"],
-    "paths": { "@/*": ["./src/*"] }
+    "paths": { "@/*": ["./src/*"], "motion-react-full": ["./node_modules/framer-motion"] }
   },
   "include": ["src"]
 }
