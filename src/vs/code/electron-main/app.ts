@@ -1534,8 +1534,9 @@ export class CodeApplication extends Disposable {
 		// Start to fetch shell environment (if needed) after window has opened
 		// Since this operation can take a long time, we want to warm it up while
 		// the window is opening.
-		// We also show an error to the user in case this fails.
-		this.resolveShellEnvironment(this.environmentMainService.args, process.env, true);
+		// Tacet: a failure here is only logged, never shown as a notification.
+		// The result is cached, so the terminal (opt-in) still gets the env.
+		this.resolveShellEnvironment(this.environmentMainService.args, process.env, false);
 
 		// Crash reporter
 		this.updateCrashReporterEnablement();
