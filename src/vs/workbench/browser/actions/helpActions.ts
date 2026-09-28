@@ -310,61 +310,6 @@ class OpenPrivacyStatementUrlAction extends Action2 {
 	}
 }
 
-class GetStartedWithAccessibilityFeatures extends Action2 {
-
-	static readonly ID = 'workbench.action.getStartedWithAccessibilityFeatures';
-
-	constructor() {
-		super({
-			id: GetStartedWithAccessibilityFeatures.ID,
-			title: localize2('getStartedWithAccessibilityFeatures', 'Get Started with Accessibility Features'),
-			category: Categories.Help,
-			f1: true,
-			precondition: IsSessionsWindowContext.negate(),
-			menu: {
-				id: MenuId.MenubarHelpMenu,
-				group: '1_welcome',
-				order: 6,
-				when: IsSessionsWindowContext.negate()
-			}
-		});
-	}
-	run(accessor: ServicesAccessor): void {
-		const commandService = accessor.get(ICommandService);
-		commandService.executeCommand('workbench.action.openWalkthrough', 'SetupAccessibility');
-	}
-}
-
-class AskVSCodeCopilot extends Action2 {
-	static readonly ID = 'workbench.action.askVScode';
-
-	constructor() {
-		super({
-			id: AskVSCodeCopilot.ID,
-			title: localize2('askVScode', 'Ask @vscode'),
-			category: Categories.Help,
-			f1: true,
-			precondition: ContextKeyExpr.and(ContextKeyExpr.equals('chatSetupHidden', false), ContextKeyExpr.equals('chatSetupDisabledInWorkspace', false), IsSessionsWindowContext.negate())
-		});
-	}
-
-	async run(accessor: ServicesAccessor): Promise<void> {
-		const commandService = accessor.get(ICommandService);
-		commandService.executeCommand('workbench.action.chat.open', { mode: 'agent', query: '@vscode ', isPartialQuery: true });
-
-	}
-}
-
-MenuRegistry.appendMenuItem(MenuId.MenubarHelpMenu, {
-	command: {
-		id: AskVSCodeCopilot.ID,
-		title: localize2('askVScode', 'Ask @vscode'),
-	},
-	order: 7,
-	group: '1_welcome',
-	when: ContextKeyExpr.and(ContextKeyExpr.equals('chatSetupHidden', false), ContextKeyExpr.equals('chatSetupDisabledInWorkspace', false), IsSessionsWindowContext.negate())
-});
-
 // --- Actions Registration
 
 if (KeybindingsReferenceAction.AVAILABLE) {
@@ -403,6 +348,3 @@ if (OpenPrivacyStatementUrlAction.AVAILABLE) {
 	registerAction2(OpenPrivacyStatementUrlAction);
 }
 
-registerAction2(GetStartedWithAccessibilityFeatures);
-
-registerAction2(AskVSCodeCopilot);
