@@ -26,6 +26,9 @@
       "workbench.tips.enabled": false,
       "workbench.editor.empty.hint": "hidden",
       "workbench.editor.showTabs": "none",
+      "workbench.editor.editorActionsLocation": "hidden",
+      "workbench.editor.centeredLayoutFixedWidth": true,
+      "window.title": "${dirty}${activeEditorShort}${separator}${appName}",
       "workbench.statusBar.visible": false,
       "workbench.reduceMotion": "auto",
       "workbench.tree.indent": 12,
@@ -54,6 +57,7 @@
       "editor.scrollbar.verticalScrollbarSize": 10,
       "editor.scrollbar.horizontalScrollbarSize": 10,
       "editor.padding.top": 16,
+      "editor.scrollBeyondLastLine": false,
       "editor.stickyScroll.enabled": false,
       "editor.inlineSuggest.enabled": false,
       "editor.hover.delay": 500,
@@ -78,6 +82,7 @@
         "editor.wordWrap": "bounded",
         "editor.wordWrapColumn": 72,
         "editor.padding.top": 56,
+        "editor.padding.bottom": 96,
         "editor.renderWhitespace": "none",
         "editor.lightbulb.enabled": "off"
       }
