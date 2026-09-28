@@ -1,14 +1,13 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest something for Tacet
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
-
 ---
 
-<!-- ⚠️⚠️ Do Not Delete This! feature_request_template ⚠️⚠️ -->
-<!-- Please read our Rules of Conduct: https://opensource.microsoft.com/codeofconduct/ -->
-<!-- Please search existing issues to avoid creating duplicates. -->
+**What you are trying to do**
 
-<!-- Describe the feature you'd like. -->
+**What would help**
+
+Tacet stays small on purpose: no AI features, no accounts, no sync service, no extension marketplace. Requests in those areas will be closed with a short note, not because they are bad ideas, but because they are a different app.

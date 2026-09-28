@@ -1,75 +1,102 @@
-# Tacet
+<p align="center">
+  <img src="tacet/design/assets/icon/margin-app-icon-1024.png" width="112" alt="Tacet icon: a white sheet of paper with a blue margin rule">
+</p>
 
-**A quiet place for your files.**
+<h1 align="center">Tacet</h1>
 
-An AI-free, notes-first desktop editor built from Code OSS. Paper-white, precise, and useful with a single file open. Markdown, plain text, and code share one dependable document system.
+<p align="center"><b>A quiet place to write.</b> Notepad with a VS Code feel, for Mac and Windows.</p>
 
-This repository currently contains the **requirements, design system, generated concepts, interactive design study, implementation plan, and pinned upstream source**. It is **not a built or release-qualified desktop app**.
+<p align="center">
+  <a href="#build-and-run">Build from source</a> ·
+  <a href="https://www.mazenzwin.com">Website</a> ·
+  <a href="LICENSE.txt">MIT (with one exception)</a>
+</p>
+
+<p align="center">
+  <img src=".github/assets/tacet-writing.png" alt="Tacet on a Mac: a note titled 'A quieter morning' with a paragraph, a checklist and a quote on a plain white page">
+</p>
+
+Tacet opens to a white page with a caret, and you write. Your notes are real files on your disk, Markdown reads like a page instead of a pile of symbols, and a terminal is there when you turn it on. There is no AI, no account and no telemetry.
+
+*Tacet* is the mark in a score that tells a player to stay silent. The app does the same: it stays out of the way.
+
+> **Status: early.** Development builds run on macOS (Apple silicon) and Windows (x64). There is no signed release yet. Build it from source below, and expect rough edges.
+
+## How it works
+
+| 1. Open | 2. Write | 3. Save |
+| --- | --- | --- |
+| Open a `.md` or `.txt` file, or start a new note. | A rendered, editable page with the caret ready. Source view is one key away. | Cmd/Ctrl+S writes an ordinary file. Durable drafts and autosave are next on the [plan](tacet/SHIP-PLAN.md) (M5). |
+
+## Tacet is for you if
+
+- You want a notes app that is **just a page**, not a workspace, vault or dashboard.
+- You like **Markdown**, but you would rather read it than stare at `#` and `*`.
+- You edit the files your coding agents read (`AGENTS.md`, `CLAUDE.md`, rule files) and want a plain, safe editor for them.
+- You want **keyboard-first** editing with the precision of VS Code's text engine.
+- You want your writing to stay **on your computer**, in files you own.
+
+## What Tacet is not
+
+| Not | Because |
+| --- | --- |
+| An IDE | No debugger, no tasks, no test runner, no source control. |
+| An AI editor | No models, no chat, no completions. Nothing you write is sent anywhere. |
+| A cloud notes service | No account, no sync server. Use any folder, synced or not. |
+| An extension marketplace | Built-in features only. |
 
 ## Build and run
 
-One branch builds both platforms. Node must match `.nvmrc` (24.18.0).
+One `main` branch builds both platforms. Node must match [`.nvmrc`](.nvmrc).
 
-**macOS** (Apple silicon or Intel; Xcode command line tools):
+**macOS** (Apple silicon or Intel, Xcode command line tools):
 
 ```sh
-nvm use                                   # 24.18.0
+nvm use
 VSCODE_INSTALL_CONCURRENCY=3 npm ci
 npm run compile
-./scripts/code.sh                         # dev build
-node margin/tools/smoke.mjs mac --skip-prelaunch   # smoke gate
+./scripts/code.sh                                  # run the dev build
+node tacet/tools/smoke.mjs mac --skip-prelaunch    # smoke gate: type, save, undo, terminal
+npm run gulp vscode-darwin-arm64-min               # package Tacet.app (next to the repo folder)
 ```
 
-**Windows** (x64; Visual Studio 2022 with C++ and Spectre-mitigated libraries, see [STATE](margin/STATE.md)):
+**Windows** (x64, Visual Studio 2022 with the C++ workload and Spectre-mitigated libraries):
 
 ```powershell
 nvm use 24.18.0
 $env:VSCODE_INSTALL_CONCURRENCY=3; npm ci
 npm run compile
 .\scripts\code.bat
-node margin\tools\smoke.mjs win --skip-prelaunch
+node tacet\tools\smoke.mjs win --skip-prelaunch
+npm run gulp vscode-win32-x64-min
 ```
 
-Package: `npm run gulp vscode-darwin-arm64-min` (macOS) or `npm run gulp vscode-win32-x64-min` (Windows).
+An 8 GB Mac can build Tacet; installs take a while the first time.
 
-## Start here
+## Project layout
 
-1. [Opus build handoff](margin/OPUS-HANDOFF.md): the execution prompt and first assignment.
-2. [Product requirements](margin/docs/01-PRODUCT.md): audience, differentiation, scope, workflows, and decision rules.
-3. [Document and file contract](margin/docs/02-DOCUMENT-CONTRACT.md): persistence, fidelity, recovery, concurrency, and Markdown.
-4. [Screen specification](margin/docs/03-SCREENS.md): 20 screens and states, including failures and compact windows.
-5. [Design system](margin/docs/04-DESIGN-SYSTEM.md): tokens, typography, icon, components, motion, and accessibility.
-6. [Architecture and modules](margin/docs/05-ARCHITECTURE.md): source integration, ownership, interfaces, and dependencies.
-7. [AI removal specification](margin/docs/06-NO-AI.md): what removal means and how to prove it.
-8. [Execution plan](margin/docs/07-EXECUTION.md): sequenced work packages and completion gates.
-9. [Acceptance matrix](margin/docs/08-ACCEPTANCE.md): behavior, recovery, performance, security, and release checks.
-10. [Research and source audit](margin/docs/09-RESEARCH.md): sources, observations, hypotheses, and limits.
-11. [Current state](margin/STATE.md): exact starting point and native build prerequisite.
+| Path | What it is |
+| --- | --- |
+| [`tacet/`](tacet) | Product docs, design system, ship plan and the smoke gate ([`tacet/SHIP-PLAN.md`](tacet/SHIP-PLAN.md) is the plan of record). |
+| `src/vs/workbench/contrib/margin/` | Tacet's workbench shell: title bar, page, identity. |
+| `extensions/margin-welcome/` | First boot (a small React webview). |
+| `extensions/theme-margin/` | Tacet Light, Tacet Dark and a high-contrast theme. |
+| `extensions/markdown-language-features/` | The rich Markdown page (write, read, source). |
 
-## See the direction
+Some internal folders and setting keys still use the project's earlier working name, *margin*. They will be renamed in one pass before 1.0.
 
-Open [the interactive design study](margin/prototype/index.html) in a browser. It uses sample notes and browser storage. It is not the native app or a persistence qualification harness. The sample terminal runs nothing.
+## Telemetry
 
-![Tacet writing concept](margin/concepts/01-writing.png)
+None. Tacet has no telemetry, crash reporting or usage tracking; the upstream telemetry and AI services are removed from the source. A full no-network audit of the packaged app is part of the 1.0 release gate.
 
-- [Capture, find, read, and recover](margin/concepts/02-everyday-states.png)
-- [Code and compact windows](margin/concepts/03-code-and-compact.png)
-- [Art prompts and corrections](margin/concepts/README.md)
+## Contributing
 
-Images are generated concept art. Written specifications govern behavior and measurements.
+Bug reports and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues privately: see [SECURITY.md](SECURITY.md).
 
-## Decisions already made
+## License
 
-- Windows and macOS from one branch. Apple-level care adapted to each platform's conventions.
-- White is the default identity. Accessibility and system high contrast still work.
-- No sign-in, mandatory vault, cloud service, or AI features.
-- Real files; original paths, text, encodings, and Markdown remain under the user's control.
-- Write, Read, and Code are views of the same document.
-- Coding tools are available deliberately; the first note opens into a quiet writing surface.
-- Recovery and file fidelity are release gates.
+Tacet is MIT licensed, with one exception: a few first-boot UI components from Animate UI are "MIT + Commons Clause". Details are in [LICENSE.txt](LICENSE.txt).
 
-## Source identity
+Tacet is built on [Code - OSS](https://github.com/microsoft/vscode), Copyright (c) Microsoft Corporation, under the MIT License. Tacet is not affiliated with or endorsed by Microsoft. Visual Studio Code is a trademark of Microsoft Corporation.
 
-Code OSS `1.139.0`, commit `2242ebbb54efeeb0129e08e919e7e8d43033cd83`, dated September 22, 2026. Local branch: `margin/notes-first`. Upstream source retains its [MIT license](LICENSE.txt); its original README is [preserved](README.upstream.md).
-
-Early implementation experiments are [quarantined](margin/experiments/README.md). They are sketches, not approved production architecture. Begin by obtaining a working baseline build.
+Made by [Mazen Zwin](https://www.mazenzwin.com).

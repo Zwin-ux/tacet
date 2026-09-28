@@ -1,14 +1,10 @@
-# VS Code Agents Instructions
+# Tacet — notes for coding agents
 
-## Tacet product authority
+Tacet is a calm, AI-free writing app built on Code - OSS. The product plan is `tacet/SHIP-PLAN.md`; specs live in `tacet/docs/` and the design system in `tacet/design/`.
 
-This checkout is the starting point for Tacet, an AI-free, notes-first Code OSS fork.
-Read `margin/OPUS-HANDOFF.md`, `margin/STATE.md`, and the referenced specifications before editing.
-Accepted direction: Windows first, notes first with coding tools available, Apple-level craft, white and iconic.
-`margin/experiments/` contains unqualified sketches. Do not apply them wholesale or claim a working desktop build.
-User requirements and Tacet's contracts govern this fork. Upstream coding conventions below apply where compatible.
-Do not spawn agents unless explicitly authorized; then respect the machine's cap and bounded build concurrency.
-
-This file provides instructions for AI coding agents working with the VS Code codebase.
-
-For detailed project overview, architecture, coding guidelines, and validation steps, see the [Copilot Instructions](.github/copilot-instructions.md).
+- **Never add AI features**, network calls, telemetry, accounts or a marketplace. The product promise depends on it.
+- **Text safety first.** Changes near saving, drafts or the Markdown page (`extensions/markdown-language-features`) must keep every byte the user typed. Prove it with the smoke gate.
+- Build: `npm ci` (Node from `.nvmrc`), `npm run compile`. Run: `./scripts/code.sh` (macOS) or `scripts\code.bat` (Windows).
+- Check: `node tacet/tools/smoke.mjs <tag> --skip-prelaunch` drives the dev build over CDP (no OS-level input) and must pass on the platform you changed.
+- Headers: new Tacet files use the Tacet copyright header (see CONTRIBUTING.md); upstream files keep Microsoft's.
+- Upstream conventions apply: tabs, layered `src/vs` imports (`common` → `browser`/`node` → `electron-*`), no new `.js` files.

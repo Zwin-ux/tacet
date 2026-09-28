@@ -1,7 +1,8 @@
-<!-- Thank you for submitting a Pull Request. Please:
-* Read our Pull Request guidelines:
-  https://github.com/microsoft/vscode/wiki/How-to-Contribute#pull-requests
-* Associate an issue with the Pull Request.
-* Ensure that the code is up-to-date with the `main` branch.
-* Include a description of the proposed changes and how to test them.
--->
+**What this changes**
+
+**How you checked it**
+- [ ] `npm run compile` passes
+- [ ] Smoke gate passes on your platform: `node tacet/tools/smoke.mjs <tag> --skip-prelaunch`
+- [ ] Tested on: macOS / Windows
+
+**Anything that could lose or change a user's text?**

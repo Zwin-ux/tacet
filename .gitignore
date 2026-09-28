@@ -56,9 +56,10 @@ dist
 .agent-validation/
 .gstack/
 
-# Tacet design: large generated media stays local (not in the public repo history)
-margin/design/assets/rejected/v2/
-margin/design/assets/motion/**/*.mp4
-margin/design/assets/hero/
-margin/design/assets/_jobs/v2/
-margin/design/assets/motion/keyframes/
+# Tacet: design media and local smoke evidence stay out of the repo
+tacet/design/assets/rejected/
+tacet/design/assets/motion/
+tacet/design/assets/hero/
+tacet/design/assets/_jobs/
+tacet/evidence/
+*.tsbuildinfo
