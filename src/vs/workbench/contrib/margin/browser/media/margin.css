@@ -33,3 +33,12 @@
 .monaco-workbench .part.titlebar.titlebar > .titlebar-container > .titlebar-left > .window-appicon:not(.codicon) {
 	background-image: url('./margin-mark.svg');
 }
+
+/* Checkbox (design guide 4.25): checked is an accent fill with a white tick. The widget paints one
+   inline background for both states, so the checked fill must override it. */
+
+.monaco-workbench .monaco-custom-toggle.monaco-checkbox.checked {
+	background-color: var(--vscode-checkbox-selectBackground) !important;
+	border-color: var(--vscode-checkbox-selectBorder) !important;
+	color: var(--vscode-checkbox-foreground) !important;
+}
