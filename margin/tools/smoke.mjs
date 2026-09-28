@@ -40,6 +40,15 @@ const results = { tag, started: new Date().toISOString() };
 const REQUIRED_CHECKS = ['launch', 'writingLayout', 'richEditor', 'typeSave', 'undo', 'typingCases', 'terminal', 'noGit'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// Platform chords: macOS uses Cmd for commands, Cmd+Up/Down for document start/end and Option for word moves.
+const isMac = process.platform === 'darwin';
+const KEY = {
+	mod: isMac ? 'Meta' : 'Control',
+	docStart: isMac ? 'Meta+ArrowUp' : 'Control+Home',
+	docEnd: isMac ? 'Meta+ArrowDown' : 'Control+End',
+	wordRight: isMac ? 'Alt+ArrowRight' : 'Control+ArrowRight',
+};
+
 function freePort() {
 	return new Promise((res, rej) => {
 		const server = createServer();
@@ -101,10 +110,10 @@ async function shot(page, name) {
 	return path;
 }
 
-// Presses Ctrl+S until the file on disk satisfies the predicate (retries a lost keystroke).
+// Presses Ctrl/Cmd+S until the file on disk satisfies the predicate (retries a lost keystroke).
 async function saveUntil(page, predicate, attempts = 4) {
 	for (let attempt = 0; attempt < attempts; attempt++) {
-		await page.keyboard.press('Control+s');
+		await page.keyboard.press(`${KEY.mod}+s`);
 		for (let i = 0; i < 10; i++) {
 			await sleep(300);
 			if (predicate(readFileSync(note, 'utf8'))) {
@@ -143,7 +152,7 @@ async function pressSequence(page, keys, delay) {
 async function undoToOriginal(page) {
 	for (let round = 0; round < 3; round++) {
 		for (let i = 0; i < 40; i++) {
-			await page.keyboard.press('Control+z');
+			await page.keyboard.press(`${KEY.mod}+z`);
 			await sleep(30);
 		}
 		if (await saveUntil(page, text => text === original, 1)) {
@@ -159,22 +168,22 @@ async function runTypingCases(page) {
 	const cases = [
 		{
 			name: 'end-10ms',
-			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+End'); await page.keyboard.type('Fast at ten.', { delay: 10 }); },
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press(KEY.docEnd); await page.keyboard.type('Fast at ten.', { delay: 10 }); },
 			expect: original + 'Fast at ten.'
 		},
 		{
 			name: 'start',
-			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+Home'); await page.keyboard.type('Start ', { delay: 10 }); },
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press(KEY.docStart); await page.keyboard.type('Start ', { delay: 10 }); },
 			expect: original.replace('# Smoke note', '# Start Smoke note')
 		},
 		{
 			name: 'after-heading',
-			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+Home'); await page.keyboard.press('End'); await page.keyboard.type(' title', { delay: 10 }); },
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press(KEY.docStart); await page.keyboard.press('End'); await page.keyboard.type(' title', { delay: 10 }); },
 			expect: original.replace('# Smoke note', '# Smoke note title')
 		},
 		{
 			name: 'middle',
-			run: async () => { await click('First line of the note.'); await page.keyboard.press('Home'); await pressSequence(page, ['Control+ArrowRight', 'Control+ArrowRight', ...' mid'], 10); },
+			run: async () => { await click('First line of the note.'); await page.keyboard.press('Home'); await pressSequence(page, [KEY.wordRight, KEY.wordRight, ...' mid'], 10); },
 			expect: original.replace('First line of', 'First line mid of')
 		},
 		{
@@ -184,14 +193,14 @@ async function runTypingCases(page) {
 		},
 		{
 			name: 'enter-backspace-10ms',
-			run: async () => { await click('Last line of the note.'); await page.keyboard.press('Control+End'); await pressSequence(page, [...'abc', 'Backspace', 'd', 'Enter', 'Enter', ...'next'], 10); },
+			run: async () => { await click('Last line of the note.'); await page.keyboard.press(KEY.docEnd); await pressSequence(page, [...'abc', 'Backspace', 'd', 'Enter', 'Enter', ...'next'], 10); },
 			expect: null // Enter at the document end is a paragraph break; checked below by shape.
 		},
 		{
 			name: 'composition',
 			run: async () => {
 				await click('Last line of the note.');
-				await page.keyboard.press('Control+End');
+				await page.keyboard.press(KEY.docEnd);
 				const cdp = await page.context().newCDPSession(page);
 				try {
 					await cdp.send('Input.imeSetComposition', { text: 'n', selectionStart: 1, selectionEnd: 1 });
@@ -233,7 +242,13 @@ async function runTypingCases(page) {
 
 function killTree(pid) {
 	// Stops only the process tree rooted at the PID this script spawned.
-	if (pid) {
+	if (!pid) {
+		return;
+	}
+	if (isMac) {
+		// The launcher is spawned detached, so its PID leads the process group.
+		try { process.kill(-pid, 'SIGTERM'); } catch { /* already gone */ }
+	} else {
 		spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore' });
 	}
 }
@@ -253,14 +268,15 @@ async function main() {
 	const port = await freePort();
 	results.port = port;
 	const log = createWriteStream(join(evidence, `${tag}-launch.log`));
-	const child = spawn('cmd.exe', ['/d', '/c', 'scripts\\code.bat',
+	const [launcher, ...launcherArgs] = isMac ? ['scripts/code.sh'] : ['cmd.exe', '/d', '/c', 'scripts\\code.bat'];
+	const child = spawn(launcher, [...launcherArgs,
 		`--remote-debugging-port=${port}`,
 		'--user-data-dir', join(scratch, 'profile'),
 		'--extensions-dir', join(scratch, 'ext'),
 		'--disable-workspace-trust',
 		'--skip-release-notes',
 		fixtures, note
-	], { cwd: root, env: { ...process.env, VSCODE_SKIP_PRELAUNCH: '1' }, windowsHide: false, stdio: ['ignore', 'pipe', 'pipe'] });
+	], { cwd: root, env: { ...process.env, VSCODE_SKIP_PRELAUNCH: '1' }, windowsHide: false, detached: isMac, stdio: ['ignore', 'pipe', 'pipe'] });
 	child.stdout.pipe(log);
 	child.stderr.pipe(log);
 	results.launcherPid = child.pid;
@@ -314,7 +330,7 @@ async function main() {
 			}
 			// Ctrl+End then type at once: the chord must land before the first character
 			// (regression: 'note.T\nyped ...' when editor chords were routed through the host).
-			await page.keyboard.press('Control+End');
+			await page.keyboard.press(KEY.docEnd);
 			await page.keyboard.type(typed, { delay: 50 });
 			await sleep(300);
 			const saved = await saveUntil(page, text => text === original + typed);
@@ -329,7 +345,7 @@ async function main() {
 		try {
 			// Undo stops at the opened content, so extra presses are harmless.
 			for (let i = 0; i < 40; i++) {
-				await page.keyboard.press('Control+z');
+				await page.keyboard.press(`${KEY.mod}+z`);
 				await sleep(40);
 			}
 			const restored = await saveUntil(page, text => text === original);
@@ -376,9 +392,9 @@ async function main() {
 
 		// Writing layout: close panel and side bar for the reference screenshot.
 		try {
-			await page.keyboard.press('Control+j');
+			await page.keyboard.press(`${KEY.mod}+j`);
 			await sleep(300);
-			await page.keyboard.press('Control+b');
+			await page.keyboard.press(`${KEY.mod}+b`);
 			await sleep(1000);
 			results.screenshots.push(await shot(page, 'writing'));
 		} catch (error) {
