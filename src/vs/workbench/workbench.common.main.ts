@@ -219,9 +219,6 @@ import './contrib/sash/browser/sash.contribution.js';
 import './contrib/git/browser/git.contributions.js';
 
 // SCM
-import './contrib/scm/browser/scm.contribution.js';
-import './contrib/scm/browser/quickDiff.contribution.js';
-import './contrib/scm/browser/scm.service.contribution.js';
 
 // Markers
 import './contrib/markers/browser/markers.contribution.js';
@@ -229,7 +226,6 @@ import './contrib/markers/browser/markers.contribution.js';
 // Process Explorer
 
 // Merge Editor
-import './contrib/mergeEditor/browser/mergeEditor.contribution.js';
 
 // Multi Diff Editor
 import './contrib/multiDiffEditor/browser/multiDiffEditor.contribution.js';

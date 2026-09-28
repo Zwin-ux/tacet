@@ -62,10 +62,8 @@ import { ExtHostMessageService } from './extHostMessageService.js';
 import { IExtHostOutputService } from './extHostOutput.js';
 import { ExtHostProfileContentHandlers } from './extHostProfileContentHandler.js';
 import { IExtHostProgress } from './extHostProgress.js';
-import { ExtHostQuickDiff } from './extHostQuickDiff.js';
 import { createExtHostQuickOpen } from './extHostQuickOpen.js';
 import { IExtHostRpcService } from './extHostRpcService.js';
-import { ExtHostSCM } from './extHostSCM.js';
 import { IExtHostSearch } from './extHostSearch.js';
 import { IExtHostSecretState } from './extHostSecretState.js';
 import { ExtHostStatusBar } from './extHostStatusBar.js';
@@ -188,8 +186,6 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 	const extHostFileSystem = rpcProtocol.set(ExtHostContext.ExtHostFileSystem, new ExtHostFileSystem(rpcProtocol, extHostLanguageFeatures));
 	const extHostFileSystemEvent = rpcProtocol.set(ExtHostContext.ExtHostFileSystemEventService, new ExtHostFileSystemEventService(rpcProtocol, extHostLogService, extHostDocumentsAndEditors));
 	const extHostQuickOpen = rpcProtocol.set(ExtHostContext.ExtHostQuickOpen, createExtHostQuickOpen(rpcProtocol, extHostWorkspace, extHostCommands));
-	const extHostSCM = rpcProtocol.set(ExtHostContext.ExtHostSCM, new ExtHostSCM(rpcProtocol, extHostCommands, extHostDocuments, extHostLogService));
-	const extHostQuickDiff = rpcProtocol.set(ExtHostContext.ExtHostQuickDiff, new ExtHostQuickDiff(rpcProtocol, extHostDocuments, uriTransformer));
 	const extHostLabelService = rpcProtocol.set(ExtHostContext.ExtHostLabelService, new ExtHostLabelService(rpcProtocol));
 	const extHostTheming = rpcProtocol.set(ExtHostContext.ExtHostTheming, new ExtHostTheming(rpcProtocol));
 	const extHostWebviews = rpcProtocol.set(ExtHostContext.ExtHostWebviews, new ExtHostWebviews(rpcProtocol, initData.remote, extHostWorkspace, extHostLogService, extHostApiDeprecation));
@@ -951,11 +947,13 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			},
 			registerQuickDiffProvider(selector: vscode.DocumentSelector, quickDiffProvider: vscode.QuickDiffProvider, id: string, label: string, rootUri?: vscode.Uri): vscode.Disposable {
 				checkProposedApiEnabled(extension, 'quickDiffProvider');
-				return extHostQuickDiff.registerQuickDiffProvider(extension, checkSelector(selector), quickDiffProvider, id, label, rootUri);
+				// Margin has no source control: providers are accepted and ignored.
+				return new extHostTypes.Disposable(() => { });
 			},
 			createSourceControlDiffInformation(uri: vscode.Uri): vscode.SourceControlDiffInformationProvider {
 				checkProposedApiEnabled(extension, 'textEditorDiffInformation');
-				return extHostQuickDiff.createSourceControlDiffInformation(uri);
+				// Margin has no source control: there is never diff information.
+				return { diffInformation: undefined, onDidChange: Event.None, dispose: () => { } };
 			},
 			get linkPresentationRules(): readonly vscode.LinkPresentationRule[] {
 				checkProposedApiEnabled(extension, 'linkPresentation');
@@ -1327,19 +1325,17 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			},
 		};
 
-		// namespace: scm
+		// namespace: scm — Margin has no source control. There is no input box and
+		// no source control can be created.
 		const scm: typeof vscode.scm = {
 			get inputBox() {
 				extHostApiDeprecation.report('scm.inputBox', extension,
 					`Use 'SourceControl.inputBox' instead`);
 
-				return extHostSCM.getLastInputBox(extension)!; // Strict null override - Deprecated api
+				return undefined!; // Strict null override - Deprecated api
 			},
-			createSourceControl(id: string, label: string, rootUri?: vscode.Uri, iconPath?: vscode.IconPath, isHidden?: boolean, parent?: vscode.SourceControl): vscode.SourceControl {
-				if (iconPath || isHidden || parent) {
-					checkProposedApiEnabled(extension, 'scmProviderOptions');
-				}
-				return extHostSCM.createSourceControl(extension, id, label, rootUri, iconPath, isHidden, parent);
+			createSourceControl(): vscode.SourceControl {
+				throw new Error('Source control is not available in Margin.');
 			}
 		};
 

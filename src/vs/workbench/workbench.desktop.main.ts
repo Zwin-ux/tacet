@@ -148,7 +148,6 @@ import './contrib/splash/electron-browser/splash.contribution.js';
 import './contrib/localHistory/electron-browser/localHistory.contribution.js';
 
 // Merge Editor
-import './contrib/mergeEditor/electron-browser/mergeEditor.contribution.js';
 
 // Multi Diff Editor
 import './contrib/multiDiffEditor/browser/multiDiffEditor.contribution.js';

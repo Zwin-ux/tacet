@@ -37,7 +37,7 @@ const original = '# Smoke note\n\nFirst line of the note.\n\n- first item\n- sec
 const typed = 'Typed by the smoke gate.';
 
 const results = { tag, started: new Date().toISOString() };
-const REQUIRED_CHECKS = ['launch', 'writingLayout', 'richEditor', 'typeSave', 'undo', 'typingCases', 'terminal', 'git'];
+const REQUIRED_CHECKS = ['launch', 'writingLayout', 'richEditor', 'typeSave', 'undo', 'typingCases', 'terminal', 'noGit'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function freePort() {
@@ -364,22 +364,14 @@ async function main() {
 			results.terminal = `FAIL (${error.message.split('\n')[0]})`;
 		}
 
-		// Source control.
+		// Source control is removed (owner, 2026-09-27): the fixture is a git repository, and Margin must show no trace of it.
 		try {
 			await page.keyboard.press('Control+Shift+G');
-			await page.waitForSelector('div[id="workbench.view.scm"]', { timeout: 20_000 });
-			let listed = false;
-			for (let i = 0; i < 60 && !listed; i++) {
-				listed = await page.locator('div[id="workbench.view.scm"] .monaco-list-row .resource').filter({ hasText: 'term.txt' }).count() > 0;
-				if (!listed) {
-					await sleep(500);
-				}
-			}
-			const porcelain = git('status', '--porcelain').stdout;
-			results.git = listed ? 'PASS (view lists term.txt)' : porcelain.includes('term.txt') ? 'PARTIAL (view open, term.txt not listed)' : 'FAIL';
-			results.screenshots.push(await shot(page, 'scm'));
+			await sleep(2_000);
+			const scmViews = await page.locator('div[id^="workbench.view.scm"], div[id^="workbench.scm"]').count();
+			results.noGit = scmViews === 0 ? 'PASS (no source control view in a git repository)' : `FAIL (${scmViews} source control views)`;
 		} catch (error) {
-			results.git = `FAIL (${error.message.split('\n')[0]})`;
+			results.noGit = `FAIL (${error.message.split('\n')[0]})`;
 		}
 
 		// Writing layout: close panel and side bar for the reference screenshot.

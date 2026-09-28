@@ -35,7 +35,6 @@ import { IMarkerData, IRelatedInformation, MarkerSeverity, MarkerTag } from '../
 import { ProgressLocation as MainProgressLocation } from '../../../platform/progress/common/progress.js';
 import { DEFAULT_EDITOR_ASSOCIATION, SaveReason } from '../../common/editor.js';
 import { IViewBadge } from '../../common/views.js';
-import { InputValidationType } from '../../contrib/scm/common/scm.js';
 import * as search from '../../contrib/search/common/search.js';
 import { EditorGroupColumn } from '../../services/editor/common/editorGroupColumn.js';
 import { ACTIVE_GROUP, SIDE_GROUP } from '../../services/editor/common/editorService.js';
@@ -1916,14 +1915,14 @@ export namespace IconPath {
 }
 
 export namespace SourceControlInputBoxValidationType {
-	export function from(type: number): InputValidationType {
+	export function from(type: number): extHostProtocol.InputValidationType {
 		switch (type) {
 			case types.SourceControlInputBoxValidationType.Error:
-				return InputValidationType.Error;
+				return extHostProtocol.InputValidationType.Error;
 			case types.SourceControlInputBoxValidationType.Warning:
-				return InputValidationType.Warning;
+				return extHostProtocol.InputValidationType.Warning;
 			case types.SourceControlInputBoxValidationType.Information:
-				return InputValidationType.Information;
+				return extHostProtocol.InputValidationType.Information;
 			default:
 				throw new Error('Unknown SourceControlInputBoxValidationType');
 		}

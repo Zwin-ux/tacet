@@ -32,7 +32,6 @@ import { diffSets, diffMaps } from '../../../base/common/collections.js';
 import { IPaneCompositePartService } from '../../services/panecomposite/browser/panecomposite.js';
 import { ViewContainerLocation } from '../../common/views.js';
 import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
-import { IQuickDiffModelService } from '../../contrib/scm/browser/quickDiffModel.js';
 
 
 class TextEditorSnapshot {
@@ -296,8 +295,7 @@ export class MainThreadDocumentsAndEditors extends Disposable implements IMainTh
 		@IUriIdentityService uriIdentityService: IUriIdentityService,
 		@IClipboardService private readonly _clipboardService: IClipboardService,
 		@IPathService pathService: IPathService,
-		@IConfigurationService configurationService: IConfigurationService,
-		@IQuickDiffModelService quickDiffModelService: IQuickDiffModelService
+		@IConfigurationService configurationService: IConfigurationService
 	) {
 		super();
 		this._proxy = extHostContext.getProxy(ExtHostContext.ExtHostDocumentsAndEditors);
@@ -305,7 +303,7 @@ export class MainThreadDocumentsAndEditors extends Disposable implements IMainTh
 		this._mainThreadDocuments = this._register(new MainThreadDocuments(extHostContext, this._modelService, this._textFileService, fileService, textModelResolverService, environmentService, uriIdentityService, workingCopyFileService, pathService));
 		extHostContext.set(MainContext.MainThreadDocuments, this._mainThreadDocuments);
 
-		this._mainThreadEditors = this._register(new MainThreadTextEditors(this, extHostContext, codeEditorService, this._editorService, this._editorGroupService, configurationService, quickDiffModelService, uriIdentityService));
+		this._mainThreadEditors = this._register(new MainThreadTextEditors(this, extHostContext, codeEditorService, this._editorService, this._editorGroupService, configurationService, uriIdentityService));
 		extHostContext.set(MainContext.MainThreadTextEditors, this._mainThreadEditors);
 
 		// It is expected that the ctor of the state computer calls our `_onDelta`.

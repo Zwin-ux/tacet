@@ -23,7 +23,6 @@ import { ViewPaneContainer } from '../../browser/parts/views/viewPaneContainer.j
 import { IWorkbenchContribution, WorkbenchPhase, registerWorkbenchContribution2 } from '../../common/contributions.js';
 import { ICustomViewDescriptor, IViewContainersRegistry, IViewDescriptor, IViewsRegistry, ViewContainer, Extensions as ViewContainerExtensions, ViewContainerLocation } from '../../common/views.js';
 import { VIEWLET_ID as EXPLORER } from '../../contrib/files/common/files.js';
-import { VIEWLET_ID as SCM } from '../../contrib/scm/common/scm.js';
 import { WebviewViewPane } from '../../contrib/webviewView/browser/webviewViewPane.js';
 import { Extensions as ExtensionFeaturesRegistryExtensions, IExtensionFeatureTableRenderer, IExtensionFeaturesRegistry, IRenderedData, IRowData, ITableData } from '../../services/extensionManagement/common/extensionFeatures.js';
 import { isProposedApiEnabled } from '../../services/extensions/common/extensions.js';
@@ -607,7 +606,6 @@ class ViewsExtensionHandler implements IWorkbenchContribution {
 	private getViewContainer(value: string): ViewContainer | undefined {
 		switch (value) {
 			case 'explorer': return this.viewContainersRegistry.get(EXPLORER);
-			case 'scm': return this.viewContainersRegistry.get(SCM);
 			default: return this.viewContainersRegistry.get(`workbench.view.extension.${value}`);
 		}
 	}
@@ -615,7 +613,6 @@ class ViewsExtensionHandler implements IWorkbenchContribution {
 	private showCollapsed(container: ViewContainer): boolean {
 		switch (container.id) {
 			case EXPLORER:
-			case SCM:
 				return true;
 		}
 		return false;

@@ -28,14 +28,11 @@ import { IExtHostContext } from '../../services/extensions/common/extHostCustome
 import { IEditorControl } from '../../common/editor.js';
 import { getCodeEditor, ICodeEditor } from '../../../editor/browser/editorBrowser.js';
 import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
-import { IQuickDiffModelService } from '../../contrib/scm/browser/quickDiffModel.js';
 import { autorun, constObservable, derived, derivedOpts, IObservable, observableFromEvent } from '../../../base/common/observable.js';
 import { IUriIdentityService } from '../../../platform/uriIdentity/common/uriIdentity.js';
 import { isITextModel } from '../../../editor/common/model.js';
 import { LineRangeMapping } from '../../../editor/common/diff/rangeMapping.js';
 import { equals } from '../../../base/common/arrays.js';
-import { Event } from '../../../base/common/event.js';
-import { DiffAlgorithmName } from '../../../editor/common/services/editorWorker.js';
 
 export interface IMainThreadEditorLocator {
 	getEditor(id: string): MainThreadTextEditor | undefined;
@@ -61,7 +58,6 @@ export class MainThreadTextEditors implements MainThreadTextEditorsShape {
 		@IEditorService private readonly _editorService: IEditorService,
 		@IEditorGroupsService private readonly _editorGroupService: IEditorGroupsService,
 		@IConfigurationService private readonly _configurationService: IConfigurationService,
-		@IQuickDiffModelService private readonly _quickDiffModelService: IQuickDiffModelService,
 		@IUriIdentityService private readonly _uriIdentityService: IUriIdentityService
 	) {
 		this._instanceId = String(++MainThreadTextEditors.INSTANCE_COUNT);
@@ -153,53 +149,19 @@ export class MainThreadTextEditors implements MainThreadTextEditorsShape {
 				return constObservable(undefined);
 			}
 
-			// TextEditor
+			// TextEditor - Margin has no source control, so a plain text editor has no quick diff
 			if (isITextModel(editorModel)) {
-				const quickDiffModelRef = this._quickDiffModelService.createQuickDiffModelReference(editorModel.uri);
-				if (!quickDiffModelRef) {
-					return constObservable(undefined);
-				}
-
-				toDispose.push(quickDiffModelRef);
-				return observableFromEvent(this, quickDiffModelRef.object.onDidChange, () => {
-					return quickDiffModelRef.object.getQuickDiffResults()
-						.map(result => ({
-							original: result.original,
-							modified: result.modified,
-							changes: result.changes2
-						}));
-				});
-			}
-
-			// DiffEditor - we create a quick diff model (using the diff algorithm used by the diff editor)
-			// even for diff editor so that we can provide multiple "original resources" to diff with the original
-			// and modified resources.
-			const diffAlgorithm = this._configurationService.getValue<DiffAlgorithmName>('diffEditor.diffAlgorithm');
-			const quickDiffModelRef = this._quickDiffModelService.createQuickDiffModelReference(editorModel.modified.uri, { algorithm: diffAlgorithm });
-			if (!quickDiffModelRef) {
 				return constObservable(undefined);
 			}
 
-			toDispose.push(quickDiffModelRef);
-			return observableFromEvent(Event.any(quickDiffModelRef.object.onDidChange, diffEditor.onDidUpdateDiff), () => {
+			// DiffEditor
+			return observableFromEvent(diffEditor.onDidUpdateDiff, () => {
 				const diffChanges = diffEditor.getDiffComputationResult()?.changes2 ?? [];
-				const diffInformation = [{
+				return [{
 					original: editorModel.original.uri,
 					modified: editorModel.modified.uri,
 					changes: diffChanges.map(change => change as LineRangeMapping)
 				}];
-
-				// Add quick diff information from secondary/contributed providers
-				const quickDiffInformation = quickDiffModelRef.object.getQuickDiffResults()
-					.filter(result => result.providerKind !== 'primary')
-					.map(result => ({
-						original: result.original,
-						modified: result.modified,
-						changes: result.changes2
-					}));
-
-				// Combine diff and quick diff information
-				return diffInformation.concat(quickDiffInformation);
 			});
 		});
 
@@ -387,23 +349,8 @@ export class MainThreadTextEditors implements MainThreadTextEditorsShape {
 			return Promise.resolve(diffEditor.getLineChanges() || []);
 		}
 
-		if (!codeEditor.hasModel()) {
-			return Promise.resolve([]);
-		}
-
-		const quickDiffModelRef = this._quickDiffModelService.createQuickDiffModelReference(codeEditor.getModel().uri);
-		if (!quickDiffModelRef) {
-			return Promise.resolve([]);
-		}
-
-		try {
-			const primaryQuickDiff = quickDiffModelRef.object.quickDiffs.find(quickDiff => quickDiff.kind === 'primary');
-			const primaryQuickDiffChanges = quickDiffModelRef.object.changes.filter(change => change.providerId === primaryQuickDiff?.id);
-
-			return Promise.resolve(primaryQuickDiffChanges.map(change => change.change) ?? []);
-		} finally {
-			quickDiffModelRef.dispose();
-		}
+		// Margin has no source control, so a plain text editor has no line changes
+		return Promise.resolve([]);
 	}
 }
 

@@ -15,7 +15,6 @@ import { DiffEditorInput } from '../../../../common/editor/diffEditorInput.js';
 import { EditorInput } from '../../../../common/editor/editorInput.js';
 import { TextResourceEditorInput } from '../../../../common/editor/textResourceEditorInput.js';
 import { FileEditorInput } from '../../../../contrib/files/browser/editors/fileEditorInput.js';
-import { MergeEditorInput, MergeEditorInputData } from '../../../../contrib/mergeEditor/browser/mergeEditorInput.js';
 import { UntitledTextEditorInput } from '../../../../services/untitled/common/untitledTextEditorInput.js';
 import { TestEditorInput, TestServiceAccessor, workbenchInstantiationService } from '../../workbenchTestServices.js';
 
@@ -163,29 +162,6 @@ suite('EditorInput', () => {
 		assert.ok(!fileEditorInput.matches(untypedResourceMergeEditorInput));
 
 		fileEditorInput.dispose();
-	});
-
-	test('Untyped inputs properly match MergeEditorInput', () => {
-		const mergeData: MergeEditorInputData = { uri: testResource, description: undefined, detail: undefined, title: undefined };
-		const mergeEditorInput = instantiationService.createInstance(MergeEditorInput, testResource, mergeData, mergeData, testResource);
-
-		assert.ok(!mergeEditorInput.matches(untypedResourceEditorInput));
-		assert.ok(!mergeEditorInput.matches(untypedTextResourceEditorInput));
-		assert.ok(!mergeEditorInput.matches(untypedResourceSideBySideEditorInput));
-		assert.ok(!mergeEditorInput.matches(untypedUntitledResourceEditorinput));
-		assert.ok(!mergeEditorInput.matches(untypedResourceDiffEditorInput));
-		assert.ok(mergeEditorInput.matches(untypedResourceMergeEditorInput));
-
-		stripOverrides();
-
-		assert.ok(!mergeEditorInput.matches(untypedResourceEditorInput));
-		assert.ok(!mergeEditorInput.matches(untypedTextResourceEditorInput));
-		assert.ok(!mergeEditorInput.matches(untypedResourceSideBySideEditorInput));
-		assert.ok(!mergeEditorInput.matches(untypedUntitledResourceEditorinput));
-		assert.ok(!mergeEditorInput.matches(untypedResourceDiffEditorInput));
-		assert.ok(mergeEditorInput.matches(untypedResourceMergeEditorInput));
-
-		mergeEditorInput.dispose();
 	});
 
 	test('Untyped inputs properly match UntitledTextEditorInput', () => {
