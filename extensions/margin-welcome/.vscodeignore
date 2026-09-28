@@ -1,4 +1,6 @@
 src/**
 webview/**
-tsconfig.json
-out/**/*.map
+out/**
+tsconfig*.json
+**/*.tsbuildinfo
+esbuild*.mts
