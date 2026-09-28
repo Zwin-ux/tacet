@@ -1,7 +1,7 @@
 # Tacet first boot
 
-Status: design spec v2.1, 2026-09-27 (v2: no status bar anywhere, optional Extras step, animated mark on step 1; v2.1: Markdown source view row removed and OneDrive honesty on step 3, from CRITICISM.md C1, C2; `Check spelling` Extra, owner decision). Owner: margin/design. Built in `extensions/margin-welcome` (M3); test gate `margin/tools/first-boot.mjs`.
-Basis: [docs/10-REBUILD.md](../docs/10-REBUILD.md) revision 2026-09-27 (first boot is a React webview built with Animate UI in `extensions/margin-welcome`; git removed), [REFERENCES-V2.md](REFERENCES-V2.md) §6, owner direction 2026-09-27 (title bar + page only by default; the status line is an opt-in extra), [ANIMATION-GATE.md](ANIMATION-GATE.md), and [DESIGN-GUIDE.md](DESIGN-GUIDE.md) for everything not changed here. DESIGN-GUIDE §4.28 ("no first-run surface") and §4.18 (footer always on) conflict with this file; the guide owner must fold the changes in. This file does not edit the guide.
+Status: design spec v2.1, 2026-09-27 (v2: no status bar anywhere, optional Extras step, animated mark on step 1; v2.1: Markdown source view row removed and OneDrive honesty on step 3, from CRITICISM.md C1, C2; `Check spelling` Extra, owner decision). Owner: tacet/design. Built in `extensions/tacet-welcome` (M3); test gate `tacet/tools/first-boot.mjs`.
+Basis: [docs/10-REBUILD.md](../docs/10-REBUILD.md) revision 2026-09-27 (first boot is a React webview built with Animate UI in `extensions/tacet-welcome`; git removed), [REFERENCES-V2.md](REFERENCES-V2.md) §6, owner direction 2026-09-27 (title bar + page only by default; the status line is an opt-in extra), [ANIMATION-GATE.md](ANIMATION-GATE.md), and [DESIGN-GUIDE.md](DESIGN-GUIDE.md) for everything not changed here. DESIGN-GUIDE §4.28 ("no first-run surface") and §4.18 (footer always on) conflict with this file; the guide owner must fold the changes in. This file does not edit the guide.
 
 Renders: [assets/first-boot/](assets/first-boot/). Motion: [motion/MOTION.md](motion/MOTION.md) (M-07), mark: [assets/animated/](assets/animated/). Written numbers beat the renders.
 
@@ -28,14 +28,14 @@ The first boot is up to four short pages on the same white sheet the user will w
 
 | Block | Spec |
 | --- | --- |
-| Heading | 36 x 36 animated Tacet mark, then 12 gap, then `Tacet`, on one line. The mark plays the pen-stroke draw once when the step appears (880ms, [assets/animated/margin-mark.css](assets/animated/margin-mark.css) `.mm--draw`; reduced motion: 200ms fade). Input is live from the first frame. |
+| Heading | 36 x 36 animated Tacet mark, then 12 gap, then `Tacet`, on one line. The mark plays the pen-stroke draw once when the step appears (880ms, [assets/animated/tacet-mark.css](assets/animated/tacet-mark.css) `.mm--draw`; reduced motion: 200ms fade). Input is live from the first frame. |
 | Line | `Choose how the page looks. You can change this later in Settings.` |
 | Theme | Label `Theme` (14/20 semibold ink), 8 below: segmented control `System` / `Light` / `Dark`, 28 tall, segments 80 wide, track sunken radius 6, white thumb radius 4 with 1px controlQuiet edge (guide §4.5 anatomy). Default `System`. |
 | Text size | Label `Text size`, 8 below: stepper `-` `17` `+` (buttons 28 x 28 sunken, radius 4; value 14/20 tabular, 40 wide centered), range 12 to 28, and `Reset` text button when not 17. |
 | Sample | 16 below the stepper: one sentence in the real document typography at the chosen size (Segoe UI Variable Text, 17/28 at default, ink): `Leave the phone in the kitchen. Open the window.` Not boxed. |
 | Live | Theme and size apply to the whole window at once (color change 100ms; size change instant). |
 | Buttons | Primary `Continue  Enter`. |
-| Writes | System: `window.autoDetectColorScheme: true`, `workbench.preferredLightColorTheme: "Tacet Light"`, `workbench.preferredDarkColorTheme: "Tacet Dark"`. Light / Dark: `workbench.colorTheme` = `"Tacet Light"` / `"Tacet Dark"`, `window.autoDetectColorScheme: false`. Size: `margin.document.fontSize` (default 17; only written when changed). Contrast Themes always win (guide §8). |
+| Writes | System: `window.autoDetectColorScheme: true`, `workbench.preferredLightColorTheme: "Tacet Light"`, `workbench.preferredDarkColorTheme: "Tacet Dark"`. Light / Dark: `workbench.colorTheme` = `"Tacet Light"` / `"Tacet Dark"`, `window.autoDetectColorScheme: false`. Size: `tacet.document.fontSize` (default 17; only written when changed). Contrast Themes always win (guide §8). |
 | Initial focus | The selected theme segment. |
 
 ## 4. Step 2 of 4: Bring your settings (conditional)
@@ -62,7 +62,7 @@ Shown only if at least one source folder exists: `%APPDATA%\Code\User`, `%APPDAT
 | Choice | Radio rows, 44 tall, same anatomy as step 2: `Notes folder in Documents` / `C:\Users\Alex\Documents\Notes` (real path; if missing, add ` · Tacet makes this folder` in ink3), and `A folder I choose` / text button `Choose Folder…` (accent). The picker is the native folder dialog. Cancelled with no folder picked: selection returns to row 1. Default row 1. |
 | OneDrive (from CRITICISM.md C2) | Documents is often synced by OneDrive (Known Folder Move), which would break the no-cloud promise without the user knowing. Detect it: the Documents shell folder (`HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders` `Personal`, expanded) is under `%OneDrive%`, `%OneDriveConsumer%` or `%OneDriveCommercial%`, or under a folder named `OneDrive` / `OneDrive - <org>`. If so: one plain line under row 1, 12/16 ink2, `Documents is synced by OneDrive. Your notes will sync too.`, and an extra row between rows 1 and 2: `Keep notes only on this PC` / `%USERPROFILE%\Tacet` (same ` · Tacet makes this folder` rule). Row 1 stays the default: do not block, just be honest. |
 | Buttons | Primary `Continue  Enter`, secondary `Back`. |
-| Writes | `margin.notes.folder: "<absolute path>"` (default Save location for drafts); the folder is added to the shelf's Folders. The Notes folder is created when setup finishes, never earlier. Drafts storage does not change. |
+| Writes | `tacet.notes.folder: "<absolute path>"` (default Save location for drafts); the folder is added to the shelf's Folders. The Notes folder is created when setup finishes, never earlier. Drafts storage does not change. |
 | Initial focus | The selected radio row. |
 
 ## 6. Step 4 of 4: Extras (optional)
@@ -75,10 +75,10 @@ Everything here is off. Enter keeps it that way; the step costs one keystroke.
 | Line | `All are off. You can turn them on later in Settings.` |
 | Rows | Four switch rows (v2.1: the Markdown source view row is removed, `Check spelling` is added), each one line, 40 tall, full 560 width, padding 0 12, radius 6, hover fill hoverCanvas, no border at rest. Label 14/20 ink at left; Windows 11 toggle switch at the right end (guide §4.25: 40 x 20 track; off: 1px control edge, ink2 knob 12; on: accent fill, white knob 14). No descriptions, no icons. |
 | Row 1 | `Show a status line` -> `workbench.statusBar.visible: true` (the footer of guide §4.18: save state and word count in Write/Read; Ln/Col and language in Code). Default `false`. |
-| Row 2 | `Show line numbers in Code view` -> `margin.code.lineNumbers: true` (sets `editor.lineNumbers: "on"` for the Code view only; Write and Read never show them). Default `false`. |
-| Row 3 | `Open a terminal with Ctrl+\`` -> `margin.terminal.shortcut: true` (registers `workbench.action.terminal.toggleTerminal` on Ctrl+\`, which Tacet does not bind by default). Default `false`. |
-| Row 4 | `Check spelling` -> `margin.spelling.enabled: true` (owner decision 2026-09-27). Squiggle underlines only; Tacet never autocorrects or changes text. Default `false`. The fork has no spell checker yet (Electron `spellcheck: false` in `windows.ts`); M6 implements it against this setting. |
-| Removed (from CRITICISM.md C1) | `Show Markdown source view`. Source view for `.md` is always one key away (`Write ▾` -> `Code`, and its keybinding), never behind a switch: hidden characters and formatting are the top Notepad-Markdown complaint. There is no `margin.markdown.sourceView` setting. |
+| Row 2 | `Show line numbers in Code view` -> `tacet.code.lineNumbers: true` (sets `editor.lineNumbers: "on"` for the Code view only; Write and Read never show them). Default `false`. |
+| Row 3 | `Open a terminal with Ctrl+\`` -> `tacet.terminal.shortcut: true` (registers `workbench.action.terminal.toggleTerminal` on Ctrl+\`, which Tacet does not bind by default). Default `false`. |
+| Row 4 | `Check spelling` -> `tacet.spelling.enabled: true` (owner decision 2026-09-27). Squiggle underlines only; Tacet never autocorrects or changes text. Default `false`. The fork has no spell checker yet (Electron `spellcheck: false` in `windows.ts`); M6 implements it against this setting. |
+| Removed (from CRITICISM.md C1) | `Show Markdown source view`. Source view for `.md` is always one key away (`Write ▾` -> `Code`, and its keybinding), never behind a switch: hidden characters and formatting are the top Notepad-Markdown complaint. There is no `tacet.markdown.sourceView` setting. |
 | Buttons | Primary `Start writing  Enter`, secondary `Back`. |
 | Writes | Only the rows switched on; nothing is written for rows left off. |
 | Initial focus | Row 1. |
@@ -120,8 +120,8 @@ Focus ring: 2px accent, 2px offset, keyboard only. Every step completes with Ent
 
 ## 9. Skip, persistence, re-entry
 
-- `Skip setup` keeps choices already confirmed with Continue and writes nothing else. Defaults: theme System, size 17, no import, no `margin.notes.folder` (Save opens the native dialog in Documents), all extras off.
-- Completion flag `margin.firstBoot.completed = true` in application storage (`StorageScope.APPLICATION`, `StorageTarget.MACHINE`), set on `Start writing` or `Skip setup`. Closing the window mid-setup: next launch starts again at step 1, with earlier choices kept.
+- `Skip setup` keeps choices already confirmed with Continue and writes nothing else. Defaults: theme System, size 17, no import, no `tacet.notes.folder` (Save opens the native dialog in Documents), all extras off.
+- Completion flag `tacet.firstBoot.completed = true` in application storage (`StorageScope.APPLICATION`, `StorageTarget.MACHINE`), set on `Start writing` or `Skip setup`. Closing the window mid-setup: next launch starts again at step 1, with earlier choices kept.
 - A launch with a file argument skips setup for that launch and opens the file.
 - Command `Show Setup` (palette only, no chrome icon) reopens step 1 over a new empty draft.
 - Never shown on update.
@@ -130,16 +130,16 @@ Focus ring: 2px accent, 2px offset, keyboard only. Every step completes with Ent
 
 [UI-KIT.md](UI-KIT.md) (2026-09-27) also maps the first boot to Animate UI components (`texts/splitting`, `radix/radio-group`, `base/toggle-group`, `base/switch`, `effects/fade` + `effects/slide`). Where its motion differs from this section (12 px step slide, splitting welcome line, switch spring bounce 0.15), the conflict and a recommendation are in [motion/MOTION.md](motion/MOTION.md) §4; the owner decides. The webview uses Tacet tokens and CSS variables from the host theme (`--vscode-*`), Segoe UI Variable, and Tacet radii. Nothing keeps Animate UI's demo look: no gradients, no glow, no blur, no scale-in, no spring overshoot, no text effects. The only animated icon is the Tacet mark on step 1.
 
-| Use | Animate UI (registry, verify exact ids in `extensions/margin-welcome`) | Motion values |
+| Use | Animate UI (registry, verify exact ids in `extensions/tacet-welcome`) | Motion values |
 | --- | --- | --- |
-| Mark on step 1 | none; inline SVG with `margin-mark.css` (or `margin-mark-draw.lottie.json` via lottie-web if the webview prefers) | 880ms draw once (see ANIMATED-IDENTITY.md); never loops |
+| Mark on step 1 | none; inline SVG with `tacet-mark.css` (or `tacet-mark-draw.lottie.json` via lottie-web if the webview prefers) | 880ms draw once (see ANIMATED-IDENTITY.md); never loops |
 | Theme segmented control | Radix-based Tabs or Radio Group component with the animated highlight (the sliding thumb) | Thumb: `{ type: "tween", duration: 0.16, ease: [0.32, 0.72, 0, 1] }`. Labels never animate. |
 | Radio rows (steps 2, 3) | Radix Radio Group | Indicator dot: opacity + scale 0.6 to 1 in 0.1s, `ease: [0.2, 0, 0, 1]`. Row hover fill 0.1s. |
 | Checkboxes (step 2) | Radix Checkbox (animated check path) | Tick: opacity + scale 0.9 to 1 in 0.1s, `ease: [0.23, 1, 0.32, 1]`; uncheck instant. |
 | Extras switches (step 4) | Radix Switch (animated thumb). Not the Checkbox: a setting that takes effect is a switch in Windows 11. | Knob: `x` 0 to 20px, `{ type: "tween", duration: 0.16, ease: [0.32, 0.72, 0, 1] }`; knob size 12 to 14 at the same time; track fill color 0.1s. No spring bounce. |
 | Text size value | Sliding Number text primitive, or a plain number | 0.1s tween, `ease: [0.2, 0, 0, 1]`, vertical offset 4px max. Plain number is acceptable; do not use a counting effect. |
 | Step change | Motion `AnimatePresence mode="wait"` (no Animate UI component) | Exit `{ opacity: 0 }` 0.11s `ease: [0.3, 0, 1, 1]`; enter `{ opacity: 1 }` 0.16s `ease: [0, 0, 0, 1]`. No x/y movement. |
-| Landing (page clears) | Motion, host-coordinated | §7 values. The webview posts `margin.firstBoot.done` after its exit fade; the workbench fades its own controls in with CSS. |
+| Landing (page clears) | Motion, host-coordinated | §7 values. The webview posts `tacet.firstBoot.done` after its exit fade; the workbench fades its own controls in with CSS. |
 | Heading and lines | Plain text. Text primitives (typing, splitting, rolling, highlight) are not used: text that animates in performs (M8). | none |
 
 Reduced motion: wrap the tree in `MotionConfig reducedMotion="always"` when the host reports reduced motion; all values above become instant, and the mark uses its 200ms fade.
@@ -150,4 +150,4 @@ No sign-in, no account slot, no telemetry prompt, no "What's new", no feature li
 
 ## 12. Build notes (M3, 2026-09-27)
 
-The settings `margin.document.fontSize`, `margin.notes.folder`, `margin.code.lineNumbers`, `margin.terminal.shortcut` and `margin.spelling.enabled` are registered by `extensions/margin-welcome`; their consumers (Write/Read size, Save location, Code view, spell checking) land in M4 to M6. `margin.terminal.shortcut` gates a `Ctrl+\`` binding, but the core terminal still binds `Ctrl+\`` by default until the engineering lane removes it. The completion flag lives in the extension's global state (`margin.firstBoot.completed`), and the palette command is `Tacet: Show Setup`. The workbench half of the landing (title-bar controls fade in, `Start writing.` placeholder, the one-time `Ctrl+O opens a file.` hint) is M4; today the webview fades out and a new untitled draft opens with the caret.
+The settings `tacet.document.fontSize`, `tacet.notes.folder`, `tacet.code.lineNumbers`, `tacet.terminal.shortcut` and `tacet.spelling.enabled` are registered by `extensions/tacet-welcome`; their consumers (Write/Read size, Save location, Code view, spell checking) land in M4 to M6. `tacet.terminal.shortcut` gates a `Ctrl+\`` binding, but the core terminal still binds `Ctrl+\`` by default until the engineering lane removes it. The completion flag lives in the extension's global state (`tacet.firstBoot.completed`), and the palette command is `Tacet: Show Setup`. The workbench half of the landing (title-bar controls fade in, `Start writing.` placeholder, the one-time `Ctrl+O opens a file.` hint) is M4; today the webview fades out and a new untitled draft opens with the caret.

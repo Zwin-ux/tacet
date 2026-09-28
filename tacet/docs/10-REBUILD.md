@@ -1,6 +1,6 @@
 # Rebuild scope (owner decision, 2026-09-24; revised 2026-09-27)
 
-**Revision 2026-09-27 (owner):** "Think of this more like Notepad, but with a VS Code feel." Git and source control are removed. North star: bare bones and high quality, with the calm of the ChatGPT desktop app and the polish of Windsurf, AI-free (see `margin/design/REFERENCES-V2.md`). The first boot is a React webview built with Animate UI (`extensions/margin-welcome`).
+**Revision 2026-09-27 (owner):** "Think of this more like Notepad, but with a VS Code feel." Git and source control are removed. North star: bare bones and high quality, with the calm of the ChatGPT desktop app and the polish of Windsurf, AI-free (see `tacet/design/REFERENCES-V2.md`). The first boot is a React webview built with Animate UI (`extensions/tacet-welcome`).
 
 The owner asked for "a total rehaul of VS Code, not just a small extension". This supersedes the "coding tools available when needed" breadth in 01-PRODUCT.md. Where this file and older specs disagree, this file wins.
 
@@ -23,10 +23,10 @@ Extension API surfaces for deleted features keep their **stable** shape as inert
 
 ## New Tacet shell
 
-The VS Code workbench layout (activity bar, side bar, panel, auxiliary bar, status bar, command center, menu bar) is replaced by the Tacet window defined in `margin/design/DESIGN-GUIDE.md`: one 48px title bar (mark, shelf toggle, document title, Write/Read/Code, overflow, caption buttons), the shelf (drafts, recent, folders), the page, and a slim status line. The terminal opens as a deliberate Code-mode surface, not permanent chrome. Implementation order is in `margin/design/IMPLEMENTATION-MAP.md`, re-sequenced after the teardown.
+The VS Code workbench layout (activity bar, side bar, panel, auxiliary bar, status bar, command center, menu bar) is replaced by the Tacet window defined in `tacet/design/DESIGN-GUIDE.md`: one 48px title bar (mark, shelf toggle, document title, Write/Read/Code, overflow, caption buttons), the shelf (drafts, recent, folders), the page, and a slim status line. The terminal opens as a deliberate Code-mode surface, not permanent chrome. Implementation order is in `tacet/design/IMPLEMENTATION-MAP.md`, re-sequenced after the teardown.
 
 ## Packages
 
 - **R1 Teardown:** delete the features above, keep the tree compiling, launching and passing the smoke test. Gate: typecheck 0, compile 0, launch with no removed surface visible, type/save/undo/terminal smoke.
-- **R2 Shell:** Tacet window replaces workbench parts; theme, fonts and icons from `margin/design/`. Gate: screenshots match the design guide at 1440px and 480px, keyboard-only flows work, high contrast readable.
+- **R2 Shell:** Tacet window replaces workbench parts; theme, fonts and icons from `tacet/design/`. Gate: screenshots match the design guide at 1440px and 480px, keyboard-only flows work, high contrast readable.
 - **R3 Document behaviour:** W2–W4 from 07-EXECUTION.md (durable drafts, Write/Read/Code on one document, shelf and search) on the new shell.

@@ -61,7 +61,7 @@ Original mark: upright white sheet, folded upper-right corner, one narrow blue l
 
 UI icons: use the existing Codicons outline family initially, audit line weight at actual Windows scaling, and replace only where the product requires a custom shape. Aim for visually even 1.5 px strokes around 20 px. A 20 px drawing can have a 32–36 px click target. Touch-adapted surfaces need at least 44 px.
 
-The [supplied SVG](../concepts/margin-mark.svg) is a design seed, not a finished multi-resolution app icon or signed Windows resource. Final asset production includes ICO, taskbar, installer, association icons, and high-contrast variants.
+The [supplied SVG](../concepts/tacet-mark.svg) is a design seed, not a finished multi-resolution app icon or signed Windows resource. Final asset production includes ICO, taskbar, installer, association icons, and high-contrast variants.
 
 ## Components
 

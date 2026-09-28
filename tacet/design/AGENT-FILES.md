@@ -131,7 +131,7 @@ A pure path match, run on open and on rename. No content sniffing beyond parsing
 | `skill-openai` | `<skill>/agents/openai.yaml` | yaml | Code |
 | `llms-txt` | `llms.txt`, `llms-full.txt` | markdown (**exception to A11**: this `.txt` is Markdown by spec) | Write |
 
-Kinds are an internal classifier (`margin.agentFileKind`), exposed only as a `when` context key and to the features below. The user never sees a kind id. The language mode stays Markdown so M6 Write / Read / Code, R2 (source one key away), outline and `#` jumps all work unchanged.
+Kinds are an internal classifier (`tacet.agentFileKind`), exposed only as a `when` context key and to the features below. The user never sees a kind id. The language mode stays Markdown so M6 Write / Read / Code, R2 (source one key away), outline and `#` jumps all work unchanged.
 
 ### 3.2 What the user sees
 
@@ -171,7 +171,7 @@ In **Write**, a YAML front matter block at line 1 (`---` … `---`, no blank lin
 
 ### 4.3 Bundled schemas
 
-`extensions/margin/agent-files/schemas/<kind>.json` (JSON Schema draft-07 describing the front matter), one per kind in §3.1, hand-written from §2.2 with a `x-margin-source` URL and `x-margin-checked` date per field. Tool-specific fields carry `x-margin-tools: ["claude-code"]` so hints can say `Claude Code only`. Updated by a person at each Tacet release; there is no runtime update.
+`extensions/tacet/agent-files/schemas/<kind>.json` (JSON Schema draft-07 describing the front matter), one per kind in §3.1, hand-written from §2.2 with a `x-margin-source` URL and `x-margin-checked` date per field. Tool-specific fields carry `x-margin-tools: ["claude-code"]` so hints can say `Claude Code only`. Updated by a person at each Tacet release; there is no runtime update.
 
 ### 4.4 Checks (quiet notices, never blocking)
 
@@ -310,11 +310,11 @@ Milestone M7. Acceptance: with 40 skills open in a folder, Ctrl+P `pdf` shows `p
 
 ## 10. JSON configs (MCP, settings)
 
-- Schemas bundled in `extensions/margin/agent-files/json/`:
+- Schemas bundled in `extensions/tacet/agent-files/json/`:
   - `claude-code-settings.schema.json` — copy of SchemaStore `claude-code-settings.json` [S11] (check its license at copy time; record in ThirdPartyNotices).
   - `mcp-claude.schema.json` — Tacet-written from [S12, S13]: `mcpServers` map; `type` enum `stdio|http|sse|ws`; stdio requires `command`; remote requires `url`; `env`/`headers` string maps.
   - `mcp-vscode.schema.json` — Tacet-written from [S14]: `servers`, `inputs`.
-- Wired with `contributes.jsonValidation` (`fileMatch` from §3.1) in `extensions/margin/package.json`, so the existing JSON language service gives validation, hover and completion with no new code path.
+- Wired with `contributes.jsonValidation` (`fileMatch` from §3.1) in `extensions/tacet/package.json`, so the existing JSON language service gives validation, hover and completion with no new code path.
 - `$schema` remap: a small allowlist in the JSON client maps `https://json.schemastore.org/claude-code-settings.json` to the bundled file. Any other remote `$schema` is not downloaded; the service's "download disabled" message is replaced by an Info marker `Tacet does not download schemas.`
 - Completion of `${VAR}` / `${input:id}` is plain snippet completion inside strings; no environment is read.
 - No discovery: Tacet does not look for or list MCP servers anywhere, never starts one, and has no "test connection" (06-NO-AI §1).

@@ -1,6 +1,6 @@
 # Tacet design guide
 
-Status: authoritative overhaul guide, v1, 2026-09-24, **with the v2 amendments below (2026-09-27), which win over any section they name.** Owner: margin/design.
+Status: authoritative overhaul guide, v1, 2026-09-24, **with the v2 amendments below (2026-09-27), which win over any section they name.** Owner: tacet/design.
 
 ## v2 amendments (2026-09-27, owner direction + coordinator rulings)
 
@@ -25,7 +25,7 @@ Sources: owner messages 2026-09-27, [REFERENCES-V2.md](REFERENCES-V2.md), [ANIMA
 | A15 | File-state notices | With no status bar, a quiet notice appears only for non-UTF-8 encoding or unusual line endings; the full path lives in the title menu. |
 | A16 | Source view | Always reachable for `.md` (Write ▾ → Code + shortcut); never an opt-in Extra. |
 Scope: every surface of the Code OSS 1.139.0 workbench that a Tacet user can see.
-Companions: [tokens.json](tokens.json) (values), [theme/](theme/) (generated color themes), [css/md-theme-margin.css](css/md-theme-margin.css) (document typography), [icons/](icons/) (product icons), [assets/README.md](assets/README.md) (mockups, app icon, rejection log), [IMPLEMENTATION-MAP.md](IMPLEMENTATION-MAP.md) (engineering order).
+Companions: [tokens.json](tokens.json) (values), [theme/](theme/) (generated color themes), [css/md-theme-tacet.css](css/md-theme-tacet.css) (document typography), [icons/](icons/) (product icons), [assets/README.md](assets/README.md) (mockups, app icon, rejection log), [IMPLEMENTATION-MAP.md](IMPLEMENTATION-MAP.md) (engineering order).
 
 Precedence: [docs/02-DOCUMENT-CONTRACT.md](../docs/02-DOCUMENT-CONTRACT.md) behavior beats everything here. This guide beats [docs/04-DESIGN-SYSTEM.md](../docs/04-DESIGN-SYSTEM.md) where they differ; §12 lists every change to 04. Written numbers beat the mockups; §11 lists what each mockup gets wrong.
 
@@ -138,7 +138,7 @@ The workbench has four horizontal bands (title bar, parts, panel, status bar) an
           ▲ one 1px hairline, full height, is the only line in the window
 ```
 
-Implementation: the title bar and status bar receive a CSS variable `--margin-shelf-width` from the layout (0 when hidden) and paint `linear-gradient(to right, var(--vscode-sideBar-background) var(--margin-shelf-width), var(--vscode-titleBar-activeBackground) 0)`. Fallback, if that patch is not accepted: title bar and footer both use `titleBar.activeBackground = canvas` and the shelf starts below the title bar; this is Notepad-correct and still calm. See IMPLEMENTATION-MAP T2.3.
+Implementation: the title bar and status bar receive a CSS variable `--tacet-shelf-width` from the layout (0 when hidden) and paint `linear-gradient(to right, var(--vscode-sideBar-background) var(--tacet-shelf-width), var(--vscode-titleBar-activeBackground) 0)`. Fallback, if that patch is not accepted: title bar and footer both use `titleBar.activeBackground = canvas` and the shelf starts below the title bar; this is Notepad-correct and still calm. See IMPLEMENTATION-MAP T2.3.
 
 When the shelf is closed the window is one continuous white sheet: no line under the title bar, no line above the footer. A 1px hairline appears under the title bar only while the document is scrolled (scroll shadow, `reveal on intent`).
 
@@ -273,7 +273,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Motion:** hover fill quick (100ms). When the shelf opens, the title group slides with the shelf edge at gentle.
 - **States:** hover `toolbar.hoverBackground`; pressed `toolbar.activeBackground`; focus ring; inactive window ink2. Scroll state: 1px hairline appears under the canvas segment when the editor scrollTop > 0 (scroll shadow).
 - **Document title button:** filename 13/18 semibold ink, then folder name 13/18 regular ink2 (`Notes`), or `Draft` for drafts. Click opens the **title menu** (Level 2 popover, 320 wide): editable name field, location path with `Show in File Explorer`, `Move…`, `Save As…`, `Open Documents` list, `Version History`. Dirty state: a 6px ink2 dot after the filename (not a color change, not italic). Read-only file: `lock` glyph 12px after the name.
-- **Maps to:** `src/vs/workbench/browser/parts/titlebar/titlebarPart.ts` (height, center slot), `titlebarpart.css`, `commandCenterControl.ts` (replaced by `MarginTitleControl` in the command-center slot), `src/vs/platform/window/common/window.ts` `DEFAULT_CUSTOM_TITLEBAR_HEIGHT` (35 → 48 for Tacet), `windows.ts` `titleBarOverlay.height` (29 → 48), `window.title: "${dirty}${activeEditorShort}${separator}Tacet"` for the taskbar, `window.commandCenter: false`, `workbench.layoutControl.enabled: false`.
+- **Maps to:** `src/vs/workbench/browser/parts/titlebar/titlebarPart.ts` (height, center slot), `titlebarpart.css`, `commandCenterControl.ts` (replaced by `TacetTitleControl` in the command-center slot), `src/vs/platform/window/common/window.ts` `DEFAULT_CUSTOM_TITLEBAR_HEIGHT` (35 → 48 for Tacet), `windows.ts` `titleBarOverlay.height` (29 → 48), `window.title: "${dirty}${activeEditorShort}${separator}Tacet"` for the taskbar, `window.commandCenter: false`, `workbench.layoutControl.enabled: false`.
 
 ### 4.3 Windows caption controls
 
@@ -287,7 +287,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 
 - **Target:** the upstream search box in the title bar is removed. Its slot hosts the document title button (§4.2). Ctrl+P and Ctrl+Shift+P keep working. Rationale: M1, and "giant command box" is on the product's no list.
 - **Tokens:** `commandCenter.*` set transparent at rest, `hoverCanvas` on hover, so if it is re-enabled by a user it is quiet.
-- **Maps to:** `window.commandCenter: false` default; `commandCenterControl.ts` untouched; new `MarginTitleControl` contribution.
+- **Maps to:** `window.commandCenter: false` default; `commandCenterControl.ts` untouched; new `TacetTitleControl` contribution.
 
 ### 4.5 Mode control (Write | Read | Code)
 
@@ -297,7 +297,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Radius:** track inner (6); thumb control (4).
 - **Motion:** thumb slides between segments, base 160ms spring; labels never move. Reduced motion: thumb jumps.
 - **States:** hover on unselected segment: label ink; pressed: track `pressed` under the segment; focus: ring around the whole control, arrow keys move selection (roving tabindex), `aria-pressed`; disabled segment (Write on a read-only file): label `disabledForeground` plus tooltip `This file is read-only.`
-- **Maps to:** new `src/vs/workbench/contrib/margin/browser/modeControl.ts` rendered into the title bar center; commands `margin.mode.write|read|code` (Ctrl+Alt+1/2/3); CSS `src/vs/workbench/contrib/margin/browser/media/modeControl.css`.
+- **Maps to:** new `src/vs/workbench/contrib/tacet/browser/modeControl.ts` rendered into the title bar center; commands `tacet.mode.write|read|code` (Ctrl+Alt+1/2/3); CSS `src/vs/workbench/contrib/tacet/browser/media/modeControl.css`.
 
 ### 4.6 Activity bar (replaced)
 
@@ -316,7 +316,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Motion:** open/close width gentle; rows do not animate in.
 - **States (row):** rest transparent; hover `list.hoverBackground` hoverOnShell; selected `list.activeSelectionBackground` tint + text/icon `#1A58BA`; selected but shelf unfocused `list.inactiveSelectionBackground` `#E9ECF1` + ink; focus (keyboard) ring inset 1px accent (HC outline); drag target `list.dropBackground`. Missing file: title in ink3 plus `Locate` and `Remove` inline text buttons (never color alone). Dirty: 6px ink2 dot at row end. Max one hover action (`…`), revealed on hover or focus.
 - **Row content:** Drafts show the first heading or first line (display title). Files show the display title and, if it differs from the filename, the filename as a 12px ink2 second line. Two identical titles always show their parent folder as the second line.
-- **Maps to:** new built-in view container `margin.shelf` in `extensions/margin/` (tree views: `margin.drafts`, `margin.recent`, `margin.folders`, `margin.outline`) or a workbench contribution `src/vs/workbench/contrib/margin/browser/shelf/*`; CSS `src/vs/workbench/browser/parts/sidebar/media/sidebarpart.css`, `src/vs/workbench/browser/parts/views/media/paneviewlet.css` (headers), `src/vs/base/browser/ui/list/list.css`; `workbench.tree.indent: 12`, `workbench.tree.renderIndentGuides: "none"` in writing.
+- **Maps to:** new built-in view container `tacet.shelf` in `extensions/tacet/` (tree views: `tacet.drafts`, `tacet.recent`, `tacet.folders`, `tacet.outline`) or a workbench contribution `src/vs/workbench/contrib/tacet/browser/shelf/*`; CSS `src/vs/workbench/browser/parts/sidebar/media/sidebarpart.css`, `src/vs/workbench/browser/parts/views/media/paneviewlet.css` (headers), `src/vs/base/browser/ui/list/list.css`; `workbench.tree.indent: 12`, `workbench.tree.renderIndentGuides: "none"` in writing.
 
 ### 4.8 Explorer tree (Coding Tools)
 
@@ -324,7 +324,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Tokens:** as shelf; `tree.indentGuidesStroke` hairline; `gitDecoration.*` (added success, modified `#1A58BA`, deleted danger, untracked success, ignored ink3, conflict warningInk).
 - **Size:** row 24; icon 16; twistie 12 in a 16 box.
 - **States:** as shelf rows; cut/compressed folder `list.deemphasizedForeground`.
-- **Maps to:** `src/vs/workbench/contrib/files/browser/media/explorerviewlet.css`, `workbench.iconTheme: "margin-files"`, `explorer.compactFolders: true`, `explorer.decorations.badges: false` (color only plus letter in tooltip; badges are noise in M1).
+- **Maps to:** `src/vs/workbench/contrib/files/browser/media/explorerviewlet.css`, `workbench.iconTheme: "tacet-files"`, `explorer.compactFolders: true`, `explorer.decorations.badges: false` (color only plus letter in tooltip; badges are noise in M1).
 
 ### 4.9 Recents and drafts "shelf" semantics
 
@@ -350,13 +350,13 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 
 - **Target:** the upstream rich Markdown editor (`@vscode/markdown-editor`) with the Tacet document theme. One column, left-aligned text inside a centered measure. Markers (`#`, `**`, `` ` ``, `>`, `-`, `|`) appear only on the block that holds the caret, in ink3, and never shift the text horizontally (heading `#` markers hang into the left margin).
 - **Tokens:** `editor.background` canvas, `editor.foreground` ink, `editorCursor.foreground` accent, `editor.selectionBackground` `#CCDEFB`, `editor.inactiveSelectionBackground` `#E4E9F0`, `textLink.foreground`, `textBlockQuote.border`, `textCodeBlock.background`, `textSeparator.foreground`, `checkbox.*`.
-- **Size & spacing:** measure 680 (setting `margin.document.lineWidth`: 600 / 680 / 800), top inset 56, bottom run-out 96, side minimum 32. Typography per §5.
+- **Size & spacing:** measure 680 (setting `tacet.document.lineWidth`: 600 / 680 / 800), top inset 56, bottom run-out 96, side minimum 32. Typography per §5.
 - **Caret:** 2px wide (`editor.cursorWidth: 2` equivalent: `--md-cursor-background` accent), height = line box minus 4px, phase blink.
 - **Selection:** `#CCDEFB`, rounded 2px ends by the editor; unfocused `#E4E9F0`.
 - **Active block:** no background box (`--md-block-active-background: transparent`). The reveal of markers is the only cue.
 - **Placeholder:** `Start writing.` 17/28 ink3 on the first empty line of an empty draft only.
 - **States:** Read (see §4.14); disabled (file too large): never shown, route to notice §4.24.
-- **Maps to:** `extensions/markdown-language-features/markdown-editor-src/editor.ts` (`classNames: ['md-theme-margin']`), new `mdThemeMargin.css` from [css/md-theme-margin.css](css/md-theme-margin.css), `markdownEditor.css`; custom editor id `vscode.markdown.editor` default for `*.md` via `workbench.editorAssociations`.
+- **Maps to:** `extensions/markdown-language-features/markdown-editor-src/editor.ts` (`classNames: ['md-theme-tacet']`), new `mdThemeTacet.css` from [css/md-theme-tacet.css](css/md-theme-tacet.css), `markdownEditor.css`; custom editor id `vscode.markdown.editor` default for `*.md` via `workbench.editorAssociations`.
 
 ### 4.13 Editor surface: Code (Monaco) and literal text
 
@@ -371,7 +371,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Target:** identical metrics to Write (M3). Differences only: no caret, no marker reveal, checkboxes inert and drawn in ink2/ink3 (informative, not greyed), links open on single click, text selectable, find works, replace disabled. Footer shows `Read only` with a 12px lock glyph. Title-bar mode control shows Read selected.
 - **Tokens:** same as Write plus `.md-readonly` rules in the theme CSS.
 - **Motion:** switching Write↔Read is instant (0ms). Nothing moves.
-- **Maps to:** `.md-theme-margin.md-readonly` in [css/md-theme-margin.css](css/md-theme-margin.css); hide upstream `.md-readonly-toggle` (the mode lives in the title bar); per-resource mode state (docs/05 §6).
+- **Maps to:** `.md-theme-tacet.md-readonly` in [css/md-theme-tacet.css](css/md-theme-tacet.css); hide upstream `.md-readonly-toggle` (the mode lives in the title bar); per-resource mode state (docs/05 §6).
 
 ### 4.15 Find widget (in document)
 
@@ -380,7 +380,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Radius:** outer (8); input control (4); toggles control (4).
 - **Motion:** enter base (fade + 4px down), exit 110ms fade.
 - **States:** invalid regex: input border danger + message below `Invalid regular expression.`; no results: count reads `No results` in ink2 (never red); replace hidden in Read.
-- **Maps to:** `src/vs/editor/contrib/find/browser/findWidget.css`, `findWidget.ts` (width), rich editor `src/contrib/find/find.css` via `--md-find-*` variables (set in md-theme-margin.css), `editor.find.addExtraSpaceOnTop: false`.
+- **Maps to:** `src/vs/editor/contrib/find/browser/findWidget.css`, `findWidget.ts` (width), rich editor `src/contrib/find/find.css` via `--md-find-*` variables (set in md-theme-tacet.css), `editor.find.addExtraSpaceOnTop: false`.
 
 ### 4.16 Minimap and gutter
 
@@ -404,7 +404,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Radius:** item hover control (4), inset 2 vertically.
 - **Motion:** state text crossfades quick; `Saving…` appears only if a save takes > 400ms.
 - **States:** save failure is persistent until resolved: danger text `Couldn't save` + the notice in §4.24. Nothing flashes.
-- **Maps to:** `src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css`, Tacet status items (`margin.status.save`, `margin.status.count`), hide upstream items in writing (notifications bell when empty, language mode, feedback, layout, accounts), `workbench.statusBar.visible: true`.
+- **Maps to:** `src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css`, Tacet status items (`tacet.status.save`, `tacet.status.count`), hide upstream items in writing (notifications bell when empty, language mode, feedback, layout, accounts), `workbench.statusBar.visible: true`.
 
 ### 4.19 Quick input and command palette
 
@@ -450,7 +450,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 - **Tokens:** `banner.*` mapped to warningSurface/warningInk; edges `#F0DCAE`.
 - **Radius:** inner (6).
 - **Motion:** expand height gentle; reduced motion: appears instantly.
-- **Maps to:** a Tacet editor overlay contribution (`src/vs/workbench/contrib/margin/browser/notice/*`) above both the rich editor and Monaco; CSS new file.
+- **Maps to:** a Tacet editor overlay contribution (`src/vs/workbench/contrib/tacet/browser/notice/*`) above both the rich editor and Monaco; CSS new file.
 
 ### 4.25 Buttons, inputs, toggles, checkboxes (controls)
 
@@ -516,7 +516,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 
 ### 4.35 Print and PDF (S18)
 
-- **Target:** the document CSS at 11pt, no chrome, headings avoid page breaks, code wraps with a 1px edge, links underlined. See `@media print` in [css/md-theme-margin.css](css/md-theme-margin.css).
+- **Target:** the document CSS at 11pt, no chrome, headings avoid page breaks, code wraps with a 1px edge, links underlined. See `@media print` in [css/md-theme-tacet.css](css/md-theme-tacet.css).
 
 ### 4.36 About (S20)
 
@@ -527,7 +527,7 @@ Format for every element: **Target** (what it is and why), **Tokens**, **Size & 
 
 ## 5. Markdown typography (Write and Read)
 
-Base 17/28 Segoe UI Variable Text. All sizes in `em` of the document size so text zoom (Ctrl+wheel, 12 to 28px) scales proportionally. Implemented in [css/md-theme-margin.css](css/md-theme-margin.css); rendered specimen [css/typography-specimen.png](css/typography-specimen.png).
+Base 17/28 Segoe UI Variable Text. All sizes in `em` of the document size so text zoom (Ctrl+wheel, 12 to 28px) scales proportionally. Implemented in [css/md-theme-tacet.css](css/md-theme-tacet.css); rendered specimen [css/typography-specimen.png](css/typography-specimen.png).
 
 | Block | Size / line | Weight | Tracking | Space before / after | Color and treatment |
 | --- | --- | --- | --- | --- | --- |
@@ -590,8 +590,8 @@ Markdown in Code view keeps task syntax literal (`- [x]` in ink2), per the conce
 
 Two paths:
 
-1. **Windows Contrast Themes on:** `window.autoDetectHighContrast: true` switches to `workbench.preferredHighContrastColorTheme` (upstream Dark High Contrast) or `workbench.preferredHighContrastLightColorTheme: "Tacet High Contrast Light"` ([theme/margin-hc-light-color-theme.json](theme/margin-hc-light-color-theme.json)). Every surface gets a `contrastBorder` edge, focus uses `contrastActiveBorder`, the shelf/page split is drawn as a line (not a tint), selection is a real fill with black text, links are underlined, icons are solid ink.
-2. **Inside webviews** (rich Markdown): `@media (forced-colors: active)` maps to system colors (`Canvas`, `CanvasText`, `LinkText`, `Highlight`, `HighlightText`), checkboxes revert to native appearance, and no information is carried by background color alone. See [css/md-theme-margin.css](css/md-theme-margin.css).
+1. **Windows Contrast Themes on:** `window.autoDetectHighContrast: true` switches to `workbench.preferredHighContrastColorTheme` (upstream Dark High Contrast) or `workbench.preferredHighContrastLightColorTheme: "Tacet High Contrast Light"` ([theme/tacet-hc-light-color-theme.json](theme/tacet-hc-light-color-theme.json)). Every surface gets a `contrastBorder` edge, focus uses `contrastActiveBorder`, the shelf/page split is drawn as a line (not a tint), selection is a real fill with black text, links are underlined, icons are solid ink.
+2. **Inside webviews** (rich Markdown): `@media (forced-colors: active)` maps to system colors (`Canvas`, `CanvasText`, `LinkText`, `Highlight`, `HighlightText`), checkboxes revert to native appearance, and no information is carried by background color alone. See [css/md-theme-tacet.css](css/md-theme-tacet.css).
 
 Gate: every screen in §4 at 100% and 200% scaling in Aquatic and Desert contrast themes, with keyboard focus visible on every control (upstream issue 321623 must be re-checked on the Tacet build).
 
@@ -650,7 +650,7 @@ Removed entirely (AI): `sparkle`, `copilot`, `chat-*`, `mcp`, `agent`, `robot`, 
 
 ### 10.4 File icon theme
 
-`margin-files`: monochrome. Five glyphs only: note (`.md`, `.markdown`), text (`.txt`, `.log`), code file (all other text; a page with `< >`), folder, folder-open. Color ink2; no per-language colors. Rationale: M1 and M4. Upstream Seti is available for users who want it.
+`tacet-files`: monochrome. Five glyphs only: note (`.md`, `.markdown`), text (`.txt`, `.log`), code file (all other text; a page with `< >`), folder, folder-open. Color ink2; no per-language colors. Rationale: M1 and M4. Upstream Seti is available for users who want it.
 
 ### 10.5 App icon brief (and delivered mark)
 
@@ -658,7 +658,7 @@ Removed entirely (AI): `sparkle`, `copilot`, `chat-*`, `mcp`, `agent`, `robot`, 
 - **Construction (48 grid, scaled to 256):** page 30 × 42 at (9, 3), radius 2.5; rule x 15.25, width 1.5; inner hairline 0.5 ink at 16%; material: white to `#F4F6F9` vertical falloff (Fluent app-icon material, 2% delta), contact shadow blur 0.9, offset 0.9, 18% black.
 - **Optical sizes:** 16 (square corners, 1px rule at x = 6, 1px `#8793A2` frame), 24 (1px rule), 32 (1.5px rule), 48+ (master). Tested on light `#F3F4F6` and dark `#1F1F1F` taskbars: [assets/icon/icon-review.png](assets/icon/icon-review.png).
 - **Variants:** flat (no material), high contrast (black page, white rule and edge), monochrome currentColor mark for UI.
-- **Deliverables:** [assets/icon/margin-app-icon.svg](assets/icon/margin-app-icon.svg) (+ 1024 PNG), `-16/-24/-32.svg`, `-flat.svg`, `-hc.svg` (+1024 PNG), `margin-mark-16.svg`, `margin-mark-mono.svg`, `margin-file-md.svg`, `margin-file-txt.svg`. ICO assembly (16, 20, 24, 32, 40, 48, 64, 256) is an engineering task (IMPLEMENTATION-MAP T1.3).
+- **Deliverables:** [assets/icon/tacet-app-icon.svg](assets/icon/tacet-app-icon.svg) (+ 1024 PNG), `-16/-24/-32.svg`, `-flat.svg`, `-hc.svg` (+1024 PNG), `tacet-mark-16.svg`, `tacet-mark-mono.svg`, `tacet-file-md.svg`, `tacet-file-txt.svg`. ICO assembly (16, 20, 24, 32, 40, 48, 64, 256) is an engineering task (IMPLEMENTATION-MAP T1.3).
 
 ---
 

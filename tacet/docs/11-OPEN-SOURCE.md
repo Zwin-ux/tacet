@@ -31,15 +31,15 @@ A requirement that says "owner decision" cannot be closed by an agent.
 | Git | Remote `origin` is `https://github.com/microsoft/vscode.git`. The brief said "no remote"; there is one. | `git remote -v`; `margin/STATE.md:10` |
 | Git | 36 Tacet commits, all authored `Zwin-ux <the owner's personal address>`. A public push exposes this address. | `git log --format='%an <%ae>' 2242ebbb..HEAD` |
 | Git | Pack is 121 MiB. Tacet-authored tracked content is about 63 MB in 613 files under `margin/`. | `git count-objects -vH`; `git ls-tree -r -l HEAD margin` |
-| Size | `margin/design` 52.9 MB / 345 files (mockups 2–2.7 MB PNG each, three AI video studies `.mp4`, fonts). `margin/evidence` 6.0 MB / 230 files (150 PNG, 42 logs, 31 JSON, one `.patch`). `margin/concepts` 3.5 MB. | `margin/design/assets/animated/studies/mk-b-caret-wink.kling3.mp4` (1.45 MB), `…/mk-a-pen-stroke.kling3.mp4` (1.23 MB) |
-| Privacy | 490 occurrences of the absolute user path `%USERPROFILE%\…` in 43 tracked files. | `margin/install.log` (70), `margin/evidence/w0-compile.log` (60), `margin/evidence/w1-compile.log` (60), every `margin/evidence/*-smoke.json`, `margin/STATE.md:9`, `margin/BUNDLE.md:5`, `margin/OPUS-HANDOFF.md:41`, `margin/evidence/VERIFICATION.md:28` |
-| Secrets | No token shapes found (`ghp_`, `github_pat_`, `sk-`, `AKIA`, `xox`, private keys, `hf_`). The only hit is the pattern list in `margin/design/AGENT-FILES.md:270`. | Grep over `margin/` |
-| Legal | `LICENSE.txt` has only the Microsoft line. Tacet-authored files carry **"Copyright (c) Microsoft Corporation"** headers, because the lint and hygiene rules force that exact header. | `LICENSE.txt:3`; `eslint.config.js:141-150`; `build/hygiene.ts:19-24`; `src/vs/workbench/contrib/margin/browser/margin.contribution.ts:2`; `extensions/margin-welcome/src/*.ts:2`; `margin/tools/smoke.mjs:2` |
+| Size | `tacet/design` 52.9 MB / 345 files (mockups 2–2.7 MB PNG each, three AI video studies `.mp4`, fonts). `tacet/evidence` 6.0 MB / 230 files (150 PNG, 42 logs, 31 JSON, one `.patch`). `margin/concepts` 3.5 MB. | `tacet/design/assets/animated/studies/mk-b-caret-wink.kling3.mp4` (1.45 MB), `…/mk-a-pen-stroke.kling3.mp4` (1.23 MB) |
+| Privacy | 490 occurrences of the absolute user path `%USERPROFILE%\…` in 43 tracked files. | `margin/install.log` (70), `tacet/evidence/w0-compile.log` (60), `tacet/evidence/w1-compile.log` (60), every `tacet/evidence/*-smoke.json`, `margin/STATE.md:9`, `margin/BUNDLE.md:5`, `margin/OPUS-HANDOFF.md:41`, `tacet/evidence/VERIFICATION.md:28` |
+| Secrets | No token shapes found (`ghp_`, `github_pat_`, `sk-`, `AKIA`, `xox`, private keys, `hf_`). The only hit is the pattern list in `tacet/design/AGENT-FILES.md:270`. | Grep over `margin/` |
+| Legal | `LICENSE.txt` has only the Microsoft line. Tacet-authored files carry **"Copyright (c) Microsoft Corporation"** headers, because the lint and hygiene rules force that exact header. | `LICENSE.txt:3`; `eslint.config.js:141-150`; `build/hygiene.ts:19-24`; `src/vs/workbench/contrib/tacet/browser/tacet.contribution.ts:2`; `extensions/tacet-welcome/src/*.ts:2`; `tacet/tools/smoke.mjs:2` |
 | Legal | Microsoft identity still in build and installer. | `build/lib/electron.ts:146` `companyName: 'Microsoft Corporation'`, `:147` `copyright: 'Copyright (C) 2026 Microsoft…'`; `build/win32/code.iss:11` `AppPublisher=Microsoft Corporation`; `package.json:2-7` (`code-oss-dev`, author Microsoft, `distro`), `:261-267` (repository and bugs → microsoft/vscode) |
 | Legal | `product.json` is mostly upstream Code OSS. `nameShort`/`nameLong` changed to "Tacet" in the working tree during the audit (identity lane in flight). Everything else is upstream. | `product.json` lines 4-38 (see OS-L4) |
-| Legal | Animate UI files are under "MIT + Commons Clause", with the license file kept next to them. Not listed in `ThirdPartyNotices.txt`. | `extensions/margin-welcome/webview/src/components/animate-ui/LICENSE.md` |
+| Legal | Animate UI files are under "MIT + Commons Clause", with the license file kept next to them. Not listed in `ThirdPartyNotices.txt`. | `extensions/tacet-welcome/webview/src/components/animate-ui/LICENSE.md` |
 | Legal | `ThirdPartyNotices.txt` (3,439 lines, about 60 components) and `cglicenses.json` are upstream. They list nothing Tacet added (React, Motion, Radix, Animate UI, fonts). The generator is Microsoft Component Governance, which Tacet cannot run. | `ThirdPartyNotices.txt`; `.github/instructions/oss-third-party-notices.instructions.md:7-21`; `build/azure-pipelines/oss/*` |
-| Build | Committed build output: `extensions/margin-welcome/media/welcome.js` (358 KB bundle). An untracked `extensions/margin-welcome/tsconfig.tsbuildinfo` sits in the tree. | `git ls-tree -r -l HEAD extensions/margin-welcome` |
+| Build | Committed build output: `extensions/tacet-welcome/media/welcome.js` (358 KB bundle). An untracked `extensions/tacet-welcome/tsconfig.tsbuildinfo` sits in the tree. | `git ls-tree -r -l HEAD extensions/tacet-welcome` |
 | CI | `.github/workflows/pr.yml` runs on Microsoft self-hosted 1ES pools (line 23 and every job). Jobs at lines 236-460 build `extensions/copilot`, which no longer exists. 15 upstream workflows in total. `.github/CODEOWNERS` names Microsoft staff. | `.github/workflows/*.yml`, `.github/CODEOWNERS:2-15` |
 | CI | 115 Azure Pipelines files: ESRP signing, CredScan, TSA, CDN upload, Microsoft telemetry extraction. | `build/azure-pipelines/**`, e.g. `config/CredScanSuppressions.json`, `win32/import-esrp-auth-cert.ps1`, `upload-cdn.ts` |
 | Community | `CONTRIBUTING.md` = "Contributing to VS Code". `SECURITY.md` = Microsoft block pointing to aka.ms. No `CODE_OF_CONDUCT.md`, no `SUPPORT.md`, no `CHANGELOG`. Issue templates include `copilot_bug_report.md`; `config.yml` sends questions to the `visual-studio-code` Stack Overflow tag. | root files; `.github/ISSUE_TEMPLATE/*` |
@@ -71,11 +71,11 @@ A requirement that says "owner decision" cannot be closed by an agent.
 - **Why.** A Microsoft copyright line on code Microsoft did not write is a false statement. Removing Microsoft's header from upstream files is a license and courtesy problem. Both are the first thing a careful reviewer checks in a fork.
 - **Check.**
   ```bash
-  git ls-files 'src/vs/workbench/contrib/margin/**' 'extensions/margin*/**' 'extensions/theme-margin/**' 'margin/tools/**' \
+  git ls-files 'src/vs/workbench/contrib/tacet/**' 'extensions/tacet*/**' 'extensions/theme-tacet/**' 'tacet/tools/**' \
     | grep -E '\.(ts|tsx|mts|js|mjs|css)$' | xargs grep -l "Copyright (c) Microsoft" ; echo "exit=$?"
   ```
   prints no files. `git diff 2242ebbb HEAD | grep '^-.*Copyright (c) Microsoft'` prints nothing (no Microsoft header removed from an upstream file). `npm run eslint` and `npm run hygiene` pass.
-- **Now.** Fail. The rule at `eslint.config.js:141-150` and `build/hygiene.ts:19-24` allows only the Microsoft header, so new files copied it: `margin.contribution.ts:2`, `extensions/margin-welcome/src/{extension,importer,jsonc,notes}.ts:2`, `margin/tools/smoke.mjs:2`.
+- **Now.** Fail. The rule at `eslint.config.js:141-150` and `build/hygiene.ts:19-24` allows only the Microsoft header, so new files copied it: `tacet.contribution.ts:2`, `extensions/tacet-welcome/src/{extension,importer,jsonc,notes}.ts:2`, `tacet/tools/smoke.mjs:2`.
 - **When.** P. One commit: widen both rules, then re-header Tacet-authored files.
 
 ### OS-L3 — No Microsoft trademarks or branding in the product
@@ -84,7 +84,7 @@ A requirement that says "owner decision" cannot be closed by an agent.
 - **Why.** Code OSS source is MIT. The VS Code name and logos are not. Microsoft's trademark guidance does not allow a fork to look like VS Code. The owner's M2 gate also says a stranger must not say "VS Code" when shown a screenshot.
 - **Check.**
   1. Static: `git grep -n -I -E 'Microsoft Corporation|Microsoft Code OSS|Microsoft\.CodeOSS|Code - OSS|vscode-cdn\.net|github\.com/microsoft/vscode' -- product.json package.json build/lib/electron.ts build/win32/code.iss resources/win32` prints nothing except the kept MIT notice.
-  2. User-visible strings: every `localize(...)` containing "VS Code" or "Visual Studio Code" in `src/vs` is either removed, rewritten to "Tacet", or on a reviewed allowlist `margin/tools/brand-allowlist.txt` (nominative uses only).
+  2. User-visible strings: every `localize(...)` containing "VS Code" or "Visual Studio Code" in `src/vs` is either removed, rewritten to "Tacet", or on a reviewed allowlist `tacet/tools/brand-allowlist.txt` (nominative uses only).
   3. Artifact: PowerShell `(Get-Item .\Tacet.exe).VersionInfo | Format-List CompanyName,LegalCopyright,ProductName,FileDescription` shows Tacet values.
 - **Now.** Fail. `build/lib/electron.ts:146-147`; `build/win32/code.iss:11`; `package.json:5-7, 261-267`; `resources/win32/code.ico` and `code_70x70.png` / `code_150x150.png` are upstream Code OSS art. 42 `localize` calls in 21 files under `src/vs` mention "VS Code" or "Visual Studio Code" (for example `src/vs/workbench/electron-browser/desktop.contribution.ts`, `src/vs/platform/update/common/update.config.contribution.ts`). Many sit in removed or dormant features; each needs a verdict.
 - **When.** M2 (identity), verified again at M10 on the packaged artifact.
@@ -97,7 +97,7 @@ A requirement that says "owner decision" cannot be closed by an agent.
 | --- | --- | --- | --- |
 | 2-3 | `nameShort`, `nameLong` | "Tacet" in working tree (uncommitted) | `Tacet` |
 | 4 | `applicationName` | `code-oss` | `margin` |
-| 5-6 | `dataFolderName`, `sharedDataFolderName` | `.vscode-oss`, `.vscode-oss-shared` | `.margin`, `.margin-shared`. Today Tacet shares a profile folder with any Code OSS build on the PC (breaks A35). |
+| 5-6 | `dataFolderName`, `sharedDataFolderName` | `.vscode-oss`, `.vscode-oss-shared` | `.margin`, `.tacet-shared`. Today Tacet shares a profile folder with any Code OSS build on the PC (breaks A35). |
 | 7 | `win32MutexName` | `vscodeoss` | `margin` |
 | 9-10 | `licenseUrl`, `serverLicenseUrl` | microsoft/vscode | `https://github.com/Zwin-ux/margin/blob/main/LICENSE.txt`; server field removed (remote is removed) |
 | 14-16 | `serverApplicationName`, `serverDataFolderName`, `tunnelApplicationName` | Code OSS server/tunnel | Remove (remote and tunnels deleted per `docs/10-REBUILD.md`) |
@@ -121,7 +121,7 @@ A requirement that says "owner decision" cannot be closed by an agent.
 
 ### OS-L5 — Animate UI and the Commons Clause (owner decision)
 
-- **Requirement.** Tacet states in `LICENSE.txt` (a short "Exceptions" section) and in `ThirdPartyNotices.txt` that the files in `extensions/margin-welcome/webview/src/components/animate-ui/` are under "MIT + Commons Clause" (Copyright (c) 2025 Elliot Sutton), not plain MIT. The same applies to any vanilla port of an Animate UI component in `src/vs/workbench/contrib/margin/browser/kit/` (planned in `margin/design/UI-KIT.md`), because a port is a derivative work.
+- **Requirement.** Tacet states in `LICENSE.txt` (a short "Exceptions" section) and in `ThirdPartyNotices.txt` that the files in `extensions/tacet-welcome/webview/src/components/animate-ui/` are under "MIT + Commons Clause" (Copyright (c) 2025 Elliot Sutton), not plain MIT. The same applies to any vanilla port of an Animate UI component in `src/vs/workbench/contrib/tacet/browser/kit/` (planned in `tacet/design/UI-KIT.md`), because a port is a derivative work.
 - **Why.** The Animate UI license lets Tacet use and distribute the components "as part of an application". So shipping them inside Tacet, and publishing Tacet's source, is allowed. It forbids selling or redistributing "the components themselves in their original form, alone or in a bundle". Two consequences:
   1. Tacet is not 100 % OSI open source while these files are in it. The README must not say "100 % MIT".
   2. A downstream fork that lifts the components out as a kit breaks the clause. People who reuse Tacet's code must be told.
@@ -129,7 +129,7 @@ A requirement that says "owner decision" cannot be closed by an agent.
   - **A. Keep and disclose** (lowest effort). Carve-out in LICENSE, NOTICE and README License section. Badge says "MIT (with exceptions)".
   - **B. Replace before 1.0.** Write Tacet's own MIT components with Radix primitives (MIT) and Motion (MIT). Animate UI stays a visual reference only. The whole repo is then plain MIT. Cost: the first-boot controls (3 components today) and every kit port.
   - Recommendation: **A for the first push, decide B before v1.0.** Do not port more Animate UI components into `kit/` until this is decided; each port adds to the carve-out.
-- **Check.** `grep -n "Commons Clause" LICENSE.txt ThirdPartyNotices.txt README.md` finds all three. `find extensions/margin-welcome/webview/src/components/animate-ui -name LICENSE.md` exists. The packaged `margin-welcome` extension contains the license text (check `resources\app\extensions\margin-welcome\` in the install).
+- **Check.** `grep -n "Commons Clause" LICENSE.txt ThirdPartyNotices.txt README.md` finds all three. `find extensions/tacet-welcome/webview/src/components/animate-ui -name LICENSE.md` exists. The packaged `tacet-welcome` extension contains the license text (check `resources\app\extensions\tacet-welcome\` in the install).
 - **Now.** License file present in the component folder. Not in LICENSE, NOTICE or README. Nothing is ported to `kit/` yet. Partial.
 - **When.** P (disclosure). Owner decision A/B before M10.
 
@@ -141,7 +141,7 @@ A requirement that says "owner decision" cannot be closed by an agent.
   - **Segoe UI Variable**: a Windows system font. **Never commit or ship the font file.** Reference it by name in CSS only, with a fallback stack (`"Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif`). Screenshots that show it are fine.
 - **Why.** OFL allows bundling with software but requires the license to travel with the font and forbids selling the font alone. Segoe UI Variable is licensed with Windows only.
 - **Check.** `git ls-files | grep -i -E 'segoe.*\.(ttf|otf|woff2?)$'` prints nothing. For each bundled `.ttf` there is a `LICENSE*` in the same folder and an entry in `ThirdPartyNotices.txt`. In the install, the fonts and license files are side by side.
-- **Now.** Fonts committed under `margin/design/fonts/` with licenses (`margin/design/fonts/README.md:5-12`). Not yet wired into the product (no reference in `src/` or `extensions/`). Not in `ThirdPartyNotices.txt`. The fonts README already lists the release steps (line 12). Partial.
+- **Now.** Fonts committed under `tacet/design/fonts/` with licenses (`tacet/design/fonts/README.md:5-12`). Not yet wired into the product (no reference in `src/` or `extensions/`). Not in `ThirdPartyNotices.txt`. The fonts README already lists the release steps (line 12). Partial.
 - **When.** M10.
 
 ### OS-L7 — Third-party notices and SBOM regenerated for what Tacet actually ships
@@ -149,7 +149,7 @@ A requirement that says "owner decision" cannot be closed by an agent.
 - **Requirement.** `ThirdPartyNotices.txt` lists every third-party component in the packaged Windows artifact, and nothing that was removed. An SBOM in CycloneDX JSON is attached to every release. Both are generated by a script in the repo, not by hand, and not by Microsoft Component Governance (Tacet has no access to it).
 - **Why.** Upstream notices cover components Tacet deleted (Copilot, telemetry, remote, git) and miss what Tacet added (React 19, react-dom, scheduler, Motion 13, framer-motion, motion-utils, `@radix-ui/*`, Animate UI, Tailwind output in the bundle, tslib, the fonts, the SchemaStore schema planned for AF8). A wrong notice file is a license breach in both directions.
 - **Check.**
-  1. `node margin/tools/notices.mjs --check` (to be written) regenerates notices from `package-lock.json`, `remote/package-lock.json`, every shipped `extensions/*/package-lock.json`, `extensions/margin-welcome/webview/package-lock.json`, all `cgmanifest.json` files of shipped extensions, and `cglicenses.json`; it exits 1 if the committed file differs. The upstream scanner `build/azure-pipelines/oss/scan-licenses.ts` and `merge-notices.ts` can be reused without the CG step.
+  1. `node tacet/tools/notices.mjs --check` (to be written) regenerates notices from `package-lock.json`, `remote/package-lock.json`, every shipped `extensions/*/package-lock.json`, `extensions/tacet-welcome/webview/package-lock.json`, all `cgmanifest.json` files of shipped extensions, and `cglicenses.json`; it exits 1 if the committed file differs. The upstream scanner `build/azure-pipelines/oss/scan-licenses.ts` and `merge-notices.ts` can be reused without the CG step.
   2. `npx @cyclonedx/cyclonedx-npm --omit dev --output-file sbom.cdx.json` (or equivalent) runs in the packaging job; the file is a release asset.
   3. A diff test: every package under `resources\app\node_modules` of the install appears in the notices.
 - **Now.** Fail. Upstream file unchanged; no React, Motion, Radix or Animate UI entry.
@@ -211,15 +211,15 @@ The repo has never been pushed. **Rewriting local history now is free. After the
 | Path | Why | Where it goes instead |
 | --- | --- | --- |
 | `margin/install.log` | Failed install log, 70 absolute user paths, superseded by the G0 receipt. | Nowhere. |
-| `margin/evidence/**` (230 files, 6 MB) | Machine-local logs and screenshots with absolute paths. Evidence belongs to CI runs. | CI artifacts (OS-C*). Keep a short `docs/evidence.md` with the receipt format from `08-ACCEPTANCE.md`. |
-| `margin/evidence/implementation-spike.patch` | Abandoned spike. | Nowhere. |
+| `tacet/evidence/**` (230 files, 6 MB) | Machine-local logs and screenshots with absolute paths. Evidence belongs to CI runs. | CI artifacts (OS-C*). Keep a short `docs/evidence.md` with the receipt format from `08-ACCEPTANCE.md`. |
+| `tacet/evidence/implementation-spike.patch` | Abandoned spike. | Nowhere. |
 | `margin/experiments/**` | Quarantined sketches, "not approved production architecture" (`README.md` last line). | Nowhere. |
-| `margin/OPUS-HANDOFF.md`, `margin/BUNDLE.md`, `margin/verify-packet.mjs`, `margin/evidence/handoff-files.sha256` | Internal agent handoff material with machine paths. | Nowhere (private notes). |
-| `margin/design/assets/mockups/*.png`, `concept-v2/**`, `first-boot/*.codex.*`, `icon/candidates/**`, `animated/studies/*.mp4` (about 50 MB) | Large, and they are AI-generated concept art (Codex, Higgsfield, Kling, MiniMax) in the repo of an AI-free product. That invites a bad-faith headline. | A private design archive, or a separate `margin-design` repo. Keep only final, shipped assets (icon, banner, pillars, social preview) and label their provenance. |
+| `margin/OPUS-HANDOFF.md`, `margin/BUNDLE.md`, `margin/verify-packet.mjs`, `tacet/evidence/handoff-files.sha256` | Internal agent handoff material with machine paths. | Nowhere (private notes). |
+| `tacet/design/assets/mockups/*.png`, `concept-v2/**`, `first-boot/*.codex.*`, `icon/candidates/**`, `animated/studies/*.mp4` (about 50 MB) | Large, and they are AI-generated concept art (Codex, Higgsfield, Kling, MiniMax) in the repo of an AI-free product. That invites a bad-faith headline. | A private design archive, or a separate `margin-design` repo. Keep only final, shipped assets (icon, banner, pillars, social preview) and label their provenance. |
 | `margin/prototype/**` | Browser study, "not the native app" (`margin/prototype/README.md`). | Optional: keep if linked as "design study"; otherwise remove. |
 | Any `node_modules/`, `out/`, `.build/`, `*.tsbuildinfo` | Build output. | `.gitignore`. |
 
-  Also decide for `extensions/margin-welcome/media/welcome.js` (358 KB committed bundle): build it in `compile` from `webview/` and stop committing it (see OS-B4).
+  Also decide for `extensions/tacet-welcome/media/welcome.js` (358 KB committed bundle): build it in `compile` from `webview/` and stop committing it (see OS-B4).
 - **Why.** Clean history is part of "clean". Absolute paths leak the owner's machine layout. 60 MB of mockups make every clone slower forever.
 - **Check.**
   ```bash
@@ -229,9 +229,9 @@ The repo has never been pushed. **Rewriting local history now is free. After the
   git rev-list --objects 2242ebbb..HEAD | git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)' \
     | awk '$1=="blob" && $2>1048576' | wc -l                                                     # expect 0 (fonts excepted: list them)
   # Tacet-authored tracked content small
-  git ls-tree -r -l HEAD margin extensions/margin* extensions/theme-margin | awk '{s+=$4} END {print s/1048576 " MB"}'   # expect <= 10 MB
+  git ls-tree -r -l HEAD margin extensions/tacet* extensions/theme-tacet | awk '{s+=$4} END {print s/1048576 " MB"}'   # expect <= 10 MB
   ```
-  The `.gitignore` block at lines 59-64 stays, and gains `margin/evidence/`, `*.tsbuildinfo`.
+  The `.gitignore` block at lines 59-64 stays, and gains `tacet/evidence/`, `*.tsbuildinfo`.
 - **Now.** Fail on every row. `.gitignore:59-64` already ignores some design media, but three `.mp4` files and all mockups were committed before that and are in history.
 - **When.** P.
 
@@ -279,8 +279,8 @@ The repo has never been pushed. **Rewriting local history now is free. After the
 
 ### OS-C2 — CONTRIBUTING.md
 
-- **Requirement.** Tacet's own guide: scope (what will be rejected: AI features, marketplace, sync, telemetry; the "What Tacet is not" list), the build recipe (link), where Tacet code lives (OS-U2), header rule (OS-L2), commit style (one task per commit, message `area: change`), DCO (OS-L9), how to run `margin/tools/smoke.mjs`, and how upstream changes are handled (never fix upstream code in place if a contrib-level change works).
-- **Check.** File exists, under 250 lines, contains "Signed-off-by", "smoke.mjs", "src/vs/workbench/contrib/margin". No "VS Code team", "Stack Overflow" or "CLA".
+- **Requirement.** Tacet's own guide: scope (what will be rejected: AI features, marketplace, sync, telemetry; the "What Tacet is not" list), the build recipe (link), where Tacet code lives (OS-U2), header rule (OS-L2), commit style (one task per commit, message `area: change`), DCO (OS-L9), how to run `tacet/tools/smoke.mjs`, and how upstream changes are handled (never fix upstream code in place if a contrib-level change works).
+- **Check.** File exists, under 250 lines, contains "Signed-off-by", "smoke.mjs", "src/vs/workbench/contrib/tacet". No "VS Code team", "Stack Overflow" or "CLA".
 - **Now.** Upstream "Contributing to VS Code" (`CONTRIBUTING.md:1`). Fail.
 - **When.** P.
 
@@ -327,7 +327,7 @@ The repo has never been pushed. **Rewriting local history now is free. After the
 
 ### OS-C8 — Design and docs in the repo
 
-- **Requirement.** `DESIGN.md` at the root (from `margin/design/DESIGN-GUIDE.md`, per SHIP-PLAN line 38), `ROADMAP.md`, and `docs/` with the public specs (`01-PRODUCT`, `02-DOCUMENT-CONTRACT`, `06-NO-AI`, `08-ACCEPTANCE`, `BUILDING`). Internal planning (agent lanes, tool budgets, "Claude coordinator" tables in SHIP-PLAN lines 95-105) is removed or rewritten for humans.
+- **Requirement.** `DESIGN.md` at the root (from `tacet/design/DESIGN-GUIDE.md`, per SHIP-PLAN line 38), `ROADMAP.md`, and `docs/` with the public specs (`01-PRODUCT`, `02-DOCUMENT-CONTRACT`, `06-NO-AI`, `08-ACCEPTANCE`, `BUILDING`). Internal planning (agent lanes, tool budgets, "Claude coordinator" tables in SHIP-PLAN lines 95-105) is removed or rewritten for humans.
 - **Why.** Visitors should see the product thinking, not the agent orchestration.
 - **Check.** `grep -ril -E 'Opus|Codex|coordinator|subagent|Higgsfield' README.md DESIGN.md ROADMAP.md docs/` prints nothing, or only a deliberate "How this was built" note the owner approves.
 - **Now.** All docs live in `margin/` and mix product specs with agent operations. Fail.
@@ -347,11 +347,11 @@ The repo has never been pushed. **Rewriting local history now is free. After the
   | 2 | Visual Studio 2022 (Community or Build Tools) with workload "Desktop development with C++" **and** component `Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre`. | Without Spectre libs, `kerberos` fails with `MSB8040` (`margin/STATE.md`, G0 receipt). The modify command must run elevated (unelevated exits 5007). Give the exact `vs_installer.exe modify --add …` command. |
   | 3 | `git clone https://github.com/Zwin-ux/margin && cd margin` | Clone size stated (depends on OS-H1). |
   | 4 | `set VSCODE_INSTALL_CONCURRENCY=3` then `npm ci` | Tacet patch in `build/npm/postinstall.ts:289-290` bounds parallel installs for 16 GB machines. |
-  | 5 | Build the first-boot webview: `npm --prefix extensions/margin-welcome/webview ci && npm --prefix extensions/margin-welcome/webview run build` | Until OS-B4 folds it into the main build. |
+  | 5 | Build the first-boot webview: `npm --prefix extensions/tacet-welcome/webview ci && npm --prefix extensions/tacet-welcome/webview run build` | Until OS-B4 folds it into the main build. |
   | 6 | `npm run compile-client` | 2.5 min on the reference laptop (`evidence/w0-compile.log`). |
   | 7 | `node build/lib/preLaunch.ts` | Downloads Electron 43.6.0 and prepares built-ins. |
   | 8 | `scripts\code.bat` | Launches Tacet (dev build) with a dev profile. |
-  | 9 | Optional: `node margin/tools/smoke.mjs local` | Proves the build works. |
+  | 9 | Optional: `node tacet/tools/smoke.mjs local` | Proves the build works. |
 
   **Budget** (to be measured and printed in the doc): time ≤ 30 min on a 16 GB / 8-core laptop with a warm npm cache excluded (reference: `npm ci` 8 min, compile 2.5 min, pre-launch about 2 min); free disk ≥ 25 GB (source + `node_modules` + `out/` + Electron + VS toolchain not counted); RAM 16 GB.
 - **Why.** "Easy to build" is the explicit bar. The MSB8040 trap cost a full session once; it must be the first thing the doc warns about.
@@ -369,16 +369,16 @@ The repo has never been pushed. **Rewriting local history now is free. After the
 
 ### OS-B3 — Pinned, offline-safe inputs
 
-- **Requirement.** Every build input is pinned: `.nvmrc` (24.18.0), `.npmrc` Electron target (43.6.0), lockfiles for the root, `remote/`, `build/`, every shipped extension, and `extensions/margin-welcome/webview/package-lock.json`. No `^` ranges resolve at build time (`npm ci` everywhere, never `npm install`). `package.json:4` `"distro"` (a Microsoft private mixin commit) is removed.
+- **Requirement.** Every build input is pinned: `.nvmrc` (24.18.0), `.npmrc` Electron target (43.6.0), lockfiles for the root, `remote/`, `build/`, every shipped extension, and `extensions/tacet-welcome/webview/package-lock.json`. No `^` ranges resolve at build time (`npm ci` everywhere, never `npm install`). `package.json:4` `"distro"` (a Microsoft private mixin commit) is removed.
 - **Check.** `git ls-files '**/package-lock.json' | wc -l` ≥ the number of `package.json` files with dependencies; CI uses only `npm ci`; `grep -n '"distro"' package.json` prints nothing.
 - **Now.** Webview has a lockfile. `distro` present at `package.json:4`. Partial.
 - **When.** M10.
 
 ### OS-B4 — No committed build output
 
-- **Requirement.** `extensions/margin-welcome/media/welcome.js` and `welcome.css` are produced by the build (a gulp step or the extension's `esbuild.mts` calling the webview's Vite build), not committed.
+- **Requirement.** `extensions/tacet-welcome/media/welcome.js` and `welcome.css` are produced by the build (a gulp step or the extension's `esbuild.mts` calling the webview's Vite build), not committed.
 - **Why.** A 358 KB minified bundle in git cannot be reviewed, can drift from its source, and is where supply-chain problems hide.
-- **Check.** `git ls-files extensions/margin-welcome/media` prints nothing; a clean clone that follows OS-B1 still shows the first boot.
+- **Check.** `git ls-files extensions/tacet-welcome/media` prints nothing; a clean clone that follows OS-B1 still shows the first boot.
 - **Now.** Committed (358,694 bytes). Fail.
 - **When.** M10 (P if cheap).
 
@@ -410,8 +410,8 @@ Public repos get free minutes on GitHub-hosted standard runners (Linux, Windows)
 | Job | Runner | What | Pass |
 | --- | --- | --- | --- |
 | `compile` | `ubuntu-latest` | `npm ci`, `npm run compile-client`, `npm run hygiene`, `npm run eslint`, `npm run valid-layers-check`, `npm run gulp compile-extensions` | Exit 0. Cache `node_modules` by lockfile hash. |
-| `unit` | `ubuntu-latest` (xvfb) | `scripts/test.sh` for `src/vs/base`, `src/vs/editor`, `src/vs/workbench/contrib/margin` and any suite touching kept features; `npm run test-node` | Exit 0; failures are never skipped silently (a skip list lives in the repo with reasons). |
-| `smoke` | `windows-2025` | OS-B1 steps, then `node margin/tools/smoke.mjs ci` (CDP + Playwright, no OS input). The script must take an output folder (today it writes to `margin/evidence`, `smoke.mjs:29`) and upload screenshots and JSON as artifacts. | All `REQUIRED_CHECKS` (`smoke.mjs:40`) pass. |
+| `unit` | `ubuntu-latest` (xvfb) | `scripts/test.sh` for `src/vs/base`, `src/vs/editor`, `src/vs/workbench/contrib/tacet` and any suite touching kept features; `npm run test-node` | Exit 0; failures are never skipped silently (a skip list lives in the repo with reasons). |
+| `smoke` | `windows-2025` | OS-B1 steps, then `node tacet/tools/smoke.mjs ci` (CDP + Playwright, no OS input). The script must take an output folder (today it writes to `tacet/evidence`, `smoke.mjs:29`) and upload screenshots and JSON as artifacts. | All `REQUIRED_CHECKS` (`smoke.mjs:40`) pass. |
 | `no-ai` | `ubuntu-latest` | Static audit: a denylist (`copilot`, `languageModel`, `chatAgent`, `mcp` discovery, `inlineCompletion` providers from AI, `@github/copilot`, `openai`, `anthropic`, telemetry endpoints) over `src/`, `extensions/`, `product.json` and the compiled `out/`, with a reviewed allowlist (for example Tacet's AF agent-file features that *mention* agents). Covers N-01/N-02 statically. | 0 unreviewed hits. |
 | `no-network` | `windows-2025` | Launch the dev build (and in `release.yml`, the installed build) with a local recording proxy (`--proxy-server=127.0.0.1:<port>`, plus a DNS log), run the smoke workflow and 60 s idle, then list every outbound request. Covers N-04. | Zero requests, or only an allowlist the owner approved (none planned). |
 | `secrets` | `ubuntu-latest` | gitleaks over the pushed range | Exit 0. |
@@ -447,14 +447,14 @@ Public repos get free minutes on GitHub-hosted standard runners (Linux, Windows)
 
 - **Requirement.** The Windows x64 user installer is Authenticode-signed with a timestamp. Options for the owner: Azure Trusted Signing (low monthly cost, individual validation), **SignPath Foundation** (free code signing for qualifying OSS projects), or an OV certificate. If 1.0 ships unsigned, the README and release notes say so and show the SmartScreen screen and how to verify the SHA-256 instead.
 - **Why.** Unsigned Electron installers trigger SmartScreen "Windows protected your PC". Hiding that erodes trust; explaining it keeps it.
-- **Check.** PowerShell `Get-AuthenticodeSignature .\MarginSetup-1.0.0-x64.exe` → `Status: Valid`, signer = the owner's identity. Or: README has the "Unsigned build" section.
+- **Check.** PowerShell `Get-AuthenticodeSignature .\TacetSetup-1.0.0-x64.exe` → `Status: Valid`, signer = the owner's identity. Or: README has the "Unsigned build" section.
 - **Now.** No signing. SHIP-PLAN line 117 lists it as owner-only. Open.
 - **When.** M10. **Owner decision.**
 
 ### OS-R3 — Release assets and checksums
 
-- **Requirement.** Each GitHub release has: `MarginSetup-<ver>-x64.exe`, `Tacet-<ver>-win32-x64.zip` (portable, optional), `SHA256SUMS` (`sha256sum` format), `sbom.cdx.json`, and release notes from the CHANGELOG. Assets are built by `release.yml` from the tagged commit, never uploaded from a laptop. GitHub artifact attestations (`actions/attest-build-provenance`, free for public repos) are attached.
-- **Check.** PowerShell: `(Get-FileHash .\MarginSetup-1.0.0-x64.exe -Algorithm SHA256).Hash` equals the line in `SHA256SUMS`. `gh attestation verify MarginSetup-1.0.0-x64.exe --repo Zwin-ux/margin` passes.
+- **Requirement.** Each GitHub release has: `TacetSetup-<ver>-x64.exe`, `Tacet-<ver>-win32-x64.zip` (portable, optional), `SHA256SUMS` (`sha256sum` format), `sbom.cdx.json`, and release notes from the CHANGELOG. Assets are built by `release.yml` from the tagged commit, never uploaded from a laptop. GitHub artifact attestations (`actions/attest-build-provenance`, free for public repos) are attached.
+- **Check.** PowerShell: `(Get-FileHash .\TacetSetup-1.0.0-x64.exe -Algorithm SHA256).Hash` equals the line in `SHA256SUMS`. `gh attestation verify TacetSetup-1.0.0-x64.exe --repo Zwin-ux/margin` passes.
 - **Now.** Nothing. Open.
 - **When.** M10 / M11.
 
@@ -488,10 +488,10 @@ Public repos get free minutes on GitHub-hosted standard runners (Linux, Windows)
 
 ### OS-U2 — Tacet code lives in Tacet folders
 
-- **Requirement.** New Tacet code goes in `src/vs/workbench/contrib/margin/**`, `extensions/margin*/**`, `extensions/theme-margin/**`, `margin/tools/**`, and `build/margin/**` (new, for Tacet build steps). Edits to upstream files are allowed only when a contribution point cannot do the job, and each such edit carries a `// Tacet:` comment (as `build/npm/postinstall.ts:289` already does).
+- **Requirement.** New Tacet code goes in `src/vs/workbench/contrib/tacet/**`, `extensions/tacet*/**`, `extensions/theme-tacet/**`, `tacet/tools/**`, and `build/margin/**` (new, for Tacet build steps). Edits to upstream files are allowed only when a contribution point cannot do the job, and each such edit carries a `// Tacet:` comment (as `build/npm/postinstall.ts:289` already does).
 - **Why.** Every line changed in an upstream file is a future merge conflict. Keeping changes in owned folders keeps syncs cheap.
-- **Check.** A script `margin/tools/patchset.mjs` lists upstream files that differ from the base tag (`git diff --name-status <base> HEAD -- . ':!src/vs/workbench/contrib/margin' ':!extensions/margin*' ':!extensions/theme-margin' ':!margin' ':!docs'`), split into Deleted / Modified. It fails CI if a Modified upstream file has no `Tacet:` marker in its diff.
-- **Now.** Mostly followed: `src/vs/workbench/contrib/margin/` and `extensions/margin`, `extensions/margin-welcome`, `extensions/theme-margin` exist. But the R1/R1b teardown and R2 shell work edit many upstream files (for example `src/vs/workbench/browser/layout.ts` and `src/vs/base/browser/ui/centered/centeredViewLayout.ts` are modified in the working tree during the audit). No inventory exists. Partial.
+- **Check.** A script `tacet/tools/patchset.mjs` lists upstream files that differ from the base tag (`git diff --name-status <base> HEAD -- . ':!src/vs/workbench/contrib/tacet' ':!extensions/tacet*' ':!extensions/theme-tacet' ':!margin' ':!docs'`), split into Deleted / Modified. It fails CI if a Modified upstream file has no `Tacet:` marker in its diff.
+- **Now.** Mostly followed: `src/vs/workbench/contrib/tacet/` and `extensions/tacet`, `extensions/tacet-welcome`, `extensions/theme-tacet` exist. But the R1/R1b teardown and R2 shell work edit many upstream files (for example `src/vs/workbench/browser/layout.ts` and `src/vs/base/browser/ui/centered/centeredViewLayout.ts` are modified in the working tree during the audit). No inventory exists. Partial.
 - **When.** M11 (script), ongoing.
 
 ### OS-U3 — Security-driven sync cadence (owner decision)
@@ -503,14 +503,14 @@ Public repos get free minutes on GitHub-hosted standard runners (Linux, Windows)
 
 ### OS-U4 — Documented, repeatable patch set
 
-- **Requirement.** `docs/UPSTREAM-PATCHES.md` is generated by `margin/tools/patchset.mjs` and committed on every sync. It lists:
+- **Requirement.** `docs/UPSTREAM-PATCHES.md` is generated by `tacet/tools/patchset.mjs` and committed on every sync. It lists:
   - **Deleted upstream paths**, grouped by feature (AI/chat, git/SCM, debug, tasks, testing, notebooks, remote, marketplace, sync, telemetry, walkthroughs, timeline, comments), with the reason.
   - **Modified upstream files**, with one line each on why.
   - **Added Tacet paths.**
-  - A removal script or checklist (`margin/tools/strip.mjs`) that re-applies the deletions, so new AI files that upstream adds in 1.140+ (for example new `chat*` contributions or a new `extensions/copilot*`) are detected and removed at sync time. The `no-ai` CI job (OS-CI2) is the safety net.
+  - A removal script or checklist (`tacet/tools/strip.mjs`) that re-applies the deletions, so new AI files that upstream adds in 1.140+ (for example new `chat*` contributions or a new `extensions/copilot*`) are detected and removed at sync time. The `no-ai` CI job (OS-CI2) is the safety net.
 - **Why.** Upstream adds AI surface every month. Without a repeatable removal, each sync quietly re-adds it.
-- **Check.** `node margin/tools/patchset.mjs --check` exits 0 (committed file matches the tree). After a sync, `no-ai` is green.
-- **Now.** No inventory. The teardown is recorded only in commit messages (`1f27c0b7`, `a59e384d`, `811e72cf`, `1d18a30e`, `18a1399f`, `f00699ee`) and in `margin/evidence/w1-ai-inventory.md` if present. Fail.
+- **Check.** `node tacet/tools/patchset.mjs --check` exits 0 (committed file matches the tree). After a sync, `no-ai` is green.
+- **Now.** No inventory. The teardown is recorded only in commit messages (`1f27c0b7`, `a59e384d`, `811e72cf`, `1d18a30e`, `18a1399f`, `f00699ee`) and in `tacet/evidence/w1-ai-inventory.md` if present. Fail.
 - **When.** M11.
 
 ---
@@ -532,9 +532,9 @@ Public repos get free minutes on GitHub-hosted standard runners (Linux, Windows)
 
 ### OS-Q3 — Demo video and images from the real app
 
-- **Requirement.** One 20–40 s screen capture of the shipped build: open a `.md` from Explorer → write → it is saved → Ctrl+P → Read. Captured over CDP (`margin/tools/`) or a screen recorder, with a disposable profile and fixture notes. Plus 3 screenshots (light, dark, compact 480 px) and the 1280×640 social preview. Each asset's caption or alt text names the build version. No AI-generated imagery presented as the product.
+- **Requirement.** One 20–40 s screen capture of the shipped build: open a `.md` from Explorer → write → it is saved → Ctrl+P → Read. Captured over CDP (`tacet/tools/`) or a screen recorder, with a disposable profile and fixture notes. Plus 3 screenshots (light, dark, compact 480 px) and the 1280×640 social preview. Each asset's caption or alt text names the build version. No AI-generated imagery presented as the product.
 - **Check.** Assets are ≤ 10 MB each; alt text present; build version stated; the demo matches features that pass their acceptance cases.
-- **Now.** Only concept art and dev-build evidence screenshots exist (`margin/concepts/`, `margin/evidence/*.png`). Fail.
+- **Now.** Only concept art and dev-build evidence screenshots exist (`margin/concepts/`, `tacet/evidence/*.png`). Fail.
 - **When.** M11.
 
 ### OS-Q4 — A "good first issue" backlog at launch
@@ -542,13 +542,13 @@ Public repos get free minutes on GitHub-hosted standard runners (Linux, Windows)
 - **Requirement.** At least 10 open issues labeled `good first issue`, each with context, the file(s) to touch, and an acceptance check. Candidates:
   1. Brand allowlist review: rewrite remaining "VS Code" strings in kept features (OS-L3).
   2. Add a Tacet-authored header check test (OS-L2).
-  3. `smoke.mjs`: take an `--out` folder instead of `margin/evidence`.
+  3. `smoke.mjs`: take an `--out` folder instead of `tacet/evidence`.
   4. Link checker in CI for `docs/`.
   5. Add missing `aria-label`s found by an axe run on the first-boot webview.
   6. Keyboard shortcut cheat sheet in `docs/`.
   7. Add a corpus fixture from `08-ACCEPTANCE.md` (one per issue: CRLF, BOM, UTF-16, RTL…).
   8. Reduced-motion variant for one kit port.
-  9. Localize one hard-coded English string in `extensions/margin-welcome`.
+  9. Localize one hard-coded English string in `extensions/tacet-welcome`.
   10. `docs/BUILDING.md`: troubleshooting entry for a common failure seen in CI.
   Plus 5 `help wanted` issues of medium size.
 - **Check.** `gh issue list -R Zwin-ux/margin -l "good first issue" --state open --json number | jq length` ≥ 10 on launch day.
@@ -572,7 +572,7 @@ Order matters. Items 1–4 are one history-rewrite session; do them together.
 | --- | --- | --- | --- |
 | 1 | Decide history shape (full upstream history recommended) and unshallow | OS-H1 | **Yes** |
 | 2 | Decide public commit email; rewrite the 36 commits | OS-H3 | **Yes** |
-| 3 | `git filter-repo`: drop `install.log`, `margin/evidence/`, experiments, handoff files, AI concept art and video, committed bundle; verify 0 absolute paths and 0 blobs > 1 MB in Tacet history | OS-H4, OS-B4 | No |
+| 3 | `git filter-repo`: drop `install.log`, `tacet/evidence/`, experiments, handoff files, AI concept art and video, committed bundle; verify 0 absolute paths and 0 blobs > 1 MB in Tacet history | OS-H4, OS-B4 | No |
 | 4 | Rename `origin` → `upstream` (push disabled), add `origin` = Zwin-ux/margin | OS-H2 | No |
 | 5 | Name decision: "Tacet" vs gomargin.app and MarginNote | OS-L8 | **Yes** |
 | 6 | `LICENSE.txt`: add "Tacet contributors" line; add Animate UI Commons Clause exception | OS-L1, OS-L5 | Yes (A vs B) |

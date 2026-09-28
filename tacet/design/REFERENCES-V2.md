@@ -1,6 +1,6 @@
 # Tacet references v2: ChatGPT desktop, Windsurf, Cursor, Zed, Notepad
 
-Status: research input, 2026-09-27. Owner: margin/design. Not authoritative: [DESIGN-GUIDE.md](DESIGN-GUIDE.md) wins until its owner accepts a change listed in §7.
+Status: research input, 2026-09-27. Owner: tacet/design. Not authoritative: [DESIGN-GUIDE.md](DESIGN-GUIDE.md) wins until its owner accepts a change listed in §7.
 Brief (owner, 2026-09-27): "bare bones / high quality, kinda like a mix of the ChatGPT app and VS Code to make it clean, Windsurf and such." Tacet has no AI. We borrow visual and interaction discipline only, never features.
 
 Evidence rules used here:
