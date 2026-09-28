@@ -20,7 +20,8 @@
       "window.autoDetectColorScheme": true,
       "window.commandCenter": false,
       "workbench.layoutControl.enabled": false,
-      "workbench.navigationControl.enabled": false
+      "workbench.navigationControl.enabled": false,
+      "workbench.activityBar.location": "hidden"
     }
   },
   "repository": {
