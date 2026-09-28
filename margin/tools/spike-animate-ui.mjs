@@ -218,6 +218,10 @@ async function main() {
 		results.finished = new Date().toISOString();
 		writeFileSync(join(evidence, `${tag}.json`), JSON.stringify(results, null, '\t') + '\n');
 		console.log(JSON.stringify(results, null, 2));
+		if (results.error || results.pass !== true) {
+			console.error(`Spike ${tag} FAILED${results.error ? `: ${results.error}` : ''}`);
+			process.exitCode = 1;
+		}
 	}
 }
 

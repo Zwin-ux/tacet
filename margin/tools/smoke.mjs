@@ -37,6 +37,7 @@ const original = '# Smoke note\n\nFirst line of the note.\n';
 const typed = 'Typed by the smoke gate.';
 
 const results = { tag, started: new Date().toISOString() };
+const REQUIRED_CHECKS = ['launch', 'typeSave', 'undo', 'terminal', 'git'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function freePort() {
@@ -251,8 +252,22 @@ async function main() {
 		killTree(child.pid);
 		results.scratch = scratch;
 		results.finished = new Date().toISOString();
+		// MARGIN_SMOKE_INJECT_FAILURE=<check> forces one check to fail (proves the exit code).
+		const injected = process.env.MARGIN_SMOKE_INJECT_FAILURE;
+		if (injected) {
+			results[injected] = 'FAIL (injected)';
+		}
+		const failed = REQUIRED_CHECKS.filter(check => !String(results[check] ?? '').startsWith('PASS'));
+		if (results.error) {
+			failed.push('error');
+		}
+		results.failed = failed;
 		writeFileSync(join(evidence, `${tag}-smoke.json`), JSON.stringify(results, null, '\t') + '\n');
 		console.log(JSON.stringify(results, null, 2));
+		if (failed.length) {
+			console.error(`Smoke ${tag} FAILED: ${failed.join(', ')}`);
+			process.exitCode = 1;
+		}
 	}
 }
 
