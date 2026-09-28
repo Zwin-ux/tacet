@@ -5,9 +5,7 @@
   "publisher": "vscode",
   "license": "MIT",
   "enabledApiProposals": [
-    "activeComment",
     "authSession",
-    "browser",
     "environmentPower",
     "contribStatusBarItems",
     "contribViewsRemote",
@@ -38,7 +36,6 @@
     "terminalDataWriteEvent",
     "terminalDimensions",
     "textSearchProvider",
-    "timeline",
     "tokenInformation",
     "treeViewActiveItem",
     "treeViewReveal",

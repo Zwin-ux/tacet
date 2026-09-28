@@ -5,7 +5,7 @@
 
 import * as os from 'os';
 import * as path from 'path';
-import { Command, commands, Disposable, MessageOptions, Position, QuickPickItem, Range, SourceControlResourceState, TextDocumentShowOptions, TextEditor, Uri, ViewColumn, window, workspace, WorkspaceEdit, WorkspaceFolder, TimelineItem, env, Selection, TextDocumentContentProvider, InputBoxValidationSeverity, TabInputText, TabInputTextMerge, QuickPickItemKind, TextDocument, LogOutputChannel, l10n, Memento, UIKind, QuickInputButton, ThemeIcon, SourceControlHistoryItem, SourceControl, InputBoxValidationMessage, Tab, TabInputNotebook, TabInputNotebookDiff, QuickInputButtonLocation, languages, SourceControlArtifact, ProgressLocation } from 'vscode';
+import { commands, Disposable, MessageOptions, Position, QuickPickItem, Range, SourceControlResourceState, TextDocumentShowOptions, TextEditor, Uri, ViewColumn, window, workspace, WorkspaceEdit, WorkspaceFolder, env, Selection, TextDocumentContentProvider, InputBoxValidationSeverity, TabInputText, TabInputTextMerge, QuickPickItemKind, TextDocument, LogOutputChannel, l10n, Memento, UIKind, QuickInputButton, ThemeIcon, SourceControlHistoryItem, SourceControl, InputBoxValidationMessage, Tab, TabInputNotebook, TabInputNotebookDiff, QuickInputButtonLocation, languages, SourceControlArtifact, ProgressLocation } from 'vscode';
 import TelemetryReporter from '@vscode/extension-telemetry';
 import type { CommitOptions, RemoteSourcePublisher, Remote, Branch, Ref } from './api/git';
 import { ForcePushMode, GitErrorCodes, RefType, Status } from './api/git.constants';
@@ -15,7 +15,6 @@ import { GitResourceGroup, Repository, Resource, ResourceGroupType } from './rep
 import { DiffEditorSelectionHunkToolbarContext, LineChange, applyLineChanges, getIndexDiffInformation, getModifiedRange, getWorkingTreeDiffInformation, intersectDiffWithRange, invertLineChange, toLineChanges, toLineRanges, compareLineChanges } from './staging';
 import { fromGitUri, toGitUri, isGitUri, toMergeUris, toMultiFileDiffEditorUris } from './uri';
 import { coalesce, DiagnosticSeverityConfig, dispose, fromNow, getHistoryItemDisplayName, getStashDescription, grep, isDefined, isDescendant, isLinuxSnap, isRemote, isWindows, pathEquals, relativePath, subject, toDiagnosticSeverity, truncate } from './util';
-import { GitTimelineItem } from './timelineProvider';
 import { ApiRepository } from './api/api1';
 import { getRemoteSourceActions, pickRemoteSource } from './remoteSource';
 import { RemoteSourceAction } from './typings/git-base';
@@ -4774,158 +4773,6 @@ export class CommandCenter {
 		}
 
 		commands.executeCommand('_workbench.openMultiDiffEditor', { multiDiffSourceUri, title, resources });
-	}
-
-	@command('git.timeline.openDiff', { repository: false })
-	async timelineOpenDiff(item: TimelineItem, uri: Uri | undefined, _source: string) {
-		const cmd = this.resolveTimelineOpenDiffCommand(
-			item, uri,
-			{
-				preserveFocus: true,
-				preview: true,
-				viewColumn: ViewColumn.Active
-			},
-		);
-		if (cmd === undefined) {
-			return undefined;
-		}
-
-		return commands.executeCommand(cmd.command, ...(cmd.arguments ?? []));
-	}
-
-	resolveTimelineOpenDiffCommand(item: TimelineItem, uri: Uri | undefined, options?: TextDocumentShowOptions): Command | undefined {
-		if (uri === undefined || uri === null || !GitTimelineItem.is(item)) {
-			return undefined;
-		}
-
-		const basename = path.basename(uri.fsPath);
-
-		let title;
-		if ((item.previousRef === 'HEAD' || item.previousRef === '~') && item.ref === '') {
-			title = l10n.t('{0} (Working Tree)', basename);
-		}
-		else if (item.previousRef === 'HEAD' && item.ref === '~') {
-			title = l10n.t('{0} (Index)', basename);
-		} else {
-			title = l10n.t('{0} ({1}) \u2194 {0} ({2})', basename, item.shortPreviousRef, item.shortRef);
-		}
-
-		return {
-			command: 'vscode.diff',
-			title: l10n.t('Open Comparison'),
-			arguments: [toGitUri(uri, item.previousRef), item.ref === '' ? uri : toGitUri(uri, item.ref), title, options]
-		};
-	}
-
-	@command('git.timeline.viewCommit', { repository: false })
-	async timelineViewCommit(item: TimelineItem, uri: Uri | undefined, _source: string) {
-		if (!GitTimelineItem.is(item)) {
-			return;
-		}
-
-		const cmd = await this._resolveTimelineOpenCommitCommand(
-			item, uri,
-			{
-				preserveFocus: true,
-				preview: true,
-				viewColumn: ViewColumn.Active
-			},
-		);
-		if (cmd === undefined) {
-			return undefined;
-		}
-
-		return commands.executeCommand(cmd.command, ...(cmd.arguments ?? []));
-	}
-
-	private async _resolveTimelineOpenCommitCommand(item: TimelineItem, uri: Uri | undefined, options?: TextDocumentShowOptions): Promise<Command | undefined> {
-		if (uri === undefined || uri === null || !GitTimelineItem.is(item)) {
-			return undefined;
-		}
-
-		const repository = await this.model.getRepository(uri.fsPath);
-		if (!repository) {
-			return undefined;
-		}
-
-		const commit = await repository.getCommit(item.ref);
-		const commitParentId = commit.parents.length > 0 ? commit.parents[0] : await repository.getEmptyTree();
-		const changes = await repository.diffBetweenWithStats(commitParentId, commit.hash);
-		const resources = changes.map(c => toMultiFileDiffEditorUris(c, commitParentId, commit.hash));
-
-		const title = `${item.shortRef} - ${subject(commit.message)}`;
-		const multiDiffSourceUri = Uri.from({ scheme: 'scm-history-item', path: `${repository.root}/${commitParentId}..${commit.hash}` });
-		const reveal = { modifiedUri: toGitUri(uri, commit.hash) };
-
-		return {
-			command: '_workbench.openMultiDiffEditor',
-			title: l10n.t('Open Commit'),
-			arguments: [{ multiDiffSourceUri, title, resources, reveal }, options]
-		};
-	}
-
-	@command('git.timeline.copyCommitId', { repository: false })
-	async timelineCopyCommitId(item: TimelineItem, _uri: Uri | undefined, _source: string) {
-		if (!GitTimelineItem.is(item)) {
-			return;
-		}
-
-		env.clipboard.writeText(item.ref);
-	}
-
-	@command('git.timeline.copyCommitMessage', { repository: false })
-	async timelineCopyCommitMessage(item: TimelineItem, _uri: Uri | undefined, _source: string) {
-		if (!GitTimelineItem.is(item)) {
-			return;
-		}
-
-		env.clipboard.writeText(item.message);
-	}
-
-	private _selectedForCompare: { uri: Uri; item: GitTimelineItem } | undefined;
-
-	@command('git.timeline.selectForCompare', { repository: false })
-	async timelineSelectForCompare(item: TimelineItem, uri: Uri | undefined, _source: string) {
-		if (!GitTimelineItem.is(item) || !uri) {
-			return;
-		}
-
-		this._selectedForCompare = { uri, item };
-		await commands.executeCommand('setContext', 'git.timeline.selectedForCompare', true);
-	}
-
-	@command('git.timeline.compareWithSelected', { repository: false })
-	async timelineCompareWithSelected(item: TimelineItem, uri: Uri | undefined, _source: string) {
-		if (!GitTimelineItem.is(item) || !uri || !this._selectedForCompare || uri.toString() !== this._selectedForCompare.uri.toString()) {
-			return;
-		}
-
-		const { item: selected } = this._selectedForCompare;
-
-		const basename = path.basename(uri.fsPath);
-		let leftTitle;
-		if ((selected.previousRef === 'HEAD' || selected.previousRef === '~') && selected.ref === '') {
-			leftTitle = l10n.t('{0} (Working Tree)', basename);
-		}
-		else if (selected.previousRef === 'HEAD' && selected.ref === '~') {
-			leftTitle = l10n.t('{0} (Index)', basename);
-		} else {
-			leftTitle = l10n.t('{0} ({1})', basename, selected.shortRef);
-		}
-
-		let rightTitle;
-		if ((item.previousRef === 'HEAD' || item.previousRef === '~') && item.ref === '') {
-			rightTitle = l10n.t('{0} (Working Tree)', basename);
-		}
-		else if (item.previousRef === 'HEAD' && item.ref === '~') {
-			rightTitle = l10n.t('{0} (Index)', basename);
-		} else {
-			rightTitle = l10n.t('{0} ({1})', basename, item.shortRef);
-		}
-
-
-		const title = l10n.t('{0} \u2194 {1}', leftTitle, rightTitle);
-		await commands.executeCommand('vscode.diff', selected.ref === '' ? uri : toGitUri(uri, selected.ref), item.ref === '' ? uri : toGitUri(uri, item.ref), title);
 	}
 
 	@command('git.rebaseAbort', { repository: true })

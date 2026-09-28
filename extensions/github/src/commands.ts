@@ -24,18 +24,6 @@ async function copyVscodeDevLink(gitAPI: GitAPI, useSelection: boolean, context:
 	}
 }
 
-async function openVscodeDevLink(gitAPI: GitAPI): Promise<vscode.Uri | undefined> {
-	try {
-		const headlink = await getLink(gitAPI, true, false, getVscodeDevHost(), 'headlink');
-		return headlink ? vscode.Uri.parse(headlink) : undefined;
-	} catch (err) {
-		if (!(err instanceof vscode.CancellationError)) {
-			vscode.window.showErrorMessage(err.message);
-		}
-		return undefined;
-	}
-}
-
 interface ResolvedSessionRepo {
 	repository: Repository;
 	remoteInfo: { owner: string; repo: string };
@@ -215,23 +203,6 @@ export function registerCommands(gitAPI: GitAPI): vscode.Disposable {
 		}
 
 		await openOnGitHub(apiRepository, historyItem.id);
-	}));
-
-	disposables.add(vscode.commands.registerCommand('github.timeline.openOnGitHub', async (item: vscode.TimelineItem, uri: vscode.Uri) => {
-		if (!item.id || !uri) {
-			return;
-		}
-
-		const apiRepository = gitAPI.getRepository(uri);
-		if (!apiRepository) {
-			return;
-		}
-
-		await openOnGitHub(apiRepository, item.id);
-	}));
-
-	disposables.add(vscode.commands.registerCommand('github.openOnVscodeDev', async () => {
-		return openVscodeDevLink(gitAPI);
 	}));
 
 	disposables.add(vscode.commands.registerCommand('github.createPullRequest', async (sessionResource: vscode.Uri | undefined, sessionMetadata: { worktreePath?: string } | undefined) => {
