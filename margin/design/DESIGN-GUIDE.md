@@ -1,6 +1,24 @@
 # Margin design guide
 
-Status: authoritative overhaul guide, v1, 2026-09-24. Owner: margin/design.
+Status: authoritative overhaul guide, v1, 2026-09-24, **with the v2 amendments below (2026-09-27), which win over any section they name.** Owner: margin/design.
+
+## v2 amendments (2026-09-27, owner direction + coordinator rulings)
+
+Sources: owner messages 2026-09-27, [REFERENCES-V2.md](REFERENCES-V2.md), [ANIMATION-GATE.md](ANIMATION-GATE.md), [UI-KIT.md](UI-KIT.md), [FIRST-BOOT.md](FIRST-BOOT.md), [motion/MOTION.md](motion/MOTION.md), [../SHIP-PLAN.md](../SHIP-PLAN.md).
+
+| # | Amends | Rule now |
+| --- | --- | --- |
+| A1 | Whole guide | Product = "Notepad with a VS Code feel". No git, no source control, no AI. Must not look like VS Code. |
+| A2 | §4.18 footer | **No status bar by default.** Window = title bar + page. Save state = dirty dot beside the document title; "Saved"/"Edited" on title hover/focus. A status line is an opt-in Extra (first boot or Settings). |
+| A3 | §4.5 mode control | No centered segmented control. Left-aligned document title; a quiet `Write ▾` menu at the title bar's right (REFERENCES-V2 C3). |
+| A4 | §4.7 shelf | Shelf closed at launch. Top rows `New note  Ctrl+N` and `Search  Ctrl+P` (no bordered field); Drafts / Recent / Folders; no icons on Drafts and Recent rows; section controls on hover/focus only. Opening the shelf never moves the page text (column stays anchored). |
+| A5 | §2.3 type | UI body 14/20; nothing below 12 px regular; small titles 14 semibold. |
+| A6 | §4.10, §4.31 | modernUI and shadows off: no floating cards, gaps or shadows on docked regions. Ignore cited contrib/modernUI paths. |
+| A7 | §4.28 first run | **There is a first boot**: 4 short steps (look; import VS Code settings and shortcuts; where notes live; Extras, all off), Enter continues, Esc skips, no sign-in. React webview with Animate UI (FIRST-BOOT.md). |
+| A8 | §2.7 motion, §4.19 palette | Every motion passes ANIMATION-GATE.md. Command palette, quick open, find: **instant** (no 160 ms). Focus ring: instant. Notice height: no animation. Animate UI components per UI-KIT.md. |
+| A9 | §4.23 dialogs | Unsaved changes on close uses the **native Windows dialog**. |
+| A10 | UI-KIT reading progress | Dropped. No always-visible reading-progress line. |
+| A11 | .md opening | A `.md` opens in the rich editor (Write) by default; `.txt` in the plain editor, no line numbers. Line numbers only in Code view when the Extra is on. |
 Scope: every surface of the Code OSS 1.139.0 workbench that a Margin user can see.
 Companions: [tokens.json](tokens.json) (values), [theme/](theme/) (generated color themes), [css/md-theme-margin.css](css/md-theme-margin.css) (document typography), [icons/](icons/) (product icons), [assets/README.md](assets/README.md) (mockups, app icon, rejection log), [IMPLEMENTATION-MAP.md](IMPLEMENTATION-MAP.md) (engineering order).
 

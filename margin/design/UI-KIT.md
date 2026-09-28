@@ -33,7 +33,7 @@ Tier = frequency tier from the gate (K = keyboard/100+ a day: never animate; F =
 | Markdown task checkbox (Write and Read) | `base/checkbox` | Vanilla (preview script) | F | Tick 140 ms; completed text dims 200 ms (never strike) |
 | Code blocks in Read | `buttons/copy` (icon swaps to check), `primitives/animate/code-block` styling (no typing animation) | Vanilla (preview) | O | Icon swap 150 ms |
 | Search hits in Read | `effects/highlight` | Vanilla (preview) | O | Highlight sweep 200 ms on jump only |
-| Reading progress in Read | `primitives/animate/scroll-progress` (1 px line under the title bar) | Vanilla | F | Scroll-linked, no easing; hidden in Write |
+| Reading progress in Read | Dropped (guide A10) | — | — | — |
 | Settings home | `radix/tabs` / `animate/tabs` (sliding indicator), `base/switch`, `radix/radio-group`, `base/accordion` | React webview (Margin settings); JSON/advanced opens the normal editor | O | Tab indicator slide 220 ms spring |
 | About | Animated mark + `texts/rolling` version number + `buttons/copy` (copy version info) | React webview | R | Once per open |
 | What's new (after update) | `texts/splitting` heading, `effects/fade` list | React webview | R | Once |

@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Margin animated identity</title>
+<link rel="stylesheet" href="margin-mark.css">
+<link rel="stylesheet" href="icons-animated.css">
+<style>
+:root {
+	--canvas: #FFFFFF; --shell: #F6F7F9; --sunken: #F2F4F7; --hover: #F2F4F7; --ink: #22252B; --ink2: #596272; --ink3: #676F7C;
+	--accent: #2167D5; --hairline: #E6E9EE; --edge: #D9DDE3;
+	color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) { --canvas: #1B1C1F; --shell: #222428; --sunken: #26282C; --hover: #27292E; --ink: #E7E9EC; --ink2: #A2A9B4; --ink3: #8B929D; --accent: #6EA6FF; --hairline: #2E3136; --edge: #34373D; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 14px/20px "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; }
+header { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+header h1 { margin: 0; font: 600 14px/20px "Segoe UI Variable Text", "Segoe UI", sans-serif; }
+header .sp { flex: 1; }
+label.toggle { display: inline-flex; align-items: center; gap: 8px; color: var(--ink2); cursor: pointer; }
+label.toggle input { accent-color: var(--accent); width: 16px; height: 16px; }
+main { max-width: 1080px; margin: 0 auto; padding: 8px 24px 96px; }
+h2 { font: 600 20px/28px "Segoe UI Variable Display", "Segoe UI", sans-serif; letter-spacing: -0.008em; margin: 40px 0 4px; }
+p.lede, p.note { color: var(--ink2); margin: 0 0 16px; max-width: 68ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.stage { margin: 0; border: 1px solid var(--hairline); border-radius: 8px; overflow: hidden; }
+.well { display: grid; place-items: center; height: 240px; background: var(--sunken); }
+figcaption { display: grid; gap: 2px; padding: 12px; }
+figcaption span { color: var(--ink2); font-size: 12px; line-height: 16px; }
+button { font: inherit; color: inherit; }
+.replay { justify-self: start; margin-top: 8px; height: 28px; padding: 0 12px; border: 0; border-radius: 4px; background: var(--sunken); color: var(--ink); cursor: pointer; }
+.replay:hover { background: var(--edge); }
+.replay:focus-visible, .menu-row:focus-visible, .textbtn:focus-visible, .iconbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sizes { display: flex; align-items: end; gap: 32px; padding: 24px; background: var(--sunken); border-radius: 8px; }
+.sz { display: grid; justify-items: center; gap: 8px; color: var(--ink2); font-size: 12px; }
+.lottie { display: flex; gap: 24px; align-items: center; }
+#lottie { width: 192px; height: 192px; background: var(--sunken); border-radius: 8px; }
+.menu { width: 320px; padding: 4px; border: 1px solid var(--hairline); border-radius: 8px; box-shadow: 0 4px 12px rgba(29,42,61,.08), 0 1px 3px rgba(29,42,61,.06); background: var(--canvas); }
+.menu-row { display: flex; align-items: center; gap: 10px; width: 100%; height: 28px; padding: 0 12px; border: 0; border-radius: 4px; background: transparent; text-align: left; cursor: default; }
+.menu-row:hover { background: var(--hover); }
+.menu-row .mi { width: 16px; height: 16px; color: var(--ink2); flex: none; }
+.menu-row .dim { margin-left: auto; color: var(--ink3); font-size: 12px; }
+.nevers { display: flex; flex-wrap: wrap; gap: 8px; }
+.never { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 4px; background: var(--sunken); color: var(--ink2); font-size: 12px; }
+.never .mi { width: 16px; height: 16px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: start; }
+.miniwin { width: 100%; max-width: 420px; border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--canvas); }
+.miniwin .tb { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; }
+.miniwin .t { font-weight: 600; } .miniwin .d { color: var(--ink2); }
+.miniwin .pg { padding: 16px 40px 32px; } .miniwin .pg p { margin: 8px 0 0; }
+.miniwin .ft { display: flex; justify-content: space-between; height: 28px; padding: 0 40px; color: var(--ink2); font-size: 12px; font-variant-numeric: tabular-nums; }
+#q3state { transition: opacity 100ms cubic-bezier(0.2, 0, 0, 1); }
+.m16 { display: inline-flex; }
+.about { display: flex; gap: 16px; padding: 24px; max-width: 440px; border: 1px solid var(--hairline); border-radius: 12px; box-shadow: 0 16px 48px rgba(29,42,61,.12), 0 2px 8px rgba(29,42,61,.08); }
+.about > div { display: grid; gap: 2px; } .about b { font: 600 18px/24px "Segoe UI Variable Display", "Segoe UI", sans-serif; }
+.about span { color: var(--ink2); font-size: 12px; line-height: 16px; }
+.iconbtn { padding: 0; border: 0; background: none; cursor: pointer; border-radius: 6px; }
+.textbtn { padding: 0; border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 12px; transition: opacity 100ms; }
+.vids { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.vid { margin: 0; } .vid video { width: 100%; border-radius: 8px; background: var(--sunken); display: block; }
+.vid figcaption { padding: 8px 0; color: var(--ink2); font-size: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+td, th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+th { font-weight: 600; color: var(--ink2); font-size: 12px; }
+code { font: 12px "Cascadia Code", Consolas, monospace; background: var(--sunken); padding: 1px 4px; border-radius: 4px; }
+@media (max-width: 600px) { main, header { padding-left: 16px; padding-right: 16px; } .well { height: 200px; } }
+</style>
+</head>
+<body>
+<header>
+	<h1>Margin animated identity</h1>
+	<span class="sp"></span>
+	<button class="replay" id="replayAll" style="margin:0">Replay all</button>
+	<label class="toggle"><input type="checkbox" id="reduced"> Reduce motion</label>
+</header>
+<main>
+	<p class="lede" style="margin-top:24px">Hand-authored SVG and CSS from <code>margin-mark.css</code> and <code>icons-animated.css</code>. Values and rules: <code>ANIMATED-IDENTITY.md</code>. The Reduce motion toggle applies the same fallback as <code>prefers-reduced-motion</code>: opacity only, no travel.</p>
+
+	<h2>The mark</h2>
+	<p class="note">Each plays once. Replay to see it again.</p>
+	<div class="grid"><figure class="stage"><div class="well" data-state="mm--draw"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--draw" viewBox="0 0 48 48" width="192" height="192" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-draw256" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-draw256" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-draw256)" filter="url(#shadow-draw256)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg></div>
+<figcaption><b>A. Pen stroke + settle (chosen)</b><span>880 ms. First boot, About, landing hero.</span><button class="replay" data-target="draw256">Replay</button></figcaption></figure><figure class="stage"><div class="well" data-state="mm--draw-compact"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--draw-compact" viewBox="0 0 48 48" width="96" height="96" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-compact" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-compact" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-compact)" filter="url(#shadow-compact)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg></div>
+<figcaption><b>A. Compact (launch splash)</b><span>560 ms. Only when launch is slower than 400 ms.</span><button class="replay" data-target="compact">Replay</button></figcaption></figure><figure class="stage"><div class="well" data-state="mm--wink"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--wink" viewBox="0 0 48 48" width="192" height="192" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-wink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-wink" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-wink)" filter="url(#shadow-wink)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg></div>
+<figcaption><b>B. Caret wink</b><span>600 ms. First save ever (Q3).</span><button class="replay" data-target="wink">Replay</button></figcaption></figure><figure class="stage"><div class="well" data-state="mm--nod"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--nod" viewBox="0 0 48 48" width="192" height="192" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-nod" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-nod" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-nod)" filter="url(#shadow-nod)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg></div>
+<figcaption><b>C. Page nod</b><span>720 ms. About easter egg (Q4).</span><button class="replay" data-target="nod">Replay</button></figcaption></figure></div>
+
+	<h2>Draw at real sizes</h2>
+	<p class="note">16 px is the title-bar mark; 64 px is About and first boot.</p>
+	<div class="sizes"><div class="sz"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--draw" viewBox="0 0 48 48" width="16" height="16" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-s16" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-s16" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-s16)" filter="url(#shadow-s16)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg><span>16px</span></div><div class="sz"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--draw" viewBox="0 0 48 48" width="32" height="32" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-s32" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-s32" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-s32)" filter="url(#shadow-s32)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg><span>32px</span></div><div class="sz"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--draw" viewBox="0 0 48 48" width="64" height="64" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-s64" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-s64" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-s64)" filter="url(#shadow-s64)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg><span>64px</span></div><div class="sz"><svg xmlns="http://www.w3.org/2000/svg" class="mm mm--draw" viewBox="0 0 48 48" width="128" height="128" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-s128" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-s128" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-s128)" filter="url(#shadow-s128)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg><span>128px</span></div></div>
+	<p><button class="replay" id="replaySizes">Replay sizes</button></p>
+
+	<h2>Lottie</h2>
+	<div class="lottie"><div id="lottie"></div><div><p class="note"><code>margin-mark-draw.lottie.json</code>, 60 fps, 880 ms, played with the vendored lottie-web 5.12.2 light. No contact shadow in the Lottie; add it in the host.</p><button class="replay" id="replayLottie">Replay Lottie</button></div></div>
+
+	<h2>Icons that may animate</h2>
+	<p class="note">Hover the rows (pointer devices only). This menu stands for an occasional surface. Only these five icons animate on hover; chevron and checkbox animate on state change.</p>
+	<div class="menu" role="menu"><button class="mi-anim menu-row"><svg class="mi mi--settings " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h6M11.5 4.5h2M2.5 11.5h2M7.5 11.5h6"/><circle cx="10" cy="4.5" r="1.5"/><circle cx="6" cy="11.5" r="1.5"/></svg>
+<span>Settings</span><span class="dim">settings</span></button><button class="mi-anim menu-row"><svg class="mi mi--recent " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>
+<span>Version History</span><span class="dim">recent</span></button><button class="mi-anim menu-row"><svg class="mi mi--compare " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="5.5" height="11" rx="1.5"/><rect x="9" y="2.5" width="5.5" height="11" rx="1.5"/><path d="M3 6h2.5M10.5 6H13M10.5 9H13"/></svg>
+<span>Compare Changes</span><span class="dim">compare</span></button><button class="mi-anim menu-row"><svg class="mi mi--folder " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 4a1.5 1.5 0 0 1 1.5-1.5h3l1.5 1.5h5.5a1.5 1.5 0 0 1 1.5 1.5v6.5a1.5 1.5 0 0 1-1.5 1.5h-10a1.5 1.5 0 0 1-1.5-1.5Z"/><path d="M1.5 6.5h13"/></svg>
+<span>Show in File Explorer</span><span class="dim">folder</span></button><button class="mi-anim menu-row"><svg class="mi mi--coding-tools " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M4.5 6.5l2 1.5-2 1.5M8 10h3.5"/></svg>
+<span>Coding tools</span><span class="dim">coding-tools</span></button></div>
+
+	<h2>Icons that never animate</h2>
+	<p class="note">Title bar, shelf rows, tree, palette, footer, notices and frequent controls. Reasons in ANIMATED-IDENTITY.md section 3.</p>
+	<div class="nevers"><div class="never"><svg class="mi mi--shelf " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M5.5 2.5v11"/></svg>
+<span>shelf</span></div><div class="never"><svg class="mi mi--more " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="3.5" cy="8" r=".75" fill="currentColor"/><circle cx="8" cy="8" r=".75" fill="currentColor"/><circle cx="12.5" cy="8" r=".75" fill="currentColor"/></svg>
+<span>more</span></div><div class="never"><svg class="mi mi--new-note " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5h-4.5a1.5 1.5 0 0 0-1.5 1.5v10a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5v-4.5"/><path d="M6.5 1.5v13"/><path d="M13 1v4M11 3h4"/></svg>
+<span>new-note</span></div><div class="never"><svg class="mi mi--mode-write " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h4M6 13.5h4M8 2.5v11"/></svg>
+<span>mode-write</span></div><div class="never"><svg class="mi mi--mode-read " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c-1.5-1.2-3.6-1.5-6.5-1.5v10c2.9 0 5 .3 6.5 1.5 1.5-1.2 3.6-1.5 6.5-1.5v-10c-2.9 0-5 .3-6.5 1.5Z"/><path d="M8 4v10"/></svg>
+<span>mode-read</span></div><div class="never"><svg class="mi mi--mode-code " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5L2 8l3.5 3.5M10.5 4.5L14 8l-3.5 3.5"/></svg>
+<span>mode-code</span></div><div class="never"><svg class="mi mi--note " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="1.5" width="9" height="13" rx="1.5"/><path d="M6.5 1.5v13"/></svg>
+<span>note</span></div><div class="never"><svg class="mi mi--note-draft " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="1.5" width="9" height="13" rx="1.5" stroke-dasharray="2 1.5"/><path d="M6.5 1.5v13"/></svg>
+<span>note-draft</span></div><div class="never"><svg class="mi mi--file " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 1.5h4.8l3.2 3.2v8.3a1.5 1.5 0 0 1-1.5 1.5h-6.5a1.5 1.5 0 0 1-1.5-1.5v-10a1.5 1.5 0 0 1 1.5-1.5Z"/><path d="M9 1.5v2.5a1 1 0 0 0 1 1h2.5"/></svg>
+<span>file</span></div><div class="never"><svg class="mi mi--file-text " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 1.5h4.8l3.2 3.2v8.3a1.5 1.5 0 0 1-1.5 1.5h-6.5a1.5 1.5 0 0 1-1.5-1.5v-10a1.5 1.5 0 0 1 1.5-1.5Z"/><path d="M9 1.5v2.5a1 1 0 0 0 1 1h2.5"/><path d="M5.5 8.5h5M5.5 11h3.5"/></svg>
+<span>file-text</span></div><div class="never"><svg class="mi mi--outline " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.5h11M4.5 8h9M6.5 12.5h7"/></svg>
+<span>outline</span></div><div class="never"><svg class="mi mi--search " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5"/></svg>
+<span>search</span></div><div class="never"><svg class="mi mi--close " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+<span>close</span></div><div class="never"><svg class="mi mi--lock " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
+<span>lock</span></div><div class="never"><svg class="mi mi--warning " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.2l6.2 11.1a.8.8 0 0 1-.7 1.2H2.5a.8.8 0 0 1-.7-1.2Z"/><path d="M8 6.5v3.5"/><circle cx="8" cy="12" r=".6" fill="currentColor" stroke="none"/></svg>
+<span>warning</span></div><div class="never"><svg class="mi mi--saved " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
+<span>saved</span></div></div>
+
+	<h2>Moments</h2>
+	<div class="cols">
+		<div><p class="note"><b style="color:var(--ink)">Q3 First save ever.</b> The title-bar mark winks once as the footer turns to Saved.</p><div class="miniwin"><div class="tb"><span class="m16"><svg xmlns="http://www.w3.org/2000/svg" class="mm " viewBox="0 0 48 48" width="16" height="16" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-q3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-q3" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-q3)" filter="url(#shadow-q3)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg></span><span class="t">Letter to Jun.md</span><span class="d">Drafts</span></div>
+<div class="pg"><b>Letter to Jun</b><p>Come in June. Bring the blue bowl.</p></div><div class="ft"><span id="q3state">Edited</span><span>58 words</span></div></div>
+<button class="replay" id="q3go">Save for the first time</button></div>
+		<div><p class="note"><b style="color:var(--ink)">Q4 About nod, Q6 Copied.</b></p><div class="about"><button id="q4icon" class="iconbtn" aria-label="Margin app icon"><svg xmlns="http://www.w3.org/2000/svg" class="mm " viewBox="0 0 48 48" width="64" height="64" role="img" aria-label="Margin">
+  <defs>
+    <linearGradient id="paper-q4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4F6F9"/></linearGradient>
+    <filter id="shadow-q4" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dy="0.9"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g class="mm-body">
+    <g class="mm-page">
+      <rect x="9" y="3" width="30" height="42" rx="2.5" fill="url(#paper-q4)" filter="url(#shadow-q4)"/>
+      <rect x="9.25" y="3.25" width="29.5" height="41.5" rx="2.25" fill="none" stroke="#22252B" stroke-opacity="0.16" stroke-width="0.5"/>
+    </g>
+    <rect class="mm-rule" x="15.25" y="3" width="1.5" height="42" fill="#2167D5"/>
+  </g>
+</svg></button><div><b>Margin</b><span>Version 0.3.0 (user setup)</span><span>Code OSS 1.139.0, commit 4f2a9c1</span><span><button class="textbtn" id="q6copy">Copy</button> <button class="textbtn">Licenses</button></span></div></div>
+<p class="note">Click the icon three times within 2 seconds (Q4). Click Copy (Q6).</p></div>
+	</div>
+
+	<h2>Motion studies (feel references, not specs)</h2>
+	<p class="note">Higgsfield image-to-video from the real icon. Hover a video to play.</p>
+	<div class="vids"><figure class="vid"><video src="studies/mk-a-pen-stroke.minimax-h3.mp4" poster="studies/mk-a-pen-stroke.minimax-h3.poster.jpg" muted loop playsinline controls preload="none"></video><figcaption>A. Pen stroke, MiniMax H3, job b2581a93</figcaption></figure><figure class="vid"><video src="studies/mk-a-pen-stroke.kling3.mp4" poster="studies/mk-a-pen-stroke.kling3.poster.jpg" muted loop playsinline controls preload="none"></video><figcaption>A. Pen stroke, Kling 3.0 Pro, job 791704b0</figcaption></figure><figure class="vid"><video src="studies/mk-b-caret-wink.kling3.mp4" poster="studies/mk-b-caret-wink.kling3.poster.jpg" muted loop playsinline controls preload="none"></video><figcaption>B. Wink (retract and redraw), Kling 3.0 Pro, job cf48c7c5</figcaption></figure><figure class="vid"><video src="studies/mk-c-page-hello.kling3.mp4" poster="studies/mk-c-page-hello.kling3.poster.jpg" muted loop playsinline controls preload="none"></video><figcaption>C. Page hello (corner curl, not used: folds are for file icons), Kling 3.0 Pro, job 798699be</figcaption></figure></div>
+</main>
+<script src="vendor/lottie_light.min.js"></script>
+<script>window.MM_LOTTIE = {"v":"5.7.4","fr":60,"ip":0,"op":52.8,"w":256,"h":256,"nm":"margin-mark-draw","ddd":0,"assets":[],"layers":[{"ddd":0,"ind":1,"ty":3,"nm":"body (arrive + settle)","sr":1,"ip":0,"op":52.8,"st":0,"bm":0,"ks":{"o":{"a":0,"k":100},"r":{"a":0,"k":0},"p":{"a":1,"k":[{"t":0.0,"s":[128,128,0],"o":{"x":[0.167,0.167,0.167],"y":[0.167,0.167,0.167]},"i":{"x":[0.833,0.833,0.833],"y":[0.833,0.833,0.833]},"e":[128,128,0]},{"t":33.6,"s":[128,128,0],"o":{"x":[0.77,0.77,0.77],"y":[0,0,0]},"i":{"x":[0.175,0.175,0.175],"y":[1,1,1]},"e":[128,131.2,0]},{"t":41.28,"s":[128,131.2,0],"o":{"x":[0.77,0.77,0.77],"y":[0,0,0]},"i":{"x":[0.175,0.175,0.175],"y":[1,1,1]},"e":[128,128,0]},{"t":52.8,"s":[128,128,0]}]},"a":{"a":0,"k":[128,128,0]},"s":{"a":1,"k":[{"t":0.0,"s":[97,97,100],"o":{"x":[0.23,0.23,0.23],"y":[1,1,1]},"i":{"x":[0.32,0.32,0.32],"y":[1,1,1]},"e":[100,100,100]},{"t":9.6,"s":[100,100,100]}]}}},{"ddd":0,"ind":2,"ty":4,"nm":"rule","parent":1,"sr":1,"ip":0,"op":52.8,"st":0,"bm":0,"ks":{"o":{"a":1,"k":[{"t":0.0,"s":[0],"o":{"x":[0.23],"y":[1]},"i":{"x":[0.32],"y":[1]},"e":[100]},{"t":9.6,"s":[100]}]},"r":{"a":0,"k":0},"p":{"a":0,"k":[85.33333333333333,16.0,0]},"a":{"a":0,"k":[85.33333333333333,16.0,0]},"s":{"a":1,"k":[{"t":0.0,"s":[100,0,100],"o":{"x":[0.167,0.167,0.167],"y":[0.167,0.167,0.167]},"i":{"x":[0.833,0.833,0.833],"y":[0.833,0.833,0.833]},"e":[100,0,100]},{"t":7.2,"s":[100,0,100],"o":{"x":[0.77,0.77,0.77],"y":[0,0,0]},"i":{"x":[0.175,0.175,0.175],"y":[1,1,1]},"e":[100,100,100]},{"t":36.0,"s":[100,100,100]}]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","d":1,"p":{"a":0,"k":[85.33333333333333,128.0]},"s":{"a":0,"k":[8.0,224.0]},"r":{"a":0,"k":0},"nm":"rect"},{"ty":"fl","c":{"a":0,"k":[0.1294,0.4039,0.8353,1]},"o":{"a":0,"k":100},"r":1,"nm":"fill"},{"ty":"tr","p":{"a":0,"k":[0,0]},"a":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]},"r":{"a":0,"k":0},"o":{"a":0,"k":100},"sk":{"a":0,"k":0},"sa":{"a":0,"k":0},"nm":"tr"}],"nm":"g"}]},{"ddd":0,"ind":3,"ty":4,"nm":"edge","parent":1,"sr":1,"ip":0,"op":52.8,"st":0,"bm":0,"ks":{"o":{"a":1,"k":[{"t":0.0,"s":[0],"o":{"x":[0.23],"y":[1]},"i":{"x":[0.32],"y":[1]},"e":[100]},{"t":9.6,"s":[100]}]},"r":{"a":0,"k":0},"p":{"a":0,"k":[0,0,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","d":1,"p":{"a":0,"k":[128.0,128.0]},"s":{"a":0,"k":[157.33333333333331,221.33333333333331]},"r":{"a":0,"k":12.0},"nm":"rect"},{"ty":"st","c":{"a":0,"k":[0.1333,0.1451,0.1686,1]},"o":{"a":0,"k":16},"w":{"a":0,"k":2.6666666666666665},"lc":2,"lj":2,"nm":"stroke"},{"ty":"tr","p":{"a":0,"k":[0,0]},"a":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]},"r":{"a":0,"k":0},"o":{"a":0,"k":100},"sk":{"a":0,"k":0},"sa":{"a":0,"k":0},"nm":"tr"}],"nm":"g"}]},{"ddd":0,"ind":4,"ty":4,"nm":"page","parent":1,"sr":1,"ip":0,"op":52.8,"st":0,"bm":0,"ks":{"o":{"a":1,"k":[{"t":0.0,"s":[0],"o":{"x":[0.23],"y":[1]},"i":{"x":[0.32],"y":[1]},"e":[100]},{"t":9.6,"s":[100]}]},"r":{"a":0,"k":0},"p":{"a":0,"k":[0,0,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},"shapes":[{"ty":"gr","it":[{"ty":"rc","d":1,"p":{"a":0,"k":[128.0,128.0]},"s":{"a":0,"k":[160.0,224.0]},"r":{"a":0,"k":13.333333333333332},"nm":"rect"},{"ty":"fl","c":{"a":0,"k":[1,1,1,1]},"o":{"a":0,"k":100},"r":1,"nm":"fill"},{"ty":"tr","p":{"a":0,"k":[0,0]},"a":{"a":0,"k":[0,0]},"s":{"a":0,"k":[100,100]},"r":{"a":0,"k":0},"o":{"a":0,"k":100},"sk":{"a":0,"k":0},"sa":{"a":0,"k":0},"nm":"tr"}],"nm":"g"}]}],"meta":{"g":"hand-authored for Margin; values mirror margin-mark.css .mm--draw (880 ms). No shadow or paper falloff: add in the host if needed."}};</script>
+<script>
+(function () {
+	const body = document.body;
+	const reduced = document.getElementById('reduced');
+	try { if (localStorage.getItem('mm-reduced') === '1') { reduced.checked = true; } } catch (e) { }
+	if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { reduced.checked = true; }
+	function applyReduced() {
+		body.classList.toggle('mm-reduced', reduced.checked);
+		body.classList.toggle('mi-reduced', reduced.checked);
+		try { localStorage.setItem('mm-reduced', reduced.checked ? '1' : '0'); } catch (e) { }
+	}
+	reduced.addEventListener('change', () => { applyReduced(); replayAll(); });
+	applyReduced();
+
+	function restart(svg) {
+		const cls = [...svg.classList].filter(c => c.startsWith('mm--'));
+		cls.forEach(c => svg.classList.remove(c));
+		svg.getBoundingClientRect();
+		cls.forEach(c => svg.classList.add(c));
+	}
+	function play(svg, state) {
+		[...svg.classList].filter(c => c.startsWith('mm--')).forEach(c => svg.classList.remove(c));
+		svg.getBoundingClientRect();
+		svg.classList.add(state);
+	}
+	document.querySelectorAll('.stage .replay').forEach(b => b.addEventListener('click', () => restart(b.closest('.stage').querySelector('svg.mm'))));
+	function replaySizes() { document.querySelectorAll('.sz svg.mm').forEach(restart); }
+	document.getElementById('replaySizes').addEventListener('click', replaySizes);
+
+	let anim = null;
+	function playLottie() {
+		if (!window.lottie) { return; }
+		if (!anim) {
+			anim = lottie.loadAnimation({ container: document.getElementById('lottie'), renderer: 'svg', loop: false, autoplay: false, animationData: JSON.parse(JSON.stringify(window.MM_LOTTIE)) });
+			anim.addEventListener('DOMLoaded', playLottie);
+			return;
+		}
+		if (reduced.checked) { anim.goToAndStop(anim.totalFrames - 1, true); document.getElementById('lottie').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); }
+		else { anim.goToAndPlay(0, true); }
+	}
+	document.getElementById('replayLottie').addEventListener('click', playLottie);
+
+	function replayAll() { document.querySelectorAll('.stage svg.mm').forEach(restart); replaySizes(); playLottie(); }
+	document.getElementById('replayAll').addEventListener('click', replayAll);
+	playLottie();
+
+	// Q3: first save. Footer crossfades Edited -> Saved (100 ms); the 16 px mark winks once (600 ms).
+	const q3 = document.querySelector('.m16 svg.mm'), q3s = document.getElementById('q3state');
+	document.getElementById('q3go').addEventListener('click', () => {
+		q3s.style.opacity = 0;
+		setTimeout(() => { q3s.textContent = 'Saved'; q3s.style.opacity = 1; }, reduced.checked ? 0 : 100);
+		play(q3, 'mm--wink');
+		setTimeout(() => { q3s.textContent = 'Edited'; }, 3000);
+	});
+
+	// Q4: third click within 2 s nods the page once. Q6: Copy -> Copied for 1.5 s.
+	const q4 = document.querySelector('#q4icon svg.mm'); let clicks = [];
+	document.getElementById('q4icon').addEventListener('click', () => {
+		const now = Date.now(); clicks = clicks.filter(t => now - t < 2000); clicks.push(now);
+		if (clicks.length === 3) { play(q4, 'mm--nod'); clicks = []; }
+	});
+	const copy = document.getElementById('q6copy');
+	copy.addEventListener('click', () => {
+		const d = reduced.checked ? 0 : 100;
+		copy.style.opacity = 0;
+		setTimeout(() => { copy.textContent = 'Copied'; copy.style.opacity = 1; }, d);
+		setTimeout(() => { copy.style.opacity = 0; setTimeout(() => { copy.textContent = 'Copy'; copy.style.opacity = 1; }, d); }, 1500 + d);
+	});
+
+	document.querySelectorAll('.vid video').forEach(v => {
+		v.addEventListener('mouseenter', () => { if (!reduced.checked) { v.play().catch(() => { }); } });
+		v.addEventListener('mouseleave', () => v.pause());
+	});
+})();
+</script>
+</body>
+</html>
