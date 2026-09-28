@@ -84,12 +84,10 @@ An 8 GB Mac can build Tacet; installs take a while the first time.
 | Path | What it is |
 | --- | --- |
 | [`tacet/`](tacet) | Product docs, design system, ship plan and the smoke gate ([`tacet/SHIP-PLAN.md`](tacet/SHIP-PLAN.md) is the plan of record). |
-| `src/vs/workbench/contrib/margin/` | Tacet's workbench shell: title bar, page, identity. |
-| `extensions/margin-welcome/` | First boot (a small React webview). |
-| `extensions/theme-margin/` | Tacet Light, Tacet Dark and a high-contrast theme. |
+| `src/vs/workbench/contrib/tacet/` | Tacet's workbench shell: title bar, page, identity. |
+| `extensions/tacet-welcome/` | First boot (a small React webview). |
+| `extensions/theme-tacet/` | Tacet Light, Tacet Dark and a high-contrast theme. |
 | `extensions/markdown-language-features/` | The rich Markdown page (write, read, source). |
-
-Some internal folders and setting keys still use the project's earlier working name, *margin*. They will be renamed in one pass before 1.0.
 
 ## Telemetry
 

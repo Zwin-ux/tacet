@@ -65,7 +65,7 @@ export const unicodeFilter = Object.freeze<string[]>([
 	'!extensions/**/out/**',
 	'!extensions/**/snippets/**',
 	'!extensions/**/colorize-fixtures/**',
-	'!extensions/margin-welcome/media/**',
+	'!extensions/tacet-welcome/media/**',
 	'!extensions/terminal-suggest/src/shell/fishBuiltinsCache.ts',
 
 	'!src/vs/base/browser/dompurify/**',
@@ -165,10 +165,10 @@ export const indentationFilter = Object.freeze<string[]>([
 	'!extensions/notebook-renderers/renderer-out/*.js',
 	'!extensions/simple-browser/media/*.js',
 	// Tacet first boot: Animate UI registry code (MIT + Commons Clause notice kept in its folder) and the built webview bundle
-	'!extensions/margin-welcome/webview/src/components/animate-ui/**',
-	'!extensions/margin-welcome/webview/src/hooks/**',
-	'!extensions/margin-welcome/webview/src/lib/get-strict-context.tsx',
-	'!extensions/margin-welcome/media/**',
+	'!extensions/tacet-welcome/webview/src/components/animate-ui/**',
+	'!extensions/tacet-welcome/webview/src/hooks/**',
+	'!extensions/tacet-welcome/webview/src/lib/get-strict-context.tsx',
+	'!extensions/tacet-welcome/media/**',
 ]);
 
 export const copyrightFilter = Object.freeze<string[]>([
@@ -225,10 +225,10 @@ export const copyrightFilter = Object.freeze<string[]>([
 	'!src/vs/base/common/lit-html/**',
 	'!src/vs/base/common/signals-core/**',
 	// Tacet first boot: Animate UI registry code (MIT + Commons Clause notice kept in its folder) and the built webview bundle
-	'!extensions/margin-welcome/webview/src/components/animate-ui/**',
-	'!extensions/margin-welcome/webview/src/hooks/**',
-	'!extensions/margin-welcome/webview/src/lib/get-strict-context.tsx',
-	'!extensions/margin-welcome/media/**',
+	'!extensions/tacet-welcome/webview/src/components/animate-ui/**',
+	'!extensions/tacet-welcome/webview/src/hooks/**',
+	'!extensions/tacet-welcome/webview/src/lib/get-strict-context.tsx',
+	'!extensions/tacet-welcome/media/**',
 ]);
 
 export const tsFormattingFilter = Object.freeze<string[]>([

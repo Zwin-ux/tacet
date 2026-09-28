@@ -4,8 +4,8 @@ Ordered engineering tasks that turn [DESIGN-GUIDE.md](DESIGN-GUIDE.md) into the 
 
 Conventions:
 - **Size:** S ≤ half a day, M ≤ 2 days, L ≤ 5 days, for one engineer who knows the workbench.
-- **Accept:** the check that closes the task. Screenshots go to `margin/evidence/design/<task>.png` at 100% and 200% scale, light, dark, and one Contrast Theme.
-- Each task is one reviewable patch. Keep Tacet code in `src/vs/workbench/contrib/margin/` and `extensions/margin*/` wherever a seam exists; touch upstream files only where listed.
+- **Accept:** the check that closes the task. Screenshots go to `tacet/evidence/design/<task>.png` at 100% and 200% scale, light, dark, and one Contrast Theme.
+- Each task is one reviewable patch. Keep Tacet code in `src/vs/workbench/contrib/tacet/` and `extensions/tacet*/` wherever a seam exists; touch upstream files only where listed.
 - All CSS uses `--vscode-*` color variables and size tokens (see `.github/instructions/design-tokens.instructions.md`). New size tokens need both `src/vs/platform/theme/common/sizes/baseSizes.ts` and `build/lib/stylelint/vscode-known-variables.json`.
 - User-visible strings go through `nls.localize`. Sentence case in Tacet-owned surfaces (guide §2.3).
 - Do not run a watch task for these; `npm run compile-client` once per task, targeted tests where behavior changes.
@@ -13,10 +13,10 @@ Conventions:
 ## Phase 0: Foundation
 
 ### T0.1 Theme extension scaffold (S)
-- Create `extensions/theme-margin/` (`package.json`, `package.nls.json`, `themes/`, `icons/`, `fileicons/`).
-- Contribute `themes`: `Tacet Light` (`uiTheme: "vs"`), `Tacet Dark` (`"vs-dark"`), `Tacet High Contrast Light` (`"hc-light"`), from `margin/design/theme/*.json`. Copy, do not symlink; keep `margin/design/theme/_build/generate-themes.mjs` as the source and add a one-line note in the extension README that the JSON is generated.
+- Create `extensions/theme-tacet/` (`package.json`, `package.nls.json`, `themes/`, `icons/`, `fileicons/`).
+- Contribute `themes`: `Tacet Light` (`uiTheme: "vs"`), `Tacet Dark` (`"vs-dark"`), `Tacet High Contrast Light` (`"hc-light"`), from `tacet/design/theme/*.json`. Copy, do not symlink; keep `tacet/design/theme/_build/generate-themes.mjs` as the source and add a one-line note in the extension README that the JSON is generated.
 - Add the extension to the built-in list (`build/gulpfile.extensions.*` / `product.json builtInExtensions` owner decides) and to `build/npm/dirs.ts` only if it gets dependencies (it should not).
-- **Accept:** `Preferences: Color Theme` lists the three themes; switching shows no console color-registry warnings; `node margin/design/theme/_build/generate-themes.mjs` reports `complete` for all three.
+- **Accept:** `Preferences: Color Theme` lists the three themes; switching shows no console color-registry warnings; `node tacet/design/theme/_build/generate-themes.mjs` reports `complete` for all three.
 
 ### T0.2 Default theme wiring (S)
 - Configuration defaults (see T3.1 mechanism): `workbench.colorTheme: "Tacet Light"`, `workbench.preferredLightColorTheme: "Tacet Light"`, `workbench.preferredDarkColorTheme: "Tacet Dark"`, `workbench.preferredHighContrastLightColorTheme: "Tacet High Contrast Light"`, `window.autoDetectColorScheme: true`, `window.autoDetectHighContrast: true`.
@@ -26,27 +26,27 @@ Conventions:
 ## Phase 1: Identity assets
 
 ### T1.1 Bundle fonts (S)
-- Copy `margin/design/fonts/cascadia-code/*` and `margin/design/fonts/source-serif-4/*` (with LICENSE files) into `extensions/theme-margin/fonts/` (webview use) and `resources/fonts/` (workbench use). Add both to `ThirdPartyNotices` / `cglicenses.json` per the release process.
+- Copy `tacet/design/fonts/cascadia-code/*` and `tacet/design/fonts/source-serif-4/*` (with LICENSE files) into `extensions/theme-tacet/fonts/` (webview use) and `resources/fonts/` (workbench use). Add both to `ThirdPartyNotices` / `cglicenses.json` per the release process.
 - Register `@font-face` in `src/vs/workbench/browser/media/style.css` for `Cascadia Code` (weight 200 to 700) and `Source Serif 4` (roman + italic) using `FileAccess` URIs (same pattern as codicon font loading in `src/vs/base/browser/ui/codicons/codicon/codicon.css`).
-- For the rich Markdown webview, add the fonts to `localResourceRoots` in `extensions/markdown-language-features/src/preview/markdownEditorProvider.ts` and declare `@font-face` in `mdThemeMargin.css`.
+- For the rich Markdown webview, add the fonts to `localResourceRoots` in `extensions/markdown-language-features/src/preview/markdownEditorProvider.ts` and declare `@font-face` in `mdThemeTacet.css`.
 - **Accept:** on a Windows 10 VM without Cascadia installed, Code view and terminal render Cascadia; DevTools shows the font loaded from the app bundle, not the network.
 
 ### T1.2 UI font stack (S)
 - `src/vs/workbench/browser/media/style.css` line 18: `.monaco-workbench.windows { font-family: "Segoe UI Variable Text", "Segoe WPC", "Segoe UI", sans-serif; }`; add `"Segoe UI Variable Text"` first in the `:lang()` variants too.
-- Add utility classes `.margin-display` (`"Segoe UI Variable Display"`) and `.margin-small` (`"Segoe UI Variable Small"`) in `src/vs/workbench/contrib/margin/browser/media/margin.css` for page titles and 11 to 12px labels.
+- Add utility classes `.tacet-display` (`"Segoe UI Variable Display"`) and `.tacet-small` (`"Segoe UI Variable Small"`) in `src/vs/workbench/contrib/tacet/browser/media/tacet.css` for page titles and 11 to 12px labels.
 - **Accept:** DevTools computed font on title bar, shelf, menus = Segoe UI Variable Text on Windows 11.
 
 ### T1.3 App icon and file association icons (M)
-- Source: `margin/design/assets/icon/margin-app-icon.svg` (48+), `-32.svg`, `-24.svg`, `-16.svg`, `-hc.svg`, `margin-file-md.svg`, `margin-file-txt.svg`.
-- Produce `resources/win32/margin.ico` with frames 16, 20, 24, 32, 40, 48, 64, 256 (16 from `-16.svg`, 20/24 from `-24.svg`, 32/40 from `-32.svg`, 48+ from master). Tool: any deterministic SVG→PNG (headless Chromium screenshot as done in `margin/design/assets/icon/`) then `png-to-ico`-equivalent; commit the PNGs and the ICO.
-- Replace `resources/win32/code_70x70.png`, `code_150x150.png` (VisualElementsManifest tiles, background white), `markdown.ico` → `margin-file-md` frames, add `text.ico` from `margin-file-txt`. Installer bitmaps `inno-big-*.bmp` / `inno-small-*.bmp`: white background, master icon centered.
+- Source: `tacet/design/assets/icon/tacet-app-icon.svg` (48+), `-32.svg`, `-24.svg`, `-16.svg`, `-hc.svg`, `tacet-file-md.svg`, `tacet-file-txt.svg`.
+- Produce `resources/win32/tacet.ico` with frames 16, 20, 24, 32, 40, 48, 64, 256 (16 from `-16.svg`, 20/24 from `-24.svg`, 32/40 from `-32.svg`, 48+ from master). Tool: any deterministic SVG→PNG (headless Chromium screenshot as done in `tacet/design/assets/icon/`) then `png-to-ico`-equivalent; commit the PNGs and the ICO.
+- Replace `resources/win32/code_70x70.png`, `code_150x150.png` (VisualElementsManifest tiles, background white), `markdown.ico` → `tacet-file-md` frames, add `text.ico` from `tacet-file-txt`. Installer bitmaps `inno-big-*.bmp` / `inno-small-*.bmp`: white background, master icon centered.
 - `product.json` icon references are owner-controlled; list the exact keys in the PR description instead of editing if the owner has not approved.
 - **Accept:** taskbar (light and dark), Start, Alt+Tab, Explorer (details/large icons) screenshots at 100/150/200%; the 16px frame is pixel-inspected (no blur on the rule).
 
 ## Phase 2: Shell and title bar
 
 ### T2.1 Title bar height 48 and caption overlay (M)
-- `src/vs/platform/window/common/window.ts`: add `MARGIN_TITLEBAR_HEIGHT = 48` and use it where `DEFAULT_CUSTOM_TITLEBAR_HEIGHT` feeds the custom title bar on Windows (keep upstream constant for other platforms if not yet qualified).
+- `src/vs/platform/window/common/window.ts`: add `TACET_TITLEBAR_HEIGHT = 48` and use it where `DEFAULT_CUSTOM_TITLEBAR_HEIGHT` feeds the custom title bar on Windows (keep upstream constant for other platforms if not yet qualified).
 - `src/vs/platform/windows/electron-main/windows.ts` line ~228: `titleBarOverlay.height` 29 → 48; `windowImpl.ts` `updateWindowControls` keeps height in sync.
 - `src/vs/workbench/browser/parts/titlebar/titlebarPart.ts` `minimumHeight` path: return 48 when custom title bar is on.
 - `titlebarpart.css`: remove the bottom border; center content vertically; 12px left padding.
@@ -58,24 +58,24 @@ Conventions:
 - **Accept:** title bar shows only Tacet controls; Alt shows the File/Edit/View row and Escape hides it.
 
 ### T2.3 Material follows region (M)
-- Publish the shelf width to CSS: in `src/vs/workbench/browser/layout.ts`, when the side bar is visible and on the left, set `--margin-shelf-width: <px>` on the title bar and status bar part containers on every layout pass (0px when hidden or on the right).
-- `titlebarpart.css` and `statusbarpart.css`: `background: linear-gradient(to right, var(--vscode-sideBar-background) var(--margin-shelf-width, 0px), var(--vscode-titleBar-activeBackground) 0)` (status bar uses `--vscode-statusBar-background`). Draw the shelf's right hairline continuously through both bars with a 1px `box-shadow` at `--margin-shelf-width`.
+- Publish the shelf width to CSS: in `src/vs/workbench/browser/layout.ts`, when the side bar is visible and on the left, set `--tacet-shelf-width: <px>` on the title bar and status bar part containers on every layout pass (0px when hidden or on the right).
+- `titlebarpart.css` and `statusbarpart.css`: `background: linear-gradient(to right, var(--vscode-sideBar-background) var(--tacet-shelf-width, 0px), var(--vscode-titleBar-activeBackground) 0)` (status bar uses `--vscode-statusBar-background`). Draw the shelf's right hairline continuously through both bars with a 1px `box-shadow` at `--tacet-shelf-width`.
 - Fallback if the layout patch is rejected: skip this task; themes already set `titleBar.activeBackground = canvas`.
 - **Accept:** screenshot with shelf open shows one unbroken hairline from top to bottom and no seam where bars meet parts; resizing the shelf keeps the split aligned within 0px.
 
 ### T2.4 Scroll hairline under the title bar (S)
-- Add class `.margin-content-scrolled` on the title bar when the active editor's scrollTop > 0 (listen to `IEditorService.activeEditorPane` scroll events via `onDidChangeScroll` for Monaco and a webview message for the rich editor). CSS: 1px `--vscode-sideBar-border` bottom edge on the canvas segment only.
+- Add class `.tacet-content-scrolled` on the title bar when the active editor's scrollTop > 0 (listen to `IEditorService.activeEditorPane` scroll events via `onDidChangeScroll` for Monaco and a webview message for the rich editor). CSS: 1px `--vscode-sideBar-border` bottom edge on the canvas segment only.
 - **Accept:** at scrollTop 0 no line; 1px line after scrolling; no line when shelf-only content scrolls.
 
 ### T2.5 Document title control (L)
-- New `src/vs/workbench/contrib/margin/browser/titleControl/marginTitleControl.ts` registered into the title bar center-left slot (replacing the command-center slot). Renders filename (semibold), folder or `Draft` (secondary), dirty dot, read-only lock.
+- New `src/vs/workbench/contrib/tacet/browser/titleControl/tacetTitleControl.ts` registered into the title bar center-left slot (replacing the command-center slot). Renders filename (semibold), folder or `Draft` (secondary), dirty dot, read-only lock.
 - Click opens the title menu popover (`IContextViewService`, Level 2 styles): editable name (rename via `IWorkingCopyFileService`), location with `Show in File Explorer`, `Move…`, `Save As…`, `Open Documents` list (MRU of `IEditorService.editors`), `Version History` (local history).
 - `window.title` default: `${dirty}${activeEditorShort}${separator}Tacet` (taskbar text).
 - **Accept:** keyboard: Tab to title, Enter opens, arrows move, Escape returns focus; rename a file and a draft; screen reader announces "A quieter morning.md, Notes, edited".
 
 ### T2.6 Mode control (M)
-- New `src/vs/workbench/contrib/margin/browser/modeControl/modeControl.ts` + `media/modeControl.css` per guide §4.5. Centered over the editor part's horizontal extent (read `IWorkbenchLayoutService.getContainer(Parts.EDITOR_PART)` bounds).
-- Wire to the document router commands (`margin.mode.write|read|code`, Ctrl+Alt+1/2/3) owned by M03; this task is UI only.
+- New `src/vs/workbench/contrib/tacet/browser/modeControl/modeControl.ts` + `media/modeControl.css` per guide §4.5. Centered over the editor part's horizontal extent (read `IWorkbenchLayoutService.getContainer(Parts.EDITOR_PART)` bounds).
+- Wire to the document router commands (`tacet.mode.write|read|code`, Ctrl+Alt+1/2/3) owned by M03; this task is UI only.
 - **Accept:** fixed-width segments (no width change on selection); thumb slide 160ms; reduced motion jumps; `aria-pressed` and roving focus verified with Narrator.
 
 ### T2.7 Activity bar: hidden in writing, top in Coding Tools (S)
@@ -86,7 +86,7 @@ Conventions:
 ## Phase 3: Defaults
 
 ### T3.1 Configuration defaults (S)
-Mechanism: `extensions/margin/package.json` `contributes.configurationDefaults` (preferred, reviewable), or `product.json configurationDefaults` if the owner prefers. Values:
+Mechanism: `extensions/tacet/package.json` `contributes.configurationDefaults` (preferred, reviewable), or `product.json configurationDefaults` if the owner prefers. Values:
 
 ```jsonc
 {
@@ -102,8 +102,8 @@ Mechanism: `extensions/margin/package.json` `contributes.configurationDefaults` 
   "workbench.tree.renderIndentGuides": "onHover",
   "workbench.sash.hoverDelay": 300,
   "workbench.hover.delay": 600,
-  "workbench.iconTheme": "margin-files",
-  "workbench.productIconTheme": "margin-icons",
+  "workbench.iconTheme": "tacet-files",
+  "workbench.productIconTheme": "tacet-icons",
   "workbench.experimental.modernUI": true,
   "workbench.experimental.modernUIEditorTabStyle": "pill",
   "window.density.editorTabHeight": "compact",
@@ -158,14 +158,14 @@ Mechanism: `extensions/margin/package.json` `contributes.configurationDefaults` 
 ## Phase 4: Document surface
 
 ### T4.1 Tacet document theme in the rich editor (M)
-- Copy `margin/design/css/md-theme-margin.css` to `extensions/markdown-language-features/markdown-editor-src/mdThemeMargin.css` (add copyright header), import it in `editor.ts` after `markdownEditor.css`, and change `editor.ts` line ~302 `classNames: ['md-theme-vscode-default']` → `['md-theme-margin']`.
+- Copy `tacet/design/css/md-theme-tacet.css` to `extensions/markdown-language-features/markdown-editor-src/mdThemeTacet.css` (add copyright header), import it in `editor.ts` after `markdownEditor.css`, and change `editor.ts` line ~302 `classNames: ['md-theme-vscode-default']` → `['md-theme-tacet']`.
 - Keep `@vscode/markdown-editor/themes/vscode-default.css` imported until the diff is reviewed, then remove it.
-- Map syntax variables: in `syntaxHighlighter.ts` (or host CSS) set `--margin-syntax-*` from the theme's token colors so fences match Code view.
-- **Accept:** `margin/design/css/typography-specimen.png` metrics reproduced in the real editor (overlay at 50% opacity, deviations ≤ 1px in line positions); Write↔Read switch moves 0 pixels (automated: capture element rects of the first 20 blocks in both modes and diff).
+- Map syntax variables: in `syntaxHighlighter.ts` (or host CSS) set `--tacet-syntax-*` from the theme's token colors so fences match Code view.
+- **Accept:** `tacet/design/css/typography-specimen.png` metrics reproduced in the real editor (overlay at 50% opacity, deviations ≤ 1px in line positions); Write↔Read switch moves 0 pixels (automated: capture element rects of the first 20 blocks in both modes and diff).
 
 ### T4.2 Document text size and line width settings (M)
-- Settings `margin.document.fontSize` (12 to 28, default 17), `margin.document.lineWidth` (`narrow` 600 / `standard` 680 / `wide` 800), `margin.document.typeface` (`sans` / `serif` / `mono`).
-- Host passes them to the webview as CSS variables `--markdown-font-size`, `--margin-line-width`, `--markdown-font-family`. Commands: Increase/Decrease/Reset Document Text Size; Ctrl+wheel over the document (setting `margin.document.mouseWheelZoom`, default true).
+- Settings `tacet.document.fontSize` (12 to 28, default 17), `tacet.document.lineWidth` (`narrow` 600 / `standard` 680 / `wide` 800), `tacet.document.typeface` (`sans` / `serif` / `mono`).
+- Host passes them to the webview as CSS variables `--markdown-font-size`, `--tacet-line-width`, `--markdown-font-family`. Commands: Increase/Decrease/Reset Document Text Size; Ctrl+wheel over the document (setting `tacet.document.mouseWheelZoom`, default true).
 - **Accept:** text size change preserves the reading anchor (first visible block stays within ±1 line).
 
 ### T4.3 Remove in-document read-only toggle; placeholder (S)
@@ -182,7 +182,7 @@ Mechanism: `extensions/margin/package.json` `contributes.configurationDefaults` 
 
 ### T5.1 Shelf view container and rows (L)
 - Owned with M06. Views: Drafts, Recent Files, Folders, On This Page. Row renderer: 32/44 heights, icon 16, one secondary line max, dirty dot, single hover action, missing-file inline actions.
-- CSS in `src/vs/workbench/contrib/margin/browser/shelf/media/shelf.css`; section headers use the pane header without chevrons and without borders (`paneviewlet.css` override scoped to `.margin-shelf`).
+- CSS in `src/vs/workbench/contrib/tacet/browser/shelf/media/shelf.css`; section headers use the pane header without chevrons and without borders (`paneviewlet.css` override scoped to `.tacet-shelf`).
 - Find field at top: a button styled as an input that opens Ctrl+P (not a second search implementation).
 - **Accept:** keyboard traversal (arrows, Home/End, type-ahead, Enter), two same-title files distinguishable, empty sections hidden.
 
@@ -193,11 +193,11 @@ Mechanism: `extensions/margin/package.json` `contributes.configurationDefaults` 
 ## Phase 6: Icons
 
 ### T6.1 Product icon font (M)
-- Build `margin-icons.woff` from `margin/design/icons/*.svg` (24 glyphs, codepoints in `glyph-map.json`) plus the Fluent UI System Icons 16 Regular subset for the remaining ids in guide §10.3 (MIT; add to ThirdPartyNotices). Tool: any SVG→font build (e.g. `fantasticon` run once, output committed; no runtime dependency).
-- Contribute `productIconThemes` in `extensions/theme-margin/package.json` → `icons/margin-product-icon-theme.json` (draft in `margin/design/icons/`).
+- Build `tacet-icons.woff` from `tacet/design/icons/*.svg` (24 glyphs, codepoints in `glyph-map.json`) plus the Fluent UI System Icons 16 Regular subset for the remaining ids in guide §10.3 (MIT; add to ThirdPartyNotices). Tool: any SVG→font build (e.g. `fantasticon` run once, output committed; no runtime dependency).
+- Contribute `productIconThemes` in `extensions/theme-tacet/package.json` → `icons/tacet-product-icon-theme.json` (draft in `tacet/design/icons/`).
 - **Accept:** `Preferences: Product Icon Theme` → Tacet; every icon in guide §10.3 renders; no codicon remains visible in the writing layout (DevTools query `.codicon:not([class*="margin"])` inside title bar, shelf, footer returns zero).
 
-### T6.2 File icon theme `margin-files` (S)
+### T6.2 File icon theme `tacet-files` (S)
 - Five SVG glyphs (note, text, code, folder, folder-open) derived from `icons/file.svg`, `file-text.svg`, `mode-code.svg`, `folder.svg`; monochrome ink2; dark variants via `"light"`/default sections.
 - **Accept:** Explorer and quick open show monochrome icons; `.md` and `.txt` distinguishable.
 

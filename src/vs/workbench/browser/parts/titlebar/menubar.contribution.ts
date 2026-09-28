@@ -6,6 +6,7 @@
 import { localize } from '../../../../nls.js';
 import { MenuId, MenuRegistry } from '../../../../platform/actions/common/actions.js';
 import { IsMacNativeContext } from '../../../../platform/contextkey/common/contextkeys.js';
+import { ContextKeyExpr } from '../../../../platform/contextkey/common/contextkey.js';
 
 MenuRegistry.appendMenuItem(MenuId.MenubarMainMenu, {
 	submenu: MenuId.MenubarFileMenu,
@@ -59,6 +60,7 @@ MenuRegistry.appendMenuItem(MenuId.MenubarMainMenu, {
 
 MenuRegistry.appendMenuItem(MenuId.MenubarMainMenu, {
 	submenu: MenuId.MenubarTerminalMenu,
+	when: ContextKeyExpr.has('config.tacet.terminal.shortcut'), // Tacet: the terminal is an opt-in extra
 	title: {
 		value: 'Terminal',
 		original: 'Terminal',

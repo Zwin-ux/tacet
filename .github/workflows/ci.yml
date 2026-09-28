@@ -18,7 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        # windows-2022: the Code - OSS preinstall check knows Visual Studio 2022 and 2019, not 2026
+        os: [macos-latest, windows-2022]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 90
     steps:
@@ -30,6 +31,7 @@ jobs:
         run: npm ci
         env:
           VSCODE_INSTALL_CONCURRENCY: 3
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # ripgrep and other postinstalls download GitHub releases
           ELECTRON_SKIP_BINARY_DOWNLOAD: 1
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       - name: Compile

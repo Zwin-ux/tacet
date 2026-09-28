@@ -1,0 +1,515 @@
+/*
+ * Tacet document theme for the rich Markdown editor (`md-theme-tacet`).
+ *
+ * REFERENCE IMPLEMENTATION owned by tacet/design. Engineers copy it to
+ * extensions/markdown-language-features/markdown-editor-src/mdThemeTacet.css,
+ * import it from editor.ts next to markdownEditor.css, and change
+ * editor.ts `classNames: ['md-theme-vscode-default']` to `['md-theme-tacet']`
+ * (IMPLEMENTATION-MAP.md task T4.1). Add the Microsoft copyright header when it
+ * lands in the repo.
+ *
+ * Contract (DESIGN-GUIDE.md §5):
+ *  - Write and Read use IDENTICAL metrics. Read only removes affordances
+ *    (caret, markers, hover, checkbox interaction). Switching never reflows.
+ *  - Every color is a --vscode-* theme variable, so Tacet Light/Dark/HC and
+ *    any user theme work. Fallbacks are Tacet Light values.
+ *  - Sizes derive from --tacet-doc-size (Document Text Size setting, default
+ *    17px) so Ctrl+wheel text zoom scales the whole document proportionally.
+ *  - Two weights only: 400 and 600.
+ */
+
+.md-editor.md-theme-tacet {
+	--tacet-doc-size: var(--markdown-font-size, 17px);
+	--tacet-measure: var(--tacet-line-width, 680px);
+	--tacet-ink: var(--vscode-editor-foreground, #22252B);
+	--tacet-ink2: var(--vscode-descriptionForeground, #596272);
+	--tacet-ink3: var(--vscode-editor-placeholder-foreground, #676F7C);
+	--tacet-accent: var(--vscode-textLink-foreground, #2167D5);
+	--tacet-rule: var(--vscode-textBlockQuote-border, #BCD3F6);
+	--tacet-sunken: var(--vscode-textCodeBlock-background, #F2F4F7);
+	--tacet-hairline: var(--vscode-textSeparator-foreground, #E6E9EE);
+	--tacet-control: var(--vscode-checkbox-border, #8A94A3);
+	--tacet-display: 'Segoe UI Variable Display', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+	--tacet-text: var(--markdown-font-family, 'Segoe UI Variable Text', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif);
+	--tacet-mono: var(--vscode-editor-font-family, 'Cascadia Code', 'Cascadia Mono', Consolas, monospace);
+
+	font-family: var(--tacet-text);
+	font-size: var(--tacet-doc-size);
+	line-height: 1.647; /* 28 / 17 */
+	font-weight: 400;
+	font-kerning: normal;
+	font-variant-ligatures: common-ligatures;
+	font-optical-sizing: auto;
+	text-rendering: optimizeLegibility;
+	color: var(--tacet-ink);
+	overflow-wrap: anywhere;
+
+	/* Editor-internal hooks provided by editor.css */
+	--md-cursor-background: var(--vscode-editorCursor-foreground, #2167D5);
+	--md-block-active-background: transparent; /* no grey box around the active block */
+	--md-separator-color: var(--tacet-hairline);
+	--md-inline-code-background: var(--tacet-sunken);
+	--md-html-comment-foreground: var(--tacet-ink3);
+	--md-html-comment-hover-foreground: var(--tacet-ink2);
+	--md-html-comment-font-family: var(--tacet-mono);
+	--md-find-widget-background: var(--vscode-editorWidget-background, #FFFFFF);
+	--md-find-widget-foreground: var(--vscode-editorWidget-foreground, #22252B);
+	--md-find-widget-border: var(--vscode-editorWidget-border, #DDE1E7);
+	--md-find-widget-shadow: var(--vscode-widget-shadow, #1D2A3D1F);
+	--md-find-input-background: var(--vscode-input-background, #FFFFFF);
+	--md-find-input-foreground: var(--vscode-input-foreground, #22252B);
+	--md-find-placeholder-foreground: var(--vscode-input-placeholderForeground, #676F7C);
+	--md-find-input-caret: var(--vscode-editorCursor-foreground, #2167D5);
+	--md-find-input-border: var(--vscode-input-border, #D9DDE3);
+	--md-find-count-foreground: var(--tacet-ink2);
+	--md-find-focus-border: var(--vscode-focusBorder, #2167D5);
+	--md-find-button-hover-background: var(--vscode-toolbar-hoverBackground, #F2F4F7);
+	--md-find-disabled-foreground: var(--vscode-disabledForeground, #A3AAB5);
+	--md-find-editor-background: var(--vscode-editor-background, #FFFFFF);
+	--md-find-match-background: var(--vscode-editor-findMatchHighlightBackground, #FFF0C2);
+	--md-find-current-background: var(--vscode-editor-findMatchBackground, #FFD66B);
+	--md-find-current-border: transparent;
+	--md-find-option-background: var(--vscode-inputOption-activeBackground, #E3ECFB);
+	--md-find-option-border: transparent;
+	--md-find-option-foreground: var(--vscode-inputOption-activeForeground, #1A58BA);
+	--md-find-error-border: var(--vscode-inputValidation-errorBorder, #B42A33);
+	--md-find-error-foreground: var(--vscode-errorForeground, #B42A33);
+	--md-tok-keyword: var(--tacet-syntax-keyword, #8B3FB0);
+	--md-tok-string: var(--tacet-syntax-string, #1E7A4C);
+	--md-tok-comment: var(--tacet-syntax-comment, #676F7C);
+	--md-tok-number: var(--tacet-syntax-number, #A34D00);
+	--md-tok-regexp: var(--tacet-syntax-number, #A34D00);
+	--md-tok-type: var(--tacet-syntax-type, #0F7B83);
+	--md-tok-annotation: var(--tacet-syntax-keyword, #8B3FB0);
+	--md-tok-tag: var(--tacet-syntax-function, #1A58BA);
+	--md-tok-attribute: var(--tacet-syntax-number, #A34D00);
+	--md-tok-delimiter: var(--tacet-ink2);
+}
+
+/* ── The column ───────────────────────────────────────────────────────────── */
+
+.md-theme-tacet .md-editor-content,
+.md-theme-tacet .md-document {
+	max-width: var(--tacet-measure);
+	margin-inline: auto;
+	padding-block: 56px 96px;   /* space.doc56 above, generous run-out below */
+	padding-inline: 32px;       /* min side margin; compact overrides below */
+	box-sizing: content-box;
+}
+
+/* ── Paragraphs ───────────────────────────────────────────────────────────── */
+
+.md-theme-tacet .md-paragraph {
+	margin: 0 0 0.941em;        /* 16px at 17 */
+}
+
+/* ── Headings: Display optical size for h1/h2, tight tracking, 600 only ─── */
+
+.md-theme-tacet .md-heading {
+	font-weight: 600;
+	color: var(--tacet-ink);
+	border: 0;
+	padding: 0;
+	text-wrap: balance;
+}
+
+.md-theme-tacet h1.md-heading {
+	font-family: var(--tacet-display);
+	font-size: 1.882em;          /* 32 */
+	line-height: 1.25;           /* 40 */
+	letter-spacing: -0.022em;
+	margin: 2.353rem 0 0.5em;    /* 40 / 16 */
+}
+
+.md-theme-tacet h2.md-heading {
+	font-family: var(--tacet-display);
+	font-size: 1.412em;          /* 24 */
+	line-height: 1.333;          /* 32 */
+	letter-spacing: -0.014em;
+	margin: 1.333em 0 0.5em;     /* 32 / 12 */
+}
+
+.md-theme-tacet h3.md-heading {
+	font-size: 1.176em;          /* 20 */
+	line-height: 1.4;            /* 28 */
+	letter-spacing: -0.008em;
+	margin: 1.4em 0 0.4em;       /* 28 / 8 */
+}
+
+.md-theme-tacet h4.md-heading {
+	font-size: 1em;              /* 17 */
+	line-height: 1.647;
+	margin: 1.412em 0 0.235em;   /* 24 / 4 */
+}
+
+.md-theme-tacet h5.md-heading,
+.md-theme-tacet h6.md-heading {
+	font-size: 0.882em;          /* 15 */
+	line-height: 1.6;            /* 24 */
+	margin: 1.333em 0 0.267em;   /* 20 / 4 */
+}
+
+.md-theme-tacet h6.md-heading {
+	color: var(--tacet-ink2);
+}
+
+/* The first block never pushes down from the column top. */
+.md-theme-tacet .md-editor-content > :first-child,
+.md-theme-tacet .md-document > :first-child {
+	margin-top: 0;
+}
+
+/* Heading and the paragraph after it read as one group. */
+.md-theme-tacet .md-heading + .md-paragraph {
+	margin-top: 0;
+}
+
+/* ── Markers (#, *, _, `, >, -, |) revealed on the active block in Write ── */
+
+.md-theme-tacet .md-marker {
+	color: var(--tacet-ink3);
+	font-weight: 400;
+	letter-spacing: 0;
+}
+
+.md-theme-tacet .md-heading .md-marker {
+	/* `##` sits in the margin so the heading text does not jump when revealed. */
+	font-weight: 400;
+}
+
+/* ── Emphasis ─────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet strong { font-weight: 600; }
+.md-theme-tacet em { font-style: italic; }
+.md-theme-tacet del, .md-theme-tacet s { color: var(--tacet-ink2); text-decoration-thickness: 1px; }
+.md-theme-tacet mark { background: var(--vscode-editor-findMatchHighlightBackground, #FFF0C2); color: inherit; border-radius: 2px; padding: 0 2px; }
+
+/* ── Links: color alone at rest, underline on hover/focus (never color-only for focus) ── */
+
+.md-theme-tacet a,
+.md-theme-tacet .md-rich-link-label {
+	color: var(--tacet-accent);
+	text-decoration: none;
+	border-radius: 2px;
+}
+
+.md-theme-tacet a:hover {
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+.md-theme-tacet a:focus-visible {
+	outline: 2px solid var(--vscode-focusBorder, #2167D5);
+	outline-offset: 2px;
+}
+
+/* ── Lists ────────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet .md-list {
+	margin: 0 0 0.941em;
+	padding-left: 1.529em;       /* 26: bullets hang in the gutter */
+	--md-list-indent-step: 1.529em;
+}
+
+.md-theme-tacet .md-list .md-list {
+	margin-bottom: 0;
+}
+
+.md-theme-tacet li {
+	margin: 0.235em 0;           /* 4px between items: list rhythm stays document rhythm */
+}
+
+.md-theme-tacet li::marker {
+	color: var(--tacet-ink2);
+}
+
+.md-theme-tacet ol > li::marker {
+	font-variant-numeric: tabular-nums;
+}
+
+/* ── Tasks ────────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet .md-checkbox {
+	width: 18px;
+	height: 18px;
+	border: 1.5px solid var(--tacet-control);
+	border-radius: 4px;
+	background: var(--vscode-checkbox-background, #FFFFFF);
+	vertical-align: -3px;
+	margin-right: 10px;
+	transition: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1);
+	cursor: default;
+}
+
+.md-theme-tacet .md-checkbox:hover {
+	border-color: var(--tacet-ink2);
+}
+
+.md-theme-tacet .md-checkbox:checked {
+	background-color: var(--vscode-checkbox-selectBackground, #2167D5);
+	border-color: var(--vscode-checkbox-selectBorder, #2167D5);
+}
+
+.md-theme-tacet .md-checkbox:checked::after {
+	left: 5px;
+	top: 1px;
+	width: 5px;
+	height: 10px;
+	border-color: var(--vscode-checkbox-foreground, #FFFFFF);
+	border-width: 0 1.75px 1.75px 0;
+}
+
+.md-theme-tacet .md-checkbox:focus-visible {
+	outline: 2px solid var(--vscode-focusBorder, #2167D5);
+	outline-offset: 2px;
+}
+
+/* Completed task: dim to secondary. No strikethrough (it damages legibility and reads as deleted). */
+.md-theme-tacet .md-task-list-item:has(> .md-checkbox:checked) {
+	color: var(--tacet-ink2);
+}
+
+/* `:running:` spinner is an agent-status affordance: not part of Tacet. Render as a plain unchecked box. */
+.md-theme-tacet .md-checkbox-running {
+	animation: none;
+	background: none;
+	border: 1.5px solid var(--tacet-control);
+	padding: 0;
+	-webkit-mask: none;
+	mask: none;
+}
+
+/* ── Block quote: the margin line, echoed ──────────────────────────────────── */
+
+.md-theme-tacet .md-blockquote {
+	margin: 0 0 0.941em;
+	padding: 0 0 0 1.176em;      /* 20 */
+	--md-blockquote-pad: 1.176em;
+	border-left: 2px solid var(--tacet-rule);
+	background: none;
+	border-radius: 0;
+	color: var(--tacet-ink);
+}
+
+/* GitHub-style alerts ([!NOTE] etc.) keep the rule, colored by kind. */
+.md-theme-tacet .md-blockquote[data-alert='note'] { border-left-color: var(--vscode-markdownAlert-note-foreground, #2167D5); }
+.md-theme-tacet .md-blockquote[data-alert='tip'] { border-left-color: var(--vscode-markdownAlert-tip-foreground, #1E7A4C); }
+.md-theme-tacet .md-blockquote[data-alert='important'] { border-left-color: var(--vscode-markdownAlert-important-foreground, #8B3FB0); }
+.md-theme-tacet .md-blockquote[data-alert='warning'] { border-left-color: var(--vscode-markdownAlert-warning-foreground, #7A5313); }
+.md-theme-tacet .md-blockquote[data-alert='caution'] { border-left-color: var(--vscode-markdownAlert-caution-foreground, #B42A33); }
+
+/* ── Code ─────────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet :not(pre) > code {
+	font-family: var(--tacet-mono);
+	font-size: 0.882em;          /* 15 at 17: optical match to Segoe x-height */
+	line-height: 1;
+	padding: 1px 4px;
+	margin: 0 1px;
+	color: var(--tacet-ink);
+	background-color: var(--md-inline-code-background);
+	border-radius: 4px;
+	white-space: break-spaces;
+	font-variant-ligatures: none;
+}
+
+.md-theme-tacet .md-code-block {
+	margin: 0 0 1.176em;         /* 20 */
+	padding: 16px 20px;
+	font-size: 0.824em;          /* 14 */
+	line-height: 1.571;          /* 22 */
+	background-color: var(--tacet-sunken);
+	border: 0;
+	border-radius: 6px;          /* inner tier */
+	overflow-x: auto;
+	tab-size: 4;
+}
+
+.md-theme-tacet .md-code-block code {
+	font-family: var(--tacet-mono);
+	font-size: inherit;
+	padding: 0;
+	background: transparent;
+	border-radius: 0;
+	font-variant-ligatures: none;
+}
+
+.md-theme-tacet .md-code-block .tok-keyword { color: var(--md-tok-keyword); }
+.md-theme-tacet .md-code-block .tok-string { color: var(--md-tok-string); }
+.md-theme-tacet .md-code-block .tok-comment { color: var(--md-tok-comment); font-style: italic; }
+.md-theme-tacet .md-code-block .tok-number { color: var(--md-tok-number); }
+.md-theme-tacet .md-code-block .tok-regexp { color: var(--md-tok-regexp); }
+.md-theme-tacet .md-code-block .tok-type { color: var(--md-tok-type); }
+.md-theme-tacet .md-code-block .tok-annotation { color: var(--md-tok-annotation); }
+.md-theme-tacet .md-code-block .tok-tag { color: var(--md-tok-tag); }
+.md-theme-tacet .md-code-block .tok-attribute { color: var(--md-tok-attribute); }
+.md-theme-tacet .md-code-block .tok-delimiter { color: var(--md-tok-delimiter); }
+
+/* ── Tables: quiet grid, no zebra ─────────────────────────────────────────── */
+
+.md-theme-tacet .md-table-wrapper {
+	margin: 0 0 1.176em;
+	overflow-x: auto;
+}
+
+.md-theme-tacet .md-table {
+	border-collapse: collapse;
+	font-size: 0.882em;          /* 15 */
+	line-height: 1.6;            /* 24 */
+	font-variant-numeric: tabular-nums;
+}
+
+.md-theme-tacet .md-table td {
+	padding: 8px 12px;
+	border: 0;
+	border-bottom: 1px solid var(--tacet-hairline);
+	text-align: left;
+	vertical-align: top;
+}
+
+.md-theme-tacet .md-table tr:first-child td {
+	font-weight: 600;
+	border-bottom-color: var(--vscode-editorIndentGuide-activeBackground, #D9DDE3);
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+.md-theme-tacet .md-table tr:nth-child(even):not(.md-table-delimiter-row) {
+	background: none;
+}
+
+.md-theme-tacet .md-table-delimiter-row td {
+	border: 0;
+	padding: 0 12px;
+	color: var(--tacet-ink3);
+}
+
+.md-theme-tacet .md-table.md-block-active td {
+	border-color: transparent;
+}
+
+.md-theme-tacet .md-table.md-block-active td > .md-glue-tableCellGlue:first-child,
+.md-theme-tacet .md-table.md-block-active .md-table-delimiter-row td > .md-marker-tableDelimiter {
+	position: relative;
+	left: -12px;
+}
+
+.md-theme-tacet .md-table.md-block-active td:last-child {
+	position: relative;
+}
+
+.md-theme-tacet .md-table.md-block-active td:last-child > .md-glue-tableCellGlue:last-child,
+.md-theme-tacet .md-table.md-block-active .md-table-delimiter-row td:last-child > .md-marker-tableDelimiterClose {
+	position: absolute;
+	right: 0;
+	top: auto;
+}
+
+/* ── Rule ─────────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet .md-thematic-break {
+	height: 0;
+	padding: 0;
+	margin: 2em 0;               /* 34: a section pause */
+	border: 0;
+	border-bottom: 1px solid var(--tacet-hairline);
+}
+
+/* ── Images ───────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 6px;
+	display: block;
+	margin: 0.5em 0;
+	/* hairline for white-on-white screenshots */
+	box-shadow: 0 0 0 1px var(--tacet-hairline);
+}
+
+/* ── Math, footnotes, html comments ───────────────────────────────────────── */
+
+.md-theme-tacet .md-math-block { margin: 0 0 1.176em; }
+.md-theme-tacet .md-inline-math .katex { line-height: 1; }
+.md-theme-tacet .footnotes, .md-theme-tacet .md-footnote { font-size: 0.824em; line-height: 1.571; color: var(--tacet-ink2); }
+
+/* ── Selection ────────────────────────────────────────────────────────────── */
+
+.md-theme-tacet ::selection {
+	background: var(--vscode-editor-selectionBackground, #CCDEFB);
+	color: inherit;
+}
+
+/* ── Read mode: same metrics, no affordances ──────────────────────────────── */
+
+.md-theme-tacet.md-readonly .md-checkbox {
+	pointer-events: none;
+	opacity: 1;                  /* stays legible; state is informative, not disabled-looking */
+	border-color: var(--tacet-ink3);
+}
+
+.md-theme-tacet.md-readonly .md-checkbox:checked {
+	background-color: var(--tacet-ink2);
+	border-color: var(--tacet-ink2);
+}
+
+/* The upstream in-document lock toggle is replaced by the title-bar Write/Read/Code control. */
+.md-theme-tacet .md-readonly-toggle,
+.md-theme-tacet .md-readonly-toggle-host {
+	display: none;
+}
+
+/* ── Compact (window < 600 CSS px) ─────────────────────────────────────────── */
+
+.md-theme-tacet.md-editor-narrow .md-editor-content,
+.md-theme-tacet.md-editor-narrow .md-document {
+	padding-inline: 24px;
+	padding-block-start: 40px;
+}
+
+.md-theme-tacet.md-editor-narrow h1.md-heading { font-size: 1.647em; line-height: 1.286; } /* 28/36 */
+
+/* ── High contrast ────────────────────────────────────────────────────────── */
+
+.vscode-high-contrast .md-theme-tacet,
+.vscode-high-contrast-light .md-theme-tacet {
+	--tacet-hairline: var(--vscode-contrastBorder, CanvasText);
+	--md-inline-code-background: transparent;
+}
+
+.vscode-high-contrast .md-theme-tacet :not(pre) > code,
+.vscode-high-contrast-light .md-theme-tacet :not(pre) > code,
+.vscode-high-contrast .md-theme-tacet .md-code-block,
+.vscode-high-contrast-light .md-theme-tacet .md-code-block {
+	border: 1px solid var(--vscode-contrastBorder, CanvasText);
+}
+
+.vscode-high-contrast .md-theme-tacet a,
+.vscode-high-contrast-light .md-theme-tacet a {
+	text-decoration: underline;
+}
+
+@media (forced-colors: active) {
+	.md-theme-tacet .md-checkbox { forced-color-adjust: auto; appearance: auto; -webkit-appearance: auto; }
+	.md-theme-tacet .md-blockquote { border-left-color: CanvasText; }
+	.md-theme-tacet a { color: LinkText; text-decoration: underline; }
+	.md-theme-tacet ::selection { background: Highlight; color: HighlightText; }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	.md-theme-tacet * { transition: none !important; animation: none !important; }
+}
+
+/* ── Print (S18) ──────────────────────────────────────────────────────────── */
+
+@media print {
+	.md-theme-tacet { font-size: 11pt; color: #000; }
+	.md-theme-tacet .md-editor-content, .md-theme-tacet .md-document { max-width: none; padding: 0; }
+	.md-theme-tacet .md-heading { break-after: avoid; }
+	.md-theme-tacet .md-code-block, .md-theme-tacet .md-table-wrapper, .md-theme-tacet img { break-inside: avoid; }
+	.md-theme-tacet .md-code-block { white-space: pre-wrap; background: none; border: 1px solid #C9CED6; }
+	.md-theme-tacet a { color: #000; text-decoration: underline; }
+}

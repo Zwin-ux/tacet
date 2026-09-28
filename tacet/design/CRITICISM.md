@@ -1,6 +1,6 @@
 # Tacet criticism dossier: Notepad, VS Code, Markdown on Windows, terminals
 
-Status: research input, 2026-09-27. Owner: margin/design. Not authoritative. `SHIP-PLAN.md` and `docs/10-REBUILD.md` win until the coordinator accepts a change listed in §8.
+Status: research input, 2026-09-27. Owner: tacet/design. Not authoritative. `SHIP-PLAN.md` and `docs/10-REBUILD.md` win until the coordinator accepts a change listed in §8.
 Brief (owner, 2026-09-27): "remember the criticism — people want a way to open the MD and such and find it. Really think about how people are viewing terminal, Notepad, VS Code and the evolution; dig deep into criticism."
 
 ## 0. Evidence rules and limits

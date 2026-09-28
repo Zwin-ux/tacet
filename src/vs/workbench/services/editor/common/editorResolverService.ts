@@ -54,7 +54,7 @@ function markdownEditorAgentsWindowDefault(markdownDefaultEditor?: boolean): str
  * Tacet: Markdown opens as a rendered, writable document. This is a code default (not an extension
  * configuration default) so that it already applies to files opened at startup.
  */
-export const marginEditorAssociationsDefault: Readonly<Record<string, string>> = {
+export const tacetEditorAssociationsDefault: Readonly<Record<string, string>> = {
 	'*.md': 'vscode.markdown.editor',
 	'*.markdown': 'vscode.markdown.editor'
 };
@@ -94,7 +94,7 @@ const editorAssociationsConfigurationNode: IConfigurationNode = {
 		},
 		[editorsAssociationsSettingId]: {
 			type: 'object',
-			default: marginEditorAssociationsDefault,
+			default: tacetEditorAssociationsDefault,
 			markdownDescription: localize('editor.editorAssociations', "Configure [glob patterns](https://aka.ms/vscode-glob-patterns) to editors (for example `\"*.hex\": \"hexEditor.hexedit\"`). These have precedence over the default behavior."),
 			additionalProperties: {
 				type: 'string'

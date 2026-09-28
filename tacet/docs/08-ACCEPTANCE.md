@@ -98,4 +98,4 @@ If budgets fail, profile the actual bottleneck and revise architecture. An Elect
 
 ## Evidence receipt shape
 
-For each gate store: date, source head plus dirty-patch hash if applicable, binary hash, profile path, fixture set/version, exact command, expected result, actual result, logs/screenshots, pass/fail, reviewer, and remaining limitation. Keep receipts under `margin/evidence/` or linked CI artifacts. Never mark an unchecked row passed.
+For each gate store: date, source head plus dirty-patch hash if applicable, binary hash, profile path, fixture set/version, exact command, expected result, actual result, logs/screenshots, pass/fail, reviewer, and remaining limitation. Keep receipts under `tacet/evidence/` or linked CI artifacts. Never mark an unchecked row passed.

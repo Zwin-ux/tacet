@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest something Tacet should do
+labels: [feature]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What do you want to do, and why?
+    validations: {required: true}
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: I read "What Tacet is not" in the README and this request is not on that list.
+          required: true

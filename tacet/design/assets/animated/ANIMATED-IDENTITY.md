@@ -1,19 +1,19 @@
 # Tacet animated identity
 
-Status: v1, 2026-09-27. Owner: margin/design. Gate: [ANIMATION-GATE.md](../../ANIMATION-GATE.md). Motion vocabulary: [motion/MOTION.md](../../motion/MOTION.md).
+Status: v1, 2026-09-27. Owner: tacet/design. Gate: [ANIMATION-GATE.md](../../ANIMATION-GATE.md). Motion vocabulary: [motion/MOTION.md](../../motion/MOTION.md).
 Play everything: [PREVIEW.html](PREVIEW.html) (local files only, reduced-motion toggle).
 
 The quirk is spent where it is rare: the mark, the first boot, About, the first save. Everything a person touches 100 times a day stays still. The personality is the margin rule itself behaving like a caret: it draws, it winks, it nods. No bounce, no confetti, no characters with faces.
 
 ## 1. The animated mark
 
-Three directions were explored as Higgsfield motion studies first (feel only; [studies/](studies/)), then authored by hand in SVG + CSS. The shipped values live in [margin-mark.css](margin-mark.css).
+Three directions were explored as Higgsfield motion studies first (feel only; [studies/](studies/)), then authored by hand in SVG + CSS. The shipped values live in [tacet-mark.css](tacet-mark.css).
 
 | Direction | Study (feel reference) | Authored | Verdict |
 | --- | --- | --- | --- |
-| **A. Pen stroke + paper settle** | [mk-a-pen-stroke.kling3.mp4](studies/mk-a-pen-stroke.kling3.mp4) (Kling 3.0 Pro, job `791704b0`), [mk-a-pen-stroke.minimax-h3.mp4](studies/mk-a-pen-stroke.minimax-h3.mp4) (MiniMax H3, job `b2581a93`, the better settle) | [margin-mark-draw.svg](margin-mark-draw.svg), [margin-mark-draw.lottie.json](margin-mark-draw.lottie.json) | **Chosen** for the mark. It performs the brand's one gesture (the margin line = "here") once, and it reads as writing, not as a logo sting. |
-| B. Caret wink | [mk-b-caret-wink.kling3.mp4](studies/mk-b-caret-wink.kling3.mp4) (job `cf48c7c5`; the model retracted and redrew the rule instead of fading it, a nice alternative) | [margin-mark-wink.svg](margin-mark-wink.svg) | Kept as a **moment** (first save), not the logo animation: a wink needs the mark to already be there. |
-| C. Page hello | [mk-c-page-hello.kling3.mp4](studies/mk-c-page-hello.kling3.mp4) (job `798699be`) | [margin-mark-nod.svg](margin-mark-nod.svg) (as a flat "nod") | The study's corner curl is charming but draws a folded corner, which the icon brief reserves for file icons (guide §10.5). Authored instead as a 4-degree nod on the bottom-left corner. Kept as the **About easter egg**. |
+| **A. Pen stroke + paper settle** | [mk-a-pen-stroke.kling3.mp4](studies/mk-a-pen-stroke.kling3.mp4) (Kling 3.0 Pro, job `791704b0`), [mk-a-pen-stroke.minimax-h3.mp4](studies/mk-a-pen-stroke.minimax-h3.mp4) (MiniMax H3, job `b2581a93`, the better settle) | [tacet-mark-draw.svg](tacet-mark-draw.svg), [tacet-mark-draw.lottie.json](tacet-mark-draw.lottie.json) | **Chosen** for the mark. It performs the brand's one gesture (the margin line = "here") once, and it reads as writing, not as a logo sting. |
+| B. Caret wink | [mk-b-caret-wink.kling3.mp4](studies/mk-b-caret-wink.kling3.mp4) (job `cf48c7c5`; the model retracted and redrew the rule instead of fading it, a nice alternative) | [tacet-mark-wink.svg](tacet-mark-wink.svg) | Kept as a **moment** (first save), not the logo animation: a wink needs the mark to already be there. |
+| C. Page hello | [mk-c-page-hello.kling3.mp4](studies/mk-c-page-hello.kling3.mp4) (job `798699be`) | [tacet-mark-nod.svg](tacet-mark-nod.svg) (as a flat "nod") | The study's corner curl is charming but draws a folded corner, which the icon brief reserves for file icons (guide §10.5). Authored instead as a 4-degree nod on the bottom-left corner. Kept as the **About easter egg**. |
 
 ### A. Pen stroke + paper settle (the logo animation), 880 ms
 
@@ -36,7 +36,7 @@ Uses and rules:
 | About | draw, 880 ms | Plays when the dialog opens. |
 | Landing page hero | draw, 880 ms, at 128 to 256 px | Plays once when scrolled into view; never loops. |
 
-Formats: inline SVG + `margin-mark.css` (workbench and webviews), standalone self-playing SVGs, and a Lottie JSON (hand-authored, 60 fps, 256 x 256, verified frame by frame with lottie-web 5.12.2 light; it omits the contact shadow and the 2% paper falloff, which the host adds if needed).
+Formats: inline SVG + `tacet-mark.css` (workbench and webviews), standalone self-playing SVGs, and a Lottie JSON (hand-authored, 60 fps, 256 x 256, verified frame by frame with lottie-web 5.12.2 light; it omits the contact shadow and the 2% paper falloff, which the host adds if needed).
 
 ### B. Caret wink, 600 ms
 
@@ -54,7 +54,7 @@ Every moment below passes the gate: rare or first-time (1), a named purpose (2),
 | --- | --- | --- | --- | --- | --- |
 | Q1 | The mark writes itself | First boot step 1; About opens; landing hero | Direction A, 880 ms (above) | Delight + explanation (the margin is the product) | 200 ms fade |
 | Q2 | Launch splash | Cold launch slower than 400 ms only | Direction A compact, 560 ms, then 110 ms fade to the page | Preventing a jarring change (blank window) | 200 ms fade, or nothing if ready |
-| Q3 | First save ever | The first time a draft becomes a file on this PC (once per install; tracked in application storage `margin.moment.firstSave`) | The 16 px title-bar mark winks once (Direction B, 600 ms) at the moment the footer turns to `Saved`. The footer does not change behavior. | Delight + feedback (your text is now a real file) | none |
+| Q3 | First save ever | The first time a draft becomes a file on this PC (once per install; tracked in application storage `tacet.moment.firstSave`) | The 16 px title-bar mark winks once (Direction B, 600 ms) at the moment the footer turns to `Saved`. The footer does not change behavior. | Delight + feedback (your text is now a real file) | none |
 | Q4 | About nod | Third click on the app icon in About within 2 s (discoverable, harmless) | Direction C, 720 ms. A fourth click does nothing new (no escalation, no counters). | Delight | none |
 | Q5 | The page clears | Finishing the first boot | 110 ms fade out, 40 ms empty page, 160 ms fade in of `Start writing.` and the caret, which stays solid for 500 ms before the first phase blink (FIRST-BOOT §6) | Explanation + spatial consistency (the setup was written on the same page) | instant |
 | Q6 | Copied | `Copy` in About | The text button reads `Copied` for 1.5 s, opacity crossfade 100 ms each way. No check mark, no toast. | Feedback | instant swap |

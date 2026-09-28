@@ -2,7 +2,7 @@
 
 Status: requirements, 2026-09-27. Owner direction 2026-09-28: Tacet replaces Atlas as the "big project" on mazenzwin.com. Nothing in this file has been built or deployed. The site repo, Atlas and hosting were read only.
 
-Inputs: `margin/SHIP-PLAN.md` (Open-source launch, M10, M11), `margin/design/DESIGN-GUIDE.md` (§1, §2, §2.10), `margin/design/CRITICISM.md` (§1.4, §5, §9, C11), `margin/design/assets/README.md`, `margin/design/assets/launch/src/launch.html`, `margin/evidence/m3-*.png`, `margin/tools/smoke.mjs`, `margin/docs/10-REBUILD.md`.
+Inputs: `margin/SHIP-PLAN.md` (Open-source launch, M10, M11), `tacet/design/DESIGN-GUIDE.md` (§1, §2, §2.10), `tacet/design/CRITICISM.md` (§1.4, §5, §9, C11), `tacet/design/assets/README.md`, `tacet/design/assets/launch/src/launch.html`, `tacet/evidence/m3-*.png`, `tacet/tools/smoke.mjs`, `tacet/docs/10-REBUILD.md`.
 
 ---
 
@@ -56,10 +56,10 @@ The Tacet entry uses these two patterns. The desk needs no new component type.
 | --- | --- | --- |
 | `github.com/Zwin-ux/margin` does not exist. | `gh repo view` → "Could not resolve". SHIP-PLAN line 23: create at M11, owner-confirmed. | No GitHub link, no star badge and no present-tense "open source" claim until M11. |
 | No installer, no signing certificate, no release. | SHIP-PLAN M10 "Not started"; owner decisions lines 117–121. | No Download button and no SHA-256 until M10. |
-| Current screenshots still say "Code - OSS Dev" in the window title. | `margin/evidence/m3-1-look.png`, title bar "Setup - Code - OSS Dev". Title-bar icons are still VS Code chrome. | Do not publish `m3-*.png` as they are. Recapture after M2 identity lands. |
+| Current screenshots still say "Code - OSS Dev" in the window title. | `tacet/evidence/m3-1-look.png`, title bar "Setup - Code - OSS Dev". Title-bar icons are still VS Code chrome. | Do not publish `m3-*.png` as they are. Recapture after M2 identity lands. |
 | Launch and typing budgets are not measured. | CRITICISM R12; SHIP-PLAN M9 "Not started". | No "instant", "fast" or number claims until M9 publishes measurements. The pillar "Instant" in `launch.html:147` must wait. |
 | No-network audit not run on a packaged build. | SHIP-PLAN M10, gate G7. | The privacy statement is a goal until M10 and a fact after. |
-| The smoke gate exists and is real. | `margin/tools/smoke.mjs` (CDP + Playwright, no OS input; required checks launch, writingLayout, richEditor, typeSave, undo, typingCases, terminal, noGit); `evidence/r1b-finish-*-smoke.json`. | The engineering story can show this now. |
+| The smoke gate exists and is real. | `tacet/tools/smoke.mjs` (CDP + Playwright, no OS input; required checks launch, writingLayout, richEditor, typeSave, undo, typingCases, terminal, noGit); `evidence/r1b-finish-*-smoke.json`. | The engineering story can show this now. |
 | AI and git are removed at source, not hidden. | `docs/10-REBUILD.md` "What is deleted from source"; `evidence/w1-ai-inventory.md`; commits 1f27c0b7 (W1 AI removal), f00699ee (R1b git removal). | The engineering story can show this now, with links to the diff once public. |
 
 ---
@@ -72,7 +72,7 @@ Each requirement has an ID and an acceptance check. "Now" = can ship before M10.
 
 **FS-1 — Tacet is the first project on the desk.** (Now)
 Add `<article class="project rise">` for Tacet as the first child of `<section class="personal">` (`index.html:142`), above Kit. Use the Kit/Parabola markup only. No logo next to the name (`DESIGN.md` rule; the `tests/page.cjs` "no project logos" check must stay green).
-*Accept:* the first `<h3>` under "Personal projects" is `Tacet`; `node tests/page.cjs` passes; the entry adds no new CSS class except an optional `.margin-shot` that copies `.kit-shot`.
+*Accept:* the first `<h3>` under "Personal projects" is `Tacet`; `node tests/page.cjs` passes; the entry adds no new CSS class except an optional `.tacet-shot` that copies `.kit-shot`.
 
 **FS-2 — Headline and pitch.** (Now)
 - Heading: `Tacet` (the name only; no tagline in the `<h3>`).
@@ -88,7 +88,7 @@ Remove `index.html:230-233` (`p.also`), or replace it per the Atlas decision (§
 *Accept:* `grep -i atlas index.html` returns nothing (or only the one "Earlier" line if §4 item 2 option (b) is chosen); all three description strings start their project list with Tacet.
 
 **FS-4 — Visual on the desk.** (Now: still. M10: clip.)
-- Now: one still, 740 px wide (the `.kit-shot` slot). Make it from `margin/design/assets/launch/margin-banner-light.png`, cropped to the window only (no wordmark: the desk bans logos), or from a real capture if M2 has landed. The alt text says honestly what it is: "Design of the Tacet window: a white page titled 'A quieter morning' with a task list" (design render) or "Tacet on Windows 11: …" (real capture).
+- Now: one still, 740 px wide (the `.kit-shot` slot). Make it from `tacet/design/assets/launch/tacet-banner-light.png`, cropped to the window only (no wordmark: the desk bans logos), or from a real capture if M2 has landed. The alt text says honestly what it is: "Design of the Tacet window: a white page titled 'A quieter morning' with a task list" (design render) or "Tacet on Windows 11: …" (real capture).
 - M10: replace it with a 6–10 s loop captured from the real build over CDP (the Parabola `.preview` pattern: webm + mp4 + jpg poster, still under `prefers-reduced-motion`). Content: double-click a `.md` in Explorer → rendered page with the caret → Ctrl+Alt+3 source view → back. No AI video of the product (SHIP-PLAN line 28).
 
 *Accept:* the still is ≤ 120 KB webp with `width`, `height` and `loading="lazy"`; the clip is ≤ 1.5 MB webm, plays muted inline and stops under reduced motion (same checks as Parabola); no "Code - OSS" text is visible anywhere in the frame.
@@ -105,8 +105,8 @@ Desk, one sentence: "A fork of Code OSS 1.139 with AI, git, debugging, remote an
 Landing page and README show four items, each with evidence:
 1. **Removal at source in a very large codebase.** Show a measured size of the pinned tree and the removal diff: files and lines deleted, and the features deleted (list in `10-REBUILD.md` line 20). Do not print "1M+ lines" until it is measured. Measure at the pin `2242ebbb` and at the release tag with one stated command (for example `git ls-files '*.ts' | xargs wc -l`, or `cloc` at a stated version), and print the command next to the number.
 2. **Fork discipline.** Pinned upstream tag and commit; stable extension-API shapes kept as inert stubs so built-in extensions still load (`10-REBUILD.md` line 22); Microsoft copyright headers and `ThirdPartyNotices.txt` kept; how upstream fixes are brought in (link to a CONTRIBUTING section).
-3. **Test and smoke tooling.** `margin/tools/smoke.mjs` launches a disposable profile, drives the renderer over CDP with Playwright, checks the bytes on disk after type, save and undo, runs a terminal command and asserts that git is gone (`noGit`). Show one real `*-smoke.json` result. Later: M9 fault injection and measured budgets.
-4. **First boot as a React webview.** `extensions/margin-welcome`: Animate UI + Motion in a webview, restyled to Tacet tokens, keyboard-complete, reduced motion = instant (SHIP-PLAN line 17; `design/FIRST-BOOT.md`). Show the 4 steps as real captures after M2.
+3. **Test and smoke tooling.** `tacet/tools/smoke.mjs` launches a disposable profile, drives the renderer over CDP with Playwright, checks the bytes on disk after type, save and undo, runs a terminal command and asserts that git is gone (`noGit`). Show one real `*-smoke.json` result. Later: M9 fault injection and measured budgets.
+4. **First boot as a React webview.** `extensions/tacet-welcome`: Animate UI + Motion in a webview, restyled to Tacet tokens, keyboard-complete, reduced motion = instant (SHIP-PLAN line 17; `design/FIRST-BOOT.md`). Show the 4 steps as real captures after M2.
 
 *Accept:* each item links to a file, commit or evidence JSON in the public repo (after M11), or says "source public at 1.0" (before); every number on the page has its command or file next to it.
 
@@ -139,7 +139,7 @@ Recommendation: **A now** (a small "in progress" page in Tacet style, linked fro
 **FS-9 — Hero.** (Now: design render. M10: real capture.)
 Name + mark (the landing page may use the mark; only the desk bans logos), one line, one visual.
 - Line (C11): "Markdown that reads well. Source one key away. Nothing changes your text. No AI."
-- Visual now: `launch/margin-banner-light.png` / `-dark.png` in a `<picture>` with `prefers-color-scheme`. At M10: a real capture of the same scene, then the FS-4 clip.
+- Visual now: `launch/tacet-banner-light.png` / `-dark.png` in a `<picture>` with `prefers-color-scheme`. At M10: a real capture of the same scene, then the FS-4 clip.
 
 *Accept:* the hero fits a 1440×900 viewport with no scroll; light and dark both render; the LCP image is ≤ 200 KB; no gradient, glow or device frame (DESIGN-GUIDE §1.4 slop list).
 
@@ -183,17 +183,17 @@ License (MIT, both copyright lines kept), a build-from-source block copied from 
 
 | Asset | Exists? | Path / action | Needed by |
 | --- | --- | --- | --- |
-| App icon, 1024 PNG + SVG | Yes | `design/assets/icon/margin-app-icon.svg`, `margin-app-icon-1024.png` | Landing mark, favicon source |
-| Favicon set (ICO, 16/32 PNG, SVG, 180 px touch icon) | Partly | Optical sizes exist (`margin-app-icon-16/24/32.svg`, `margin-mark-16.svg`). Make `favicon.ico` and the 180 px PNG. | Landing (FS-8) |
-| README banner light/dark (1440×480) | Yes | `design/assets/launch/margin-banner-{light,dark}.png` | README, landing hero (now) |
-| Pillars light/dark (1600×600) | Yes; copy must change | `launch/margin-pillars-*.png`. The "Instant" pillar claims speed before M9. Reorder to lead with reading and safety (C11) and re-render from `launch.html`. | README, landing |
-| GitHub social preview 1280×640 | Yes; not usable yet | `launch/margin-social.png` says "Open source" and `github.com/Zwin-ux/margin`. Upload only at M11. Match the tagline to FS-9. | Repo settings (M11) |
+| App icon, 1024 PNG + SVG | Yes | `design/assets/icon/tacet-app-icon.svg`, `tacet-app-icon-1024.png` | Landing mark, favicon source |
+| Favicon set (ICO, 16/32 PNG, SVG, 180 px touch icon) | Partly | Optical sizes exist (`tacet-app-icon-16/24/32.svg`, `tacet-mark-16.svg`). Make `favicon.ico` and the 180 px PNG. | Landing (FS-8) |
+| README banner light/dark (1440×480) | Yes | `design/assets/launch/tacet-banner-{light,dark}.png` | README, landing hero (now) |
+| Pillars light/dark (1600×600) | Yes; copy must change | `launch/tacet-pillars-*.png`. The "Instant" pillar claims speed before M9. Reorder to lead with reading and safety (C11) and re-render from `launch.html`. | README, landing |
+| GitHub social preview 1280×640 | Yes; not usable yet | `launch/tacet-social.png` says "Open source" and `github.com/Zwin-ux/margin`. Upload only at M11. Match the tagline to FS-9. | Repo settings (M11) |
 | OG image 1200×630 | **No** | Add an `#og` composition to `launch/src/launch.html` (same window and line; no repo URL before M11). | Landing `og:image` |
 | Desk still, 740 px | **No** | Crop of the banner window (now) → real capture (after M2). | FS-4 |
 | Hero renders (Higgsfield) | Yes; reference only | `design/assets/hero/hero-0{1,2,3,5}*.png` are AI renders. Use as mood or background only, never as a "screenshot". | Optional landing art |
 | Real screenshots light/dark (4 scenes) | **No** | CDP capture after M2/M4 (FS-11). | Landing, README |
 | Demo clip 6–10 s + poster | **No** | CDP capture of the real build (SHIP-PLAN line 28: not AI video). webm + mp4 + jpg. | Desk (M10), landing, README |
-| Animated mark | Yes | `design/assets/animated/margin-mark-draw.svg`, `margin-mark-draw.lottie.json` (880 ms draw, reduced-motion fade) | Landing hero, once per load |
+| Animated mark | Yes | `design/assets/animated/tacet-mark-draw.svg`, `tacet-mark-draw.lottie.json` (880 ms draw, reduced-motion fade) | Landing hero, once per load |
 | Motion studies | Yes; reference only | `design/assets/motion/mo-0*.mp4` (Kling / MiniMax). Not product footage. Do not publish as the app. | Internal |
 | Launch video (optional) | **No** | Higgsfield for title cards and motion around real captures (SHIP-PLAN line 102). The app itself is always real capture. | M10 launch post |
 
@@ -237,14 +237,14 @@ Atlas has no route, image or CSS on the live site, so nothing needs a redirect. 
 ### Phase 1 — now (before M10)
 
 1. **The owner decides** §4 items 1–5.
-2. **Make the desk still** (FS-4): crop the window from `margin-banner-light.png` to a 740 px webp. Record it in `design/assets/README.md`.
+2. **Make the desk still** (FS-4): crop the window from `tacet-banner-light.png` to a 740 px webp. Record it in `design/assets/README.md`.
 3. **One site commit in `%USERPROFILE%\mazenzwin`** (under that repo's `AGENTS.md` rules, not by this lane):
    a. add the Tacet `<article>` first in `section.personal` (FS-1, FS-2, FS-4, the FS-6 one-liner, FS-7 "Now" links);
    b. remove `p.also` at `index.html:230-233`, or replace it per §4 item 2;
    c. update the meta descriptions at `index.html:9`, `:19`, `:26` (FS-3);
    d. update `AGENTS.md:62-66` (public repos list), `STATE.md:15` (stale marks line; add a Tacet line), `.grok/skills/brand-marks/SKILL.md:3,13` (drop Atlas), `assets/logos/README.md:12` (mark `atlas.svg` unused; keep the file);
    e. run `node tests/page.cjs`; open `tests/responsive.html`; check 480 px and 1440 px.
-4. **If option A:** add `margin/index.html` as the in-progress landing page: hero (FS-9, banner), removed-and-why (FS-12), privacy in goal wording (FS-13), FAQ (FS-14), how it is built (FS-6), the status line, no download button. Add it to `sitemap.xml`. Give it a small stylesheet with Tacet tokens from `margin/design/tokens.json`.
+4. **If option A:** add `margin/index.html` as the in-progress landing page: hero (FS-9, banner), removed-and-why (FS-12), privacy in goal wording (FS-13), FAQ (FS-14), how it is built (FS-6), the status line, no download button. Add it to `sitemap.xml`. Give it a small stylesheet with Tacet tokens from `tacet/design/tokens.json`.
 5. **Deploy** with the site's ship skill (`railway up`, poll until `SUCCESS`). Verify with browse: `/` shows Tacet first; `/margin/` returns 200; every link returns 200; apex `mazenzwin.com` redirects to www.
 6. Optional: a short post ("I am building Tacet in the open. Source at 1.0.") that links the landing page. No repo link yet.
 

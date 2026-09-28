@@ -14,7 +14,7 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 | 2026-09-27 | Must not look like VS Code. New first boot (overrides guide §4.28). |
 | 2026-09-27 | North star: bare bones, high quality; ChatGPT desktop calm + VS Code power + Windsurf polish (`design/REFERENCES-V2.md`). |
 | 2026-09-27 | "More like Notepad with a VS Code feel": git and source control removed. |
-| 2026-09-27 | First boot is a React webview built with Animate UI + Motion (`extensions/margin-welcome`). Workbench chrome keeps plain CSS motion. |
+| 2026-09-27 | First boot is a React webview built with Animate UI + Motion (`extensions/tacet-welcome`). Workbench chrome keeps plain CSS motion. |
 | 2026-09-27 | **As simple as possible: no status bar by default.** The window is the title bar and the page. Save state moves to the title (dirty dot next to the document name). Power features are opt-in during first boot, all off by default. |
 | 2026-09-27 | Design uses Codex (concept art) and Higgsfield (motion, custom assets, hero) freely. |
 | 2026-09-28 | **macOS is a first-class target next to Windows.** Open source ships as **one `main` branch** that builds both, with a Mac and a Windows quickstart in the README and a .dmg + Windows installer per release. No per-platform branches. |
@@ -37,7 +37,7 @@ README structure, taken from Paperclip and adapted:
 9. Quickstart: installer + SHA-256 check, winget if available; build from source.
 10. FAQ, Roadmap, **Telemetry: none** (stated plainly), Contributing, Security, License (MIT; keeps the Microsoft Code OSS notice; "Visual Studio Code" is a Microsoft trademark and Tacet is not affiliated).
 
-Repo files at launch: README.md, LICENSE (MIT, both copyright lines), ThirdPartyNotices, CONTRIBUTING.md, SECURITY.md, DESIGN.md (from margin/design/DESIGN-GUIDE.md), ROADMAP.md, CHANGELOG, `.github/` issue templates, release with signed installer + SHA256SUMS, social preview image 1280×640. Assets (banner, pillars, social preview) from the design lane; demo video captured from the real app over CDP.
+Repo files at launch: README.md, LICENSE (MIT, both copyright lines), ThirdPartyNotices, CONTRIBUTING.md, SECURITY.md, DESIGN.md (from tacet/design/DESIGN-GUIDE.md), ROADMAP.md, CHANGELOG, `.github/` issue templates, release with signed installer + SHA256SUMS, social preview image 1280×640. Assets (banner, pillars, social preview) from the design lane; demo video captured from the real app over CDP.
 
 ## Requirements from user criticism (`design/CRITICISM.md`, 2026-09-27)
 

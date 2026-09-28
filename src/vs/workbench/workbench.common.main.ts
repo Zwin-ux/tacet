@@ -375,6 +375,6 @@ import './contrib/dropOrPasteInto/browser/dropOrPasteInto.contribution.js';
 import './contrib/opener/browser/opener.contribution.js';
 
 // Tacet
-import './contrib/margin/browser/margin.contribution.js';
+import './contrib/tacet/browser/tacet.contribution.js';
 
 //#endregion

@@ -152,12 +152,12 @@ export default defineConfig(
 	// Tacet-authored code carries Tacet's copyright line (upstream files keep Microsoft's).
 	{
 		files: [
-			'src/vs/workbench/contrib/margin/**/*.{js,mjs,ts,tsx,mts}',
-			'extensions/margin/**/*.{js,mjs,ts,tsx,mts}',
-			'extensions/margin-welcome/**/*.{js,mjs,ts,tsx,mts}',
+			'src/vs/workbench/contrib/tacet/**/*.{js,mjs,ts,tsx,mts}',
+			'extensions/tacet/**/*.{js,mjs,ts,tsx,mts}',
+			'extensions/tacet-welcome/**/*.{js,mjs,ts,tsx,mts}',
 			'tacet/tools/**/*.{js,mjs,ts,mts}',
 		],
-		ignores: ['extensions/margin-welcome/webview/src/components/animate-ui/**'],
+		ignores: ['extensions/tacet-welcome/webview/src/components/animate-ui/**'],
 		rules: {
 			'header/header': [
 				2,
@@ -261,7 +261,6 @@ export default defineConfig(
 			'extensions/emmet/src/updateImageSize.ts',
 			'extensions/emmet/src/util.ts',
 			'extensions/github-authentication/src/node/fetch.ts',
-			'extensions/tunnel-forwarding/src/extension.ts',
 			'extensions/typescript-language-features/src/utils/platform.ts',
 			'extensions/typescript-language-features/web/src/webServer.ts',
 			'src/vs/base/browser/broadcast.ts',

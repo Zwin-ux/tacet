@@ -25,7 +25,7 @@ SOFTWARE.
 
 Exceptions
 
-The files in extensions/margin-welcome/webview/src/components/animate-ui/ come
+The files in extensions/tacet-welcome/webview/src/components/animate-ui/ come
 from Animate UI (Copyright (c) 2025 Elliot Sutton) and are licensed under
 "MIT + Commons Clause", not plain MIT. See the LICENSE.md in that folder.
 They may be used and distributed as part of Tacet, but may not be sold or

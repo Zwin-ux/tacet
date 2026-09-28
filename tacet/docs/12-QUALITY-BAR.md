@@ -14,7 +14,7 @@ Precedence: `SHIP-PLAN.md`, `docs/10-REBUILD.md`, `docs/02-DOCUMENT-CONTRACT.md`
 
 | Word | Meaning |
 | --- | --- |
-| PASS | A receipt in `margin/evidence/` shows it passes on the current branch. |
+| PASS | A receipt in `tacet/evidence/` shows it passes on the current branch. |
 | FAIL | A receipt shows it fails. |
 | PARTIAL | Part of the requirement has a passing receipt. The rest has none. |
 | NOT TESTED | The feature exists, but no receipt covers it. |
@@ -79,7 +79,7 @@ This is promise number one. Tie-in: gate **G2** (M5), acceptance **A03, A04, A05
 | QB-TYPE-8 | **Input latency.** Keypress to next paint in a 50 KiB Markdown file: Write **p95 ≤ 32 ms (08)**; Code **p95 ≤ 16 ms (proposed: plain Monaco has no webview hop; one 60 Hz frame is the honest target)**. No main-thread stall over 100 ms **(08)**. | C4 latency mode: Event Timing API (`PerformanceObserver` type `event`) in the workbench and inside the webview's `#active-frame`. Manual cross-check at M9 with Typometer against Notepad and VS Code. | NOT MEASURED | M9 (first number at M6) |
 | QB-TYPE-9 | **Markers do not move text (guide §4.12).** Revealing Markdown markers on the caret's block shifts no text horizontally. A visible hard-break glyph (`↵` in `r1b-finish-3-typed.png`) is a design decision to record, not an accident. | C8 box diff: text boxes before and after the caret enters a block | NOT TESTED | M6 |
 | QB-TYPE-10 | **Nothing changes text by itself.** No autocorrect, no smart quotes, no format on save, no trim on save unless the user set it (CRITICISM §9.3). Typing a sequence produces exactly those characters, plus list continuation only after Enter. | C4: 200 random printable sequences, disk equals input | NOT TESTED. The import step can copy `files.trimTrailingWhitespace: true` from VS Code (case c). This is correct: the user chose it. | M6 |
-| QB-TYPE-11 | **Spelling (opt-in).** With `margin.spelling.enabled`, squiggles appear in Write prose only. 0 automatic changes. Off by default. | C4 + C8 | NOT BUILT (`spellcheck: false` in `windows.ts`, FIRST-BOOT §6) | M6 |
+| QB-TYPE-11 | **Spelling (opt-in).** With `tacet.spelling.enabled`, squiggles appear in Write prose only. 0 automatic changes. Off by default. | C4 + C8 | NOT BUILT (`spellcheck: false` in `windows.ts`, FIRST-BOOT §6) | M6 |
 
 ---
 
@@ -126,7 +126,7 @@ Run on every screen, at 1440 × 900 and 480 × 360, in light, dark and Tacet Hig
 | QB-VIS-10 | A stranger can read every label aloud and know what it does. | C11 copy lint + stranger test | FAIL: `PROBLEMS`, `OUTPUT`, `EXPLORER`, `FIXTURES`, `powershell`, `Untitled-1`, `Plain Text` (§9) | M4 |
 | QB-VIS-11 | Text column: max 680 px measure, centered, 56 px top inset, at least 32 px side (24 compact) (guide §2.4, §4.12). | C8: bounding box of the first paragraph | FAIL: the new draft's caret is flush against the left edge with no page margin (`m3-5-landing.png`, `m3-c-5-landing-dark.png`). In the rich editor, the H1 rule runs across most of the window, far past 680 px (`r1b-finish-3-launch.png`). The working tree has uncommitted edits to `centeredViewLayout.ts` and `layout.ts` that may address this; there is no receipt yet. | M2 |
 | QB-VIS-12 | Opening the shelf never moves page text (guide A4). | C8 box diff, shelf closed vs open | FAIL: text moves right when the side bar opens (compare `r1b-finish-3-launch.png` with `r1b-finish-3-writing.png`) | M4 |
-| QB-VIS-13 | The Tacet document theme is applied in Write and Read (guide §5). | C8: `.md-editor` has class `md-theme-margin`; computed H1 font is Segoe UI Variable Display 600 | FAIL: no file under `extensions/markdown-language-features` references `md-theme-margin`. The rich editor still uses the upstream theme (H1 with a bottom rule, wide measure). | M2 |
+| QB-VIS-13 | The Tacet document theme is applied in Write and Read (guide §5). | C8: `.md-editor` has class `md-theme-tacet`; computed H1 font is Segoe UI Variable Display 600 | FAIL: no file under `extensions/markdown-language-features` references `md-theme-tacet`. The rich editor still uses the upstream theme (H1 with a bottom rule, wide measure). | M2 |
 
 ### 4.2 VS Code tells visible in the current screenshots
 
@@ -136,11 +136,11 @@ Each tell is a C8 assertion. All must be gone at M4, except where the Milestone 
 | --- | --- | --- | --- | --- |
 | T1 | Window title `note.md - fixtures - Code - OSS Dev`, `Setup - Code - OSS Dev`, `Untitled-1 - Code - OSS Dev`, `Code - OSS Dev` | every screenshot; `r1b-finish-3-smoke.json` `windowTitle` | eng. `product.json` `nameShort`/`nameLong` = Tacet is uncommitted in the working tree. `applicationName`, `dataFolderName`, `win32MutexName` and `urlProtocol` are still `code-oss` / `.vscode-oss` / `vscodeoss`. Target title: `note.md - Tacet`, with no folder segment and no `Dev` in release. | M2 |
 | T2 | Centered window title text | every screenshot | eng: left-aligned document title with title menu (guide A3) | M4 |
-| T3 | Title-bar editor actions: split editor, close editor (×), `…` | every workbench screenshot | eng. `workbench.editor.editorActionsLocation: "hidden"` is in `extensions/margin/package.json:29` but not proven in a screenshot. | M2 |
+| T3 | Title-bar editor actions: split editor, close editor (×), `…` | every workbench screenshot | eng. `workbench.editor.editorActionsLocation: "hidden"` is in `extensions/tacet/package.json:29` but not proven in a screenshot. | M2 |
 | T4 | Shelf toggle is the codicon `layout-sidebar-left`, tinted blue | every screenshot | eng + design: Tacet `shelf` glyph, ink2 (guide §10.3) | M2 |
 | T5 | No Tacet mark in the title bar (guide §4.2: mark at x = 16) | every screenshot | eng | M2 |
 | T6 | Floating lock/pencil pill with a shadow over the document (upstream `.md-readonly-toggle`) | `r1b-finish-3-*.png` | eng: hide it; the view lives in `Write ▾` (guide §4.14) | M2 |
-| T7 | H1 with a full-width bottom rule (VS Code preview look) | `r1b-finish-3-launch.png` | eng: wire `md-theme-margin.css` | M2 |
+| T7 | H1 with a full-width bottom rule (VS Code preview look) | `r1b-finish-3-launch.png` | eng: wire `md-theme-tacet.css` | M2 |
 | T8 | New draft is Monaco plain text, caret flush left, no `Start writing.` placeholder | `m3-5-landing.png` | eng + design (guide §4.12, FIRST-BOOT §7) | M4 |
 | T9 | Draft named `Untitled-1`, language `Plain Text` | window title; `m3-c-5-landing-dark.png` status bar | eng: `Draft` (contract §2, D-02); a new note is Markdown or plain by setting | M4 |
 | T10 | Side bar is the VS Code Explorer: `EXPLORER`, `FIXTURES`, `OUTLINE` in uppercase, `…` header, colored Seti Markdown icon | `r1b-finish-3-writing.png` | design + eng: the shelf (guide A4, §10.4; slop list: "tiny uppercase grey labels") | M4 |
@@ -178,7 +178,7 @@ Source: `design/ANIMATION-GATE.md`, `design/UI-KIT.md`, guide §2.7 and A8.
 | QB-A11Y-2 | **Focus visible.** Every focusable element shows a 2 px ring, at least 3:1 against its background, never clipped (guide §2.8, §4.31). The document shows the caret instead of a ring. | C10: computed outline + pixel contrast | PARTIAL (first boot only) | M4 |
 | QB-A11Y-3 | **Automated rules.** axe-core in the workbench and every webview: 0 serious or critical violations. | C10 | NOT TESTED | M4 |
 | QB-A11Y-4 | **Narrator and NVDA (A29).** Names, roles, states, the save state, errors and first-boot steps are announced. Example: `Step 1 of 4. Tacet. Choose how the page looks.` and `Show a status line, switch, off` (FIRST-BOOT §8). Editing in Write is readable line by line. | Manual script `margin/tests/a11y-sr.md` with an NVDA speech-log capture; Narrator by ear | NOT TESTED | M9 |
-| QB-A11Y-5 | **Contrast themes (A32, guide §8).** Aquatic, Desert, Dusk, Night sky: every surface readable, no state carried by color alone, links underlined, Tacet HC Light used for light contrast themes. | C10 `forced-colors` emulation + manual pass with real themes | NOT TESTED (the theme is registered: `extensions/margin/package.json:19`) | M4, M9 |
+| QB-A11Y-5 | **Contrast themes (A32, guide §8).** Aquatic, Desert, Dusk, Night sky: every surface readable, no state carried by color alone, links underlined, Tacet HC Light used for light contrast themes. | C10 `forced-colors` emulation + manual pass with real themes | NOT TESTED (the theme is registered: `extensions/tacet/package.json:19`) | M4, M9 |
 | QB-A11Y-6 | **Scaling (A30).** 125 %, 150 %, 200 % display scale, and document text zoom 12 to 28 px: no clipped text or controls; Ctrl+wheel keeps the reading position. | C10 at deviceScaleFactor 2 + C8 matrix | NOT TESTED | M4 |
 | QB-A11Y-7 | **Text contrast.** Information text ≥ 4.5:1; `quiet` (3.1:1) only for incidental text (guide §2.1). | C10 color-contrast rule + C8 token check | Tokens meet it on paper (guide §2.1); NOT TESTED rendered | M4 |
 
@@ -268,15 +268,15 @@ Never in the UI: AI, Copilot, chat, agent (except "Agent files"), account, sign 
 | ID | Requirement and target | Measured by | Status and evidence | Milestone |
 | --- | --- | --- | --- | --- |
 | QB-ENG-1 | **Compile gate.** `npm run compile` exits 0 for every commit on `margin/notes-first`. The log is stored and its hash is in the commit body (`Compile: EXIT 0 <sha256-prefix>`) **(proposed: makes "compile unverified" commits visible)**. | C13 runner; commit-msg check | PARTIAL: `m3-compile.log` and `v1-compile.log` end in `EXIT 0`, but commit `c35ffd37` says "compile unverified" | now |
-| QB-ENG-2 | **Smoke exits non-zero on any failure.** | `tools/smoke.mjs:398-413`; `MARGIN_SMOKE_INJECT_FAILURE` | PASS (`r2-fix-exit-inject-smoke.json`). The branch is **red**: the latest run fails `typingCases`. | now |
+| QB-ENG-2 | **Smoke exits non-zero on any failure.** | `tools/smoke.mjs:398-413`; `TACET_SMOKE_INJECT_FAILURE` | PASS (`r2-fix-exit-inject-smoke.json`). The branch is **red**: the latest run fails `typingCases`. | now |
 | QB-ENG-3 | **Green branch rule.** No milestone closes while any gate script is red. Each gate script passes **10 of 10 consecutive runs** before a milestone closes **(proposed: typing bugs have come back before)**. | C13 `--repeat 10` | NOT MET | every milestone |
-| QB-ENG-4 | **Unit tests for Tacet-owned logic.** Settings and keybinding import filter (JSONC, removed features, AI keys, unknown commands), OneDrive detection, notes-folder resolution, first-boot state machine, link-scheme allowlist, agent-file classifier. Line coverage ≥ 80 % of Tacet-owned pure modules **(proposed)**. | `scripts\test.bat --grep Tacet`; mocha for `extensions/margin-welcome` pure modules | **FAIL: 0 test files** under `src/vs/workbench/contrib/margin`, `extensions/margin`, `extensions/margin-welcome`; `margin/tests/` is empty | M3 (import), then each milestone |
+| QB-ENG-4 | **Unit tests for Tacet-owned logic.** Settings and keybinding import filter (JSONC, removed features, AI keys, unknown commands), OneDrive detection, notes-folder resolution, first-boot state machine, link-scheme allowlist, agent-file classifier. Line coverage ≥ 80 % of Tacet-owned pure modules **(proposed)**. | `scripts\test.bat --grep Tacet`; mocha for `extensions/tacet-welcome` pure modules | **FAIL: 0 test files** under `src/vs/workbench/contrib/tacet`, `extensions/tacet`, `extensions/tacet-welcome`; `margin/tests/` is empty | M3 (import), then each milestone |
 | QB-ENG-5 | **Integration gates.** The `tools/*.mjs` scripts (§12) run from one runner, write one receipt each, and exit non-zero on failure. | C13 `tools/gate.mjs` | PARTIAL: 2 gate scripts exist (`smoke.mjs`, `first-boot.mjs`) | M4 |
 | QB-ENG-6 | **Lint and hygiene.** `npm run eslint` and `npm run hygiene` (copyright headers, tabs, localized strings) report 0 errors on changed files. | C13 | NOT EVIDENCED (no receipt) | now |
 | QB-ENG-7 | **Layering.** `npm run valid-layers-check` reports 0 errors at each milestone. | C13 | NOT EVIDENCED | each milestone |
-| QB-ENG-8 | **Review per milestone.** An independent code review of the milestone diff (`codex review --base <milestone start>`) plus, at M5, M6 and M9, the adversarial "try to lose text" review. Findings are closed or accepted in writing. | `evidence/<milestone>-review.md` | NOT EVIDENCED: no review receipt in `margin/evidence/` | each milestone |
-| QB-ENG-9 | **Small, isolated upstream patch.** New Tacet code lives in Tacet-owned folders (`src/vs/workbench/contrib/margin/`, `extensions/margin*`, `extensions/theme-margin`, `margin/`). Every edit to an upstream file, other than a deletion, is listed in `margin/UPSTREAM-PATCHES.md` with its reason, and is marked `// MARGIN:` in the code **(proposed: needed to take upstream security fixes after 1.139.0)**. | C13 `patchset` report from `git diff --numstat 2242ebbb..HEAD` | PARTIAL: 36 commits; 12,249 files changed (+32,529 / −3,421,252 lines). Under `src/`: 4,695 files changed (+1,702 / −1,162,735), of which 198 files have insertions. No ledger exists. | M2, then each milestone |
-| QB-ENG-10 | **No temporary files committed.** | C13: fail on files whose header says `TEMP` or "delete before commit" | FAIL: `margin/tools/diag-type.mjs` line 1 says "TEMP diagnostic (delete before commit)" | now |
+| QB-ENG-8 | **Review per milestone.** An independent code review of the milestone diff (`codex review --base <milestone start>`) plus, at M5, M6 and M9, the adversarial "try to lose text" review. Findings are closed or accepted in writing. | `evidence/<milestone>-review.md` | NOT EVIDENCED: no review receipt in `tacet/evidence/` | each milestone |
+| QB-ENG-9 | **Small, isolated upstream patch.** New Tacet code lives in Tacet-owned folders (`src/vs/workbench/contrib/tacet/`, `extensions/tacet*`, `extensions/theme-tacet`, `margin/`). Every edit to an upstream file, other than a deletion, is listed in `margin/UPSTREAM-PATCHES.md` with its reason, and is marked `// MARGIN:` in the code **(proposed: needed to take upstream security fixes after 1.139.0)**. | C13 `patchset` report from `git diff --numstat 2242ebbb..HEAD` | PARTIAL: 36 commits; 12,249 files changed (+32,529 / −3,421,252 lines). Under `src/`: 4,695 files changed (+1,702 / −1,162,735), of which 198 files have insertions. No ledger exists. | M2, then each milestone |
+| QB-ENG-10 | **No temporary files committed.** | C13: fail on files whose header says `TEMP` or "delete before commit" | FAIL: `tacet/tools/diag-type.mjs` line 1 says "TEMP diagnostic (delete before commit)" | now |
 | QB-ENG-11 | **Upstream security.** At release, Electron and Chromium have no known exploited CVE without a fix, and there is a written plan to rebase onto the next Code OSS security release. | Release checklist | NOT STARTED (Electron 43.6.0, `STATE.md`) | M10 |
 | QB-ENG-12 | **Receipts.** Every gate receipt has the shape in 08 §Evidence receipt shape: source head, dirty-patch hash, binary hash, profile, fixtures, command, result. | C13 validates the JSON shape | PARTIAL: smoke and first-boot receipts have no source head or binary hash | M4 |
 
@@ -300,7 +300,7 @@ Never in the UI: AI, Copilot, chat, agent (except "Agent files"), account, sign 
 
 ## 12. New automated checks to add
 
-All scripts live in `margin/tools/`, follow the rules in `tools/smoke.mjs` (disposable profile and fixtures, CDP and Playwright only, no OS input on the owner's desktop, stop only the process tree they started), write `margin/evidence/<tag>-<check>.json` in the 08 receipt shape, and exit 1 on any failure. Scripts marked **VM** need OS input or a power-off and run only in the VM or on CI.
+All scripts live in `tacet/tools/`, follow the rules in `tools/smoke.mjs` (disposable profile and fixtures, CDP and Playwright only, no OS input on the owner's desktop, stop only the process tree they started), write `tacet/evidence/<tag>-<check>.json` in the 08 receipt shape, and exit 1 on any failure. Scripts marked **VM** need OS input or a power-off and run only in the VM or on CI.
 
 ### C1 `durability.mjs` — kill matrix and save failures
 
@@ -341,7 +341,7 @@ All scripts live in `margin/tools/`, follow the rules in `tools/smoke.mjs` (disp
 
 - **Needs** a release build path (`--app <path to Tacet.exe>`). Refuses to run on the dev build unless `--dev` is set, and then labels every number `dev`.
 - **Competitors** in the same run when present: `notepad.exe`, Notepad++, VS Code stable (`--disable-extensions`, a fresh `--user-data-dir`), each opening the same 50 KiB file.
-- **Cold:** 20 launches. t0 is the harness `process.hrtime` just before spawn. End point: the `margin/caretReady` mark (add it in `contrib/margin` when the draft or file editor has focus and a probe key reached the model), read as `performance.timeOrigin + mark.startTime`. For competitors, the end point is the window becoming ready for input (`WaitForInputIdle` through PowerShell). Report p50, p95, max.
+- **Cold:** 20 launches. t0 is the harness `process.hrtime` just before spawn. End point: the `margin/caretReady` mark (add it in `contrib/tacet` when the draft or file editor has focus and a probe key reached the model), read as `performance.timeOrigin + mark.startTime`. For competitors, the end point is the window becoming ready for input (`WaitForInputIdle` through PowerShell). Report p50, p95, max.
 - **Warm:** 30 opens through the CLI into a running instance.
 - **Memory:** walk the tree from the root PID with `Win32_Process.ParentProcessId`; sum `WorkingSetPrivate` from `Win32_PerfFormattedData_PerfProc_Process` after 60 s idle; list each process with its `--type`.
 - **Idle:** sample `% Processor Time` and `IO Write Bytes/sec` for 10 minutes every 5 s.
@@ -359,9 +359,9 @@ All scripts live in `margin/tools/`, follow the rules in `tools/smoke.mjs` (disp
 
 ### C7 `noai-audit.mjs` — no AI reachable
 
-- **Static:** scan the packaged `resources\app` (dev: `out\` and `extensions\`) with a denylist regex: `@anthropic-ai|claude-agent-sdk|@github/copilot|copilot-api|foundry-local|agentHost|languageModel|vscode\.lm\b|vscode\.chat\b|inlineChat|chatAgent|mcpGallery|mcpServer|localTranscription|aiEmbedding|aiRelatedInformation|aiSettingsSearch|editTelemetry|defaultChatAgent`. Each hit must match an entry in `margin/tools/noai-allow.json` (path, pattern, reason: for example, the inert stable API shapes kept by `docs/10-REBUILD.md`). New or unexplained hits fail.
+- **Static:** scan the packaged `resources\app` (dev: `out\` and `extensions\`) with a denylist regex: `@anthropic-ai|claude-agent-sdk|@github/copilot|copilot-api|foundry-local|agentHost|languageModel|vscode\.lm\b|vscode\.chat\b|inlineChat|chatAgent|mcpGallery|mcpServer|localTranscription|aiEmbedding|aiRelatedInformation|aiSettingsSearch|editTelemetry|defaultChatAgent`. Each hit must match an entry in `tacet/tools/noai-allow.json` (path, pattern, reason: for example, the inert stable API shapes kept by `docs/10-REBUILD.md`). New or unexplained hits fail.
 - **Dependencies:** production dependency tree (`npm ls --omit=dev --all --json`, and the packaged `node_modules` folder list) against a package denylist.
-- **Runtime inventory:** a test-only command `margin.test.dumpInventory` (registered only when `MARGIN_TEST_SEAMS=1`) writes the registered command IDs, menu items, view IDs, configuration keys, keybindings and status-bar entries to JSON. Denylist on IDs and titles: `/chat|copilot|\bagent\b|mcp|\bai\b|language ?model|inline ?chat|sparkle|speech|voice/i`, with the allowlist `margin.agentFiles.*` and the "Agent files" label.
+- **Runtime inventory:** a test-only command `tacet.test.dumpInventory` (registered only when `TACET_TEST_SEAMS=1`) writes the registered command IDs, menu items, view IDs, configuration keys, keybindings and status-bar entries to JSON. Denylist on IDs and titles: `/chat|copilot|\bagent\b|mcp|\bai\b|language ?model|inline ?chat|sparkle|speech|voice/i`, with the allowlist `tacet.agentFiles.*` and the "Agent files" label.
 - **Processes:** after the C6 scenarios, list every process command line in the tree. Fail on `agentHost`, `copilot`, `mcp`, `transcription` or an unknown `--type=utility` service.
 - **`--reenable`:** seed `chat.*`, `github.copilot.*`, `mcp.*` settings, `.github/copilot-instructions.md`, `.vscode/mcp.json`; re-run the inventory and C6. **Pass:** no new entries, processes or connections.
 - Milestone: M1 (automate now), M9, M10.
@@ -375,7 +375,7 @@ All scripts live in `margin/tools/`, follow the rules in `tools/smoke.mjs` (disp
 - **Column:** box of the first text line in Write: left edge = (content width − 680) / 2 ± 2 px, width ≤ 680, top inset 56 ± 2 px; caret x ≥ 32 (≥ 24 at 480).
 - **No-move:** boxes of the first 20 text nodes in Write vs Read vs shelf open. **Pass:** Δ = 0 px (M3, A4).
 - **Colors:** chrome-region pixel histogram against `design/tokens.json` roles (ΔE ≤ 2); count greys and blues (§13 items 2 and 3).
-- **Theme wiring:** `.md-editor` has `md-theme-margin`; computed H1 family starts with `Segoe UI Variable Display`, weight 600, no bottom border.
+- **Theme wiring:** `.md-editor` has `md-theme-tacet`; computed H1 family starts with `Segoe UI Variable Display`, weight 600, no bottom border.
 - **OS capture (T17):** `PrintWindow` through a small PowerShell `Add-Type` helper to capture the whole window with caption buttons; this is a capture, not input.
 - **Output:** screenshots `<tag>-look-<screen>-<size>-<theme>-<scale>.png` for `/design-review`, plus `<tag>-look.json`. Milestone M2 (title, identity), M4 (full).
 
@@ -397,7 +397,7 @@ All scripts live in `margin/tools/`, follow the rules in `tools/smoke.mjs` (disp
 
 ### C11 `copy-lint.mjs` — words
 
-- **Sources:** `extensions/margin*/package.nls.json`, strings in `extensions/margin-welcome/webview/**`, `nls.localize` calls under `src/vs/workbench/contrib/margin/**`, and a runtime crawl of visible text nodes plus `aria-label` and `title` attributes on every C8 screen.
+- **Sources:** `extensions/tacet*/package.nls.json`, strings in `extensions/tacet-welcome/webview/**`, `nls.localize` calls under `src/vs/workbench/contrib/tacet/**`, and a runtime crawl of visible text nodes plus `aria-label` and `title` attributes on every C8 screen.
 - **Rules:** banned terms (§9 table); banned words and exclamation marks (QB-COPY-4); sentence length; sentence case for Tacet-owned strings (first word capitalized, then lowercase except the proper-noun allowlist: Tacet, VS Code, VSCodium, Cursor, Windsurf, Windows, OneDrive, Markdown, Settings, Explorer (only in `Show in File Explorer`), key names); no internal IDs (`/\b[a-z]+(\.[a-zA-Z]+){1,}\b/` outside code spans, `${`, `untitled:`, `undefined`, `[object`); lone backtick after `Ctrl+`.
 - **Output:** each finding with its source file and line or its screen. Milestone M3 (first boot), M4 (all surfaces).
 

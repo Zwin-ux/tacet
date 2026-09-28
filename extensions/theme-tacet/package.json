@@ -1,0 +1,40 @@
+{
+  "name": "theme-tacet",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "categories": [
+    "Themes"
+  ],
+  "version": "10.0.0",
+  "publisher": "vscode",
+  "license": "MIT",
+  "engines": {
+    "vscode": "*"
+  },
+  "contributes": {
+    "themes": [
+      {
+        "id": "Tacet Light",
+        "label": "%tacetLightThemeLabel%",
+        "uiTheme": "vs",
+        "path": "./themes/tacet-light-color-theme.json"
+      },
+      {
+        "id": "Tacet Dark",
+        "label": "%tacetDarkThemeLabel%",
+        "uiTheme": "vs-dark",
+        "path": "./themes/tacet-dark-color-theme.json"
+      },
+      {
+        "id": "Tacet High Contrast Light",
+        "label": "%tacetHcLightThemeLabel%",
+        "uiTheme": "hc-light",
+        "path": "./themes/tacet-hc-light-color-theme.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/vscode.git"
+  }
+}

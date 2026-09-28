@@ -1,9 +1,9 @@
 // Tacet theme generator.
 // Reads ../../tokens.json and ./color-keys.txt (every color id registered via registerColor()
 // in src/vs at upstream 1.139.0, plus extension-contributed ids listed in EXTRA_KEYS) and writes
-// ../margin-light-color-theme.json, ../margin-dark-color-theme.json, ../margin-hc-light-color-theme.json.
+// ../tacet-light-color-theme.json, ../tacet-dark-color-theme.json, ../tacet-hc-light-color-theme.json.
 //
-// Run from anywhere:  node margin/design/theme/_build/generate-themes.mjs
+// Run from anywhere:  node tacet/design/theme/_build/generate-themes.mjs
 // No dependencies. Deterministic output (keys sorted). Prints a coverage report.
 //
 // Rule: every workbench color is assigned from a token ROLE, never a free hex. The only literals
@@ -505,9 +505,9 @@ function build(variant, name, type) {
 }
 
 const outputs = [
-	['light', 'Tacet Light', 'light', 'margin-light-color-theme.json'],
-	['dark', 'Tacet Dark', 'dark', 'margin-dark-color-theme.json'],
-	['hc', 'Tacet High Contrast Light', 'hcLight', 'margin-hc-light-color-theme.json']
+	['light', 'Tacet Light', 'light', 'tacet-light-color-theme.json'],
+	['dark', 'Tacet Dark', 'dark', 'tacet-dark-color-theme.json'],
+	['hc', 'Tacet High Contrast Light', 'hcLight', 'tacet-hc-light-color-theme.json']
 ];
 for (const [variant, name, type, file] of outputs) {
 	const { theme, report } = build(variant, name, type);
