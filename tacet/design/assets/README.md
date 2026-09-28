@@ -10,13 +10,13 @@ Job records (full request/response JSON, including result URLs) are in [_jobs/](
 
 | File | What | Source |
 | --- | --- | --- |
-| [icon/margin-app-icon.svg](icon/margin-app-icon.svg) | Master app icon, 48 grid, Fluent material | Hand-authored from candidate A below |
-| [icon/margin-app-icon-1024.png](icon/margin-app-icon-1024.png) | 1024 PNG, transparent | Rasterized from the SVG with headless Chrome |
-| [icon/margin-app-icon-flat.svg](icon/margin-app-icon-flat.svg) | Flat vector mark (no material) | Hand-authored |
-| [icon/margin-app-icon-32.svg](icon/margin-app-icon-32.svg), [-24](icon/margin-app-icon-24.svg), [-16](icon/margin-app-icon-16.svg) | Optical sizes, pixel-snapped | Hand-authored |
-| [icon/margin-app-icon-hc.svg](icon/margin-app-icon-hc.svg) + [1024 PNG](icon/margin-app-icon-hc-1024.png) | High contrast | Hand-authored |
-| [icon/margin-mark-16.svg](icon/margin-mark-16.svg), [icon/margin-mark-mono.svg](icon/margin-mark-mono.svg) | Title-bar mark (color, currentColor) | Hand-authored |
-| [icon/margin-file-md.svg](icon/margin-file-md.svg) + [1024 PNG](icon/margin-file-md-1024.png), [icon/margin-file-txt.svg](icon/margin-file-txt.svg) | File association icons (the only place a fold appears) | Hand-authored |
+| [icon/tacet-app-icon.svg](icon/tacet-app-icon.svg) | Master app icon, 48 grid, Fluent material | Hand-authored from candidate A below |
+| [icon/tacet-app-icon-1024.png](icon/tacet-app-icon-1024.png) | 1024 PNG, transparent | Rasterized from the SVG with headless Chrome |
+| [icon/tacet-app-icon-flat.svg](icon/tacet-app-icon-flat.svg) | Flat vector mark (no material) | Hand-authored |
+| [icon/tacet-app-icon-32.svg](icon/tacet-app-icon-32.svg), [-24](icon/tacet-app-icon-24.svg), [-16](icon/tacet-app-icon-16.svg) | Optical sizes, pixel-snapped | Hand-authored |
+| [icon/tacet-app-icon-hc.svg](icon/tacet-app-icon-hc.svg) + [1024 PNG](icon/tacet-app-icon-hc-1024.png) | High contrast | Hand-authored |
+| [icon/tacet-mark-16.svg](icon/tacet-mark-16.svg), [icon/tacet-mark-mono.svg](icon/tacet-mark-mono.svg) | Title-bar mark (color, currentColor) | Hand-authored |
+| [icon/tacet-file-md.svg](icon/tacet-file-md.svg) + [1024 PNG](icon/tacet-file-md-1024.png), [icon/tacet-file-txt.svg](icon/tacet-file-txt.svg) | File association icons (the only place a fold appears) | Hand-authored |
 | [icon/icon-review.png](icon/icon-review.png) ([html](icon/icon-review.html)) | All sizes on light and dark taskbars | Headless Chrome render |
 | [icon/candidates/recraft-A-ruled-margin.svg](icon/candidates/recraft-A-ruled-margin.svg) (+png) | Winning direction, raw | Recraft V4.1 vector, job `d769f375`, prompt [prompts/logo-A-ruled-margin.txt](prompts/logo-A-ruled-margin.txt), colors [prompts/logo-colors.json](prompts/logo-colors.json), background `#F2F4F7` |
 | [icon/candidates/icon-1-sheet.png](icon/candidates/icon-1-sheet.png) | Winning direction as a Windows 11 app-icon render (material reference) | GPT Image 2, job `d251d468`, prompt [prompts/icon-1-sheet.txt](prompts/icon-1-sheet.txt) |
@@ -49,8 +49,8 @@ Refinements made by hand from A: page proportion 30:42 (paper, not phone); radiu
 | File | What |
 | --- | --- |
 | [../icons/*.svg](../icons/) + [specimen.png](../icons/specimen.png) | 24 product glyphs on the 16px grid |
-| [../icons/margin-product-icon-theme.json](../icons/margin-product-icon-theme.json), [glyph-map.json](../icons/glyph-map.json) | Product icon theme draft and codepoints |
-| [../css/typography-specimen.png](../css/typography-specimen.png) ([html](../css/typography-specimen.html)) | Every Markdown block rendered with `md-theme-margin.css` at 150% |
+| [../icons/tacet-product-icon-theme.json](../icons/tacet-product-icon-theme.json), [glyph-map.json](../icons/glyph-map.json) | Product icon theme draft and codepoints |
+| [../css/typography-specimen.png](../css/typography-specimen.png) ([html](../css/typography-specimen.html)) | Every Markdown block rendered with `md-theme-tacet.css` at 150% |
 
 No illustration or texture was produced for first-run or empty states. That is a decision, not a gap: guide §4.28 and §4.29 specify word-only empty states and no first-run surface. An illustrated empty state would break M1 (the page leads) and the slop list.
 
@@ -99,7 +99,7 @@ Owner revisions applied on 2026-09-27: git removed (10-REBUILD), no status bar b
 | [c04-notice-changed.hf.v2.png](concept-v2/hf/c04-notice-changed.hf.v2.png) | C04 Notice: changed on disk (S15) | Higgsfield GPT Image 2.5 (high, 2k), job f7ea27aa | Recoverable state in words, in place, no toast. |
 | [c05-notice-savefailed.codex.v3.png](concept-v2/codex/c05-notice-savefailed.codex.v3.png) | C05 Notice: save failed | Codex CLI 0.157.1 image_generation, prompt prompts/v2/c05-notice-savefailed.v3.txt | Honest failure, one primary; footer and notice agree (M5). |
 | [c06-dialog-unsaved.codex.v2.png](concept-v2/codex/c06-dialog-unsaved.codex.v2.png) | C06 Dialog: unsaved changes on close | Codex CLI 0.157.1 image_generation, prompt prompts/v2/c06-dialog-unsaved.v2.txt | Reads as a Windows 11 first-party dialog; the safe action has focus. |
-| [c07-about.codex.v3.png](concept-v2/codex/c07-about.codex.v3.png) | C07 About (S20) | Codex CLI 0.157.1 image_generation with icon/margin-app-icon-1024.png attached, prompt prompts/v2/c07-about.v3.txt | No marketing, the real icon, selectable facts. |
+| [c07-about.codex.v3.png](concept-v2/codex/c07-about.codex.v3.png) | C07 About (S20) | Codex CLI 0.157.1 image_generation with icon/tacet-app-icon-1024.png attached, prompt prompts/v2/c07-about.v3.txt | No marketing, the real icon, selectable facts. |
 | [c08-print-preview.codex.v3.png](concept-v2/codex/c08-print-preview.codex.v3.png) | C08 Print preview (S18) | Codex CLI 0.157.1 image_generation, prompt prompts/v2/c08-print-preview.v3.txt | The page is the product even on paper. |
 | [c09-code-terminal.hf.v4.png](concept-v2/hf/c09-code-terminal.hf.v4.png) | C09 Code mode + terminal (no git, no footer) | Higgsfield GPT Image 2.5 (high, 2k), job 610c57d2 | Fixes mockup 04 (no dark outline, no dark slab) and follows the git removal and the no-status-bar default. |
 | [c10-dark-code.hf.v4.png](concept-v2/hf/c10-dark-code.hf.v4.png) | C10 Dark: Code mode + terminal | Higgsfield GPT Image 2.5 (high, 2k), job 114fd13f | The dark variant keeps the two-surface rule. |
@@ -114,11 +114,11 @@ Owner revisions applied on 2026-09-27: git removed (10-REBUILD), no status bar b
 | [hero-02-light-dark.v2.png](hero/hero-02-light-dark.v2.png) | Hero 16:9 light + dark | Higgsfield GPT Image 2.5 (high, 4k, image refs) (mockups/02 + 07), job 4267642a | Both themes, no gradient, no glow. |
 | [hero-03-blank.v1.png](hero/hero-03-blank.v1.png) | Hero 16:9 blank page | Higgsfield GPT Image 2.5 (high, 4k, image refs) (mockups/01), job 7ef74b44 | The clean-sheet promise in one frame. |
 | [hero-05-square-blank.v1.png](hero/hero-05-square-blank.v1.png) | Hero 1:1 blank page | Higgsfield GPT Image 2.5 (high, 4k, image refs) (mockups/01), job e742de9a | Works as a store tile. |
-| [margin-banner-light.png](launch/margin-banner-light.png) | README banner, light | Hand-authored HTML (launch/src/launch.html), headless Chrome at 2x; window built from tokens | Exact type and color; no AI render in the product shot.. |
-| [margin-banner-dark.png](launch/margin-banner-dark.png) | README banner, dark | Hand-authored HTML, headless Chrome 2x | Pairs with the light banner in a picture element.. |
-| [margin-pillars-light.png](launch/margin-pillars-light.png) | Pillars, light | Hand-authored HTML, headless Chrome 2x | Type-led; the brand gesture is the only decoration.. |
-| [margin-pillars-dark.png](launch/margin-pillars-dark.png) | Pillars, dark | Hand-authored HTML, headless Chrome 2x | Pairs with the light pillars.. |
-| [margin-social.png](launch/margin-social.png) | GitHub social preview | Hand-authored HTML, headless Chrome 2x | Reads at thumbnail size; no glow, no device.. |
+| [tacet-banner-light.png](launch/tacet-banner-light.png) | README banner, light | Hand-authored HTML (launch/src/launch.html), headless Chrome at 2x; window built from tokens | Exact type and color; no AI render in the product shot.. |
+| [tacet-banner-dark.png](launch/tacet-banner-dark.png) | README banner, dark | Hand-authored HTML, headless Chrome 2x | Pairs with the light banner in a picture element.. |
+| [tacet-pillars-light.png](launch/tacet-pillars-light.png) | Pillars, light | Hand-authored HTML, headless Chrome 2x | Type-led; the brand gesture is the only decoration.. |
+| [tacet-pillars-dark.png](launch/tacet-pillars-dark.png) | Pillars, dark | Hand-authored HTML, headless Chrome 2x | Pairs with the light pillars.. |
+| [tacet-social.png](launch/tacet-social.png) | GitHub social preview | Hand-authored HTML, headless Chrome 2x | Reads at thumbnail size; no glow, no device.. |
 
 ### Motion references (feel only; the spec is motion/MOTION.md)
 
@@ -137,9 +137,9 @@ Owner revisions applied on 2026-09-27: git removed (10-REBUILD), no status bar b
 
 | File | What |
 | --- | --- |
-| [animated/margin-mark.css](animated/margin-mark.css) | Mark animations: pen-stroke draw 880 ms (chosen), compact 560 ms, caret wink 600 ms, page nod 720 ms, reduced-motion fade |
-| [animated/margin-mark-draw.svg](animated/margin-mark-draw.svg), [-wink](animated/margin-mark-wink.svg), [-nod](animated/margin-mark-nod.svg) | Standalone self-playing SVGs |
-| [animated/margin-mark-draw.lottie.json](animated/margin-mark-draw.lottie.json) | Lottie of the chosen draw, 60 fps, verified with lottie-web 5.12.2 light ([vendor/](animated/vendor/)) |
+| [animated/tacet-mark.css](animated/tacet-mark.css) | Mark animations: pen-stroke draw 880 ms (chosen), compact 560 ms, caret wink 600 ms, page nod 720 ms, reduced-motion fade |
+| [animated/tacet-mark-draw.svg](animated/tacet-mark-draw.svg), [-wink](animated/tacet-mark-wink.svg), [-nod](animated/tacet-mark-nod.svg) | Standalone self-playing SVGs |
+| [animated/tacet-mark-draw.lottie.json](animated/tacet-mark-draw.lottie.json) | Lottie of the chosen draw, 60 fps, verified with lottie-web 5.12.2 light ([vendor/](animated/vendor/)) |
 | [animated/icons-animated.css](animated/icons-animated.css) | Hover micro-animations for 5 icons on occasional surfaces; state motion for twisties and checkboxes |
 | [animated/PREVIEW.html](animated/PREVIEW.html) | Plays everything, with a reduced-motion toggle |
 

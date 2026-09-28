@@ -5,12 +5,12 @@
 
 // M3 first-boot gate (design/FIRST-BOOT.md).
 //
-// Usage: node margin/tools/first-boot.mjs [--skip-prelaunch] [--only=a,b,c,d]
+// Usage: node tacet/tools/first-boot.mjs [--skip-prelaunch] [--only=a,b,c,d]
 //
 // Each case launches the dev build with a FRESH scratch profile and drives it over CDP only
 // (Playwright connectOverCDP; every key is a CDP input event, every screenshot a page capture).
 // No OS input. The launched process gets a scratch APPDATA (fixture VS Code files), and the
-// first-boot test seams MARGIN_FIRSTBOOT_DOCUMENTS / MARGIN_FIRSTBOOT_HOME, with the OneDrive*
+// first-boot test seams TACET_FIRSTBOOT_DOCUMENTS / TACET_FIRSTBOOT_HOME, with the OneDrive*
 // variables removed or pointed at scratch folders, so the owner's real VS Code settings,
 // Documents folder and registry are never read. Only process trees this script started are stopped.
 //
@@ -20,7 +20,7 @@
 //   c  Dark + text size 19 + import from a fixture VS Code + custom notes folder + two Extras
 //   d  Documents under OneDrive (1 of 3, no import source), "Keep notes only on this PC", reduced motion
 //
-// Output: margin/evidence/m3-*.png and margin/evidence/m3-first-boot.json.
+// Output: tacet/evidence/m3-*.png and tacet/evidence/m3-first-boot.json.
 
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -37,7 +37,7 @@ const evidence = join(root, 'tacet', 'evidence');
 const skipPrelaunch = process.argv.includes('--skip-prelaunch');
 const only = (process.argv.find(a => a.startsWith('--only='))?.slice(7) ?? 'a,b,c,d').split(',');
 const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-const scratchRoot = join(tmpdir(), `margin-m3-${stamp}`);
+const scratchRoot = join(tmpdir(), `tacet-m3-${stamp}`);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const results = { started: new Date().toISOString(), scratchRoot, cases: {} };
 
@@ -239,9 +239,9 @@ function readFlag(profile) {
 	}
 	try {
 		const conn = new DatabaseSync(db, { readOnly: true });
-		const row = conn.prepare(`SELECT value FROM ItemTable WHERE key = 'vscode.margin-welcome'`).get();
+		const row = conn.prepare(`SELECT value FROM ItemTable WHERE key = 'vscode.tacet-welcome'`).get();
 		conn.close();
-		return row ? JSON.parse(row.value)['margin.firstBoot.completed'] ?? '(key missing)' : '(no row)';
+		return row ? JSON.parse(row.value)['tacet.firstBoot.completed'] ?? '(key missing)' : '(no row)';
 	} catch (error) {
 		return `(read failed: ${error.message})`;
 	}
@@ -292,7 +292,7 @@ async function caseA(c) {
 	const s = scratchCase('a');
 	const codeUser = join(s.appData, 'Code', 'User');
 	writeFixture(codeUser, { 'settings.json': FIXTURE_SETTINGS, 'keybindings.json': FIXTURE_KEYBINDINGS });
-	const env = { APPDATA: s.appData, MARGIN_FIRSTBOOT_DOCUMENTS: s.docs, MARGIN_FIRSTBOOT_HOME: s.home };
+	const env = { APPDATA: s.appData, TACET_FIRSTBOOT_DOCUMENTS: s.docs, TACET_FIRSTBOOT_HOME: s.home };
 	let session = await launch(c, { profile: s.profile, env, drop: DROP_ONEDRIVE });
 	const { page } = session;
 	const frame = await setupFrame(page, 30_000);
@@ -335,7 +335,7 @@ async function caseA(c) {
 		'window.autoDetectColorScheme': true,
 		'workbench.preferredLightColorTheme': 'Tacet Light',
 		'workbench.preferredDarkColorTheme': 'Tacet Dark',
-		'margin.notes.folder': join(s.docs, 'Notes'),
+		'tacet.notes.folder': join(s.docs, 'Notes'),
 	};
 	c.expectedSettings = expected;
 	c.pass = c.appearedAutomatically && eq(c.steps.map(x => x.line), ['1 of 4', '2 of 4', '3 of 4', '4 of 4'])
@@ -346,7 +346,7 @@ async function caseA(c) {
 
 async function caseB(c) {
 	const s = scratchCase('b');
-	const env = { APPDATA: s.appData, MARGIN_FIRSTBOOT_DOCUMENTS: s.docs, MARGIN_FIRSTBOOT_HOME: s.home };
+	const env = { APPDATA: s.appData, TACET_FIRSTBOOT_DOCUMENTS: s.docs, TACET_FIRSTBOOT_HOME: s.home };
 	const session = await launch(c, { profile: s.profile, env, drop: DROP_ONEDRIVE });
 	const frame = await setupFrame(session.page, 30_000);
 	if (!frame) {
@@ -377,7 +377,7 @@ async function caseC(c) {
 	writeFixture(join(s.profile, 'User'), { 'settings.json': '{\n\t"files.simpleDialog.enable": true\n}\n' });
 	const custom = join(s.dir, 'my notes');
 	mkdirSync(custom, { recursive: true });
-	const env = { APPDATA: s.appData, MARGIN_FIRSTBOOT_DOCUMENTS: s.docs, MARGIN_FIRSTBOOT_HOME: s.home };
+	const env = { APPDATA: s.appData, TACET_FIRSTBOOT_DOCUMENTS: s.docs, TACET_FIRSTBOOT_HOME: s.home };
 	const session = await launch(c, { profile: s.profile, env, drop: DROP_ONEDRIVE });
 	const { page } = session;
 	const frame = await setupFrame(page, 30_000);
@@ -443,11 +443,11 @@ async function caseC(c) {
 		'files.simpleDialog.enable': true, // pre-seeded by this harness
 		'window.autoDetectColorScheme': false,
 		'workbench.colorTheme': 'Tacet Dark',
-		'margin.document.fontSize': 19,
+		'tacet.document.fontSize': 19,
 		...EXPECT_IMPORTED,
-		'margin.notes.folder': custom,
+		'tacet.notes.folder': custom,
 		'workbench.statusBar.visible': true,
-		'margin.spelling.enabled': true,
+		'tacet.spelling.enabled': true,
 	};
 	c.expectedSettings = expected;
 	c.unexpectedKeys = Object.keys(c.settings).filter(k => !(k in expected));
@@ -463,7 +463,7 @@ async function caseD(c) {
 	const docs = join(oneDrive, 'Documents');
 	mkdirSync(docs, { recursive: true });
 	// No VS Code under APPDATA: the import step is skipped (1 of 3). OneDrive points at scratch.
-	const env = { APPDATA: s.appData, MARGIN_FIRSTBOOT_DOCUMENTS: docs, MARGIN_FIRSTBOOT_HOME: s.home, OneDrive: oneDrive };
+	const env = { APPDATA: s.appData, TACET_FIRSTBOOT_DOCUMENTS: docs, TACET_FIRSTBOOT_HOME: s.home, OneDrive: oneDrive };
 	const session = await launch(c, { profile: s.profile, env, drop: ['OneDriveConsumer', 'OneDriveCommercial'] });
 	const { page } = session;
 	await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -509,7 +509,7 @@ async function caseD(c) {
 		'window.autoDetectColorScheme': true,
 		'workbench.preferredLightColorTheme': 'Tacet Light',
 		'workbench.preferredDarkColorTheme': 'Tacet Dark',
-		'margin.notes.folder': join(s.home, 'Tacet'),
+		'tacet.notes.folder': join(s.home, 'Tacet'),
 	};
 	c.expectedSettings = expected;
 	c.pass = c.reducedFlag === 'true' && c.stepChangeOpacity === '1' && c.stepChangeMs < 150 && c.stepLine === '1 of 3' && c.extrasLine === '3 of 3'

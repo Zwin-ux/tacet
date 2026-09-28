@@ -1,0 +1,83 @@
+{
+  "name": "tacet-welcome",
+  "publisher": "vscode",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "10.0.0",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension",
+  "scripts": {
+    "compile": "gulp compile-extension:tacet-welcome",
+    "watch": "gulp watch-extension:tacet-welcome",
+    "build-webview": "npm --prefix webview run build"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "tacet.firstBoot.show",
+        "title": "%command.showSetup%",
+        "category": "Tacet"
+      },
+      {
+        "command": "tacet.firstBoot.showImportReport",
+        "title": "%command.showImportReport%",
+        "category": "Tacet"
+      }
+    ],
+    "configuration": {
+      "title": "Tacet",
+      "properties": {
+        "tacet.document.fontSize": {
+          "type": "number",
+          "default": 17,
+          "minimum": 12,
+          "maximum": 28,
+          "description": "%config.document.fontSize%"
+        },
+        "tacet.notes.folder": {
+          "type": "string",
+          "default": "",
+          "description": "%config.notes.folder%"
+        },
+        "tacet.code.lineNumbers": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.code.lineNumbers%"
+        },
+        "tacet.terminal.shortcut": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.terminal.shortcut%"
+        },
+        "tacet.spelling.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.spelling.enabled%"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "key": "ctrl+`",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "config.tacet.terminal.shortcut"
+      }
+    ]
+  }
+}

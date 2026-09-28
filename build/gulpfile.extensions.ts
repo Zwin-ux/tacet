@@ -60,7 +60,7 @@ const compilations = [
 	'extensions/html-language-features/server/tsconfig.json',
 	'extensions/json-language-features/client/tsconfig.json',
 	'extensions/json-language-features/server/tsconfig.json',
-	'extensions/margin-welcome/tsconfig.json',
+	'extensions/tacet-welcome/tsconfig.json',
 	'extensions/markdown-language-features/tsconfig.json',
 	'extensions/markdown-math/tsconfig.json',
 	'extensions/media-preview/tsconfig.json',

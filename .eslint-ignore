@@ -27,8 +27,8 @@
 **/extensions/mermaid-markdown-features/chat-webview-out/**
 **/extensions/mermaid-markdown-features/markdown-preview-out/**
 **/extensions/simple-browser/media/index.js
-**/extensions/margin-welcome/media/**
-**/extensions/margin-welcome/webview/**
+**/extensions/tacet-welcome/media/**
+**/extensions/tacet-welcome/webview/**
 **/extensions/terminal-suggest/src/completions/upstream/**
 **/extensions/terminal-suggest/src/shell/zshBuiltinsCache.ts
 **/extensions/terminal-suggest/src/shell/fishBuiltinsCache.ts

@@ -5,7 +5,7 @@
 
 // Tacet dev-build smoke gate (R2+).
 //
-// Usage: node margin/tools/smoke.mjs <tag> [--skip-prelaunch]
+// Usage: node tacet/tools/smoke.mjs <tag> [--skip-prelaunch]
 //
 // Launches the dev build with a disposable profile and fixture folder, connects to the
 // renderer over the Chrome DevTools Protocol (Playwright connectOverCDP) and drives it
@@ -15,7 +15,7 @@
 //
 // Checks: launch, type + save (bytes on disk), undo back to the original bytes,
 // terminal command creates a file, source control view opens and lists the change.
-// Output: margin/evidence/<tag>-*.png and margin/evidence/<tag>-smoke.json.
+// Output: tacet/evidence/<tag>-*.png and tacet/evidence/<tag>-smoke.json.
 
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream } from 'node:fs';
@@ -30,7 +30,7 @@ const evidence = join(root, 'tacet', 'evidence');
 const tag = process.argv[2] ?? 'smoke';
 const skipPrelaunch = process.argv.includes('--skip-prelaunch');
 const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-const scratch = join(tmpdir(), `margin-${tag}-${stamp}`);
+const scratch = join(tmpdir(), `tacet-${tag}-${stamp}`);
 const fixtures = join(scratch, 'fixtures');
 const note = join(fixtures, 'note.md');
 const original = '# Smoke note\n\nFirst line of the note.\n\n- first item\n- second item\n\nLast line of the note.\n';
@@ -412,8 +412,8 @@ async function main() {
 		killTree(child.pid);
 		results.scratch = scratch;
 		results.finished = new Date().toISOString();
-		// MARGIN_SMOKE_INJECT_FAILURE=<check> forces one check to fail (proves the exit code).
-		const injected = process.env.MARGIN_SMOKE_INJECT_FAILURE;
+		// TACET_SMOKE_INJECT_FAILURE=<check> forces one check to fail (proves the exit code).
+		const injected = process.env.TACET_SMOKE_INJECT_FAILURE;
 		if (injected) {
 			results[injected] = 'FAIL (injected)';
 		}
