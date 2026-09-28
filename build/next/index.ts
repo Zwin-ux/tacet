@@ -84,7 +84,6 @@ function isExtensionHostBundle(filePath: string): boolean {
 const workerEntryPoints = [
 	'vs/editor/common/services/editorWebWorkerMain',
 	'vs/workbench/api/worker/extensionHostWorkerMain',
-	'vs/workbench/contrib/notebook/common/services/notebookWebWorkerMain',
 	'vs/workbench/services/languageDetection/browser/languageDetectionWebWorkerMain',
 	'vs/workbench/services/search/worker/localFileSearchMain',
 	'vs/workbench/contrib/output/common/outputLinkComputerMain',
@@ -99,7 +98,6 @@ const desktopWorkerEntryPoints = [
 // Desktop workbench and code entry points
 const desktopEntryPoints = [
 	'vs/workbench/workbench.desktop.main',
-	'vs/workbench/contrib/debug/node/telemetryApp',
 	'vs/platform/files/node/watcher/watcherMain',
 	'vs/platform/terminal/node/ptyHostMain',
 	'vs/workbench/api/node/extensionHostProcess',
