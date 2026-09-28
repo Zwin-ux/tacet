@@ -37,7 +37,7 @@ const original = '# Smoke note\n\nFirst line of the note.\n';
 const typed = 'Typed by the smoke gate.';
 
 const results = { tag, started: new Date().toISOString() };
-const REQUIRED_CHECKS = ['launch', 'writingLayout', 'typeSave', 'undo', 'terminal', 'git'];
+const REQUIRED_CHECKS = ['launch', 'writingLayout', 'richEditor', 'typeSave', 'undo', 'terminal', 'git'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function freePort() {
@@ -165,22 +165,40 @@ async function main() {
 		const layout = {
 			statusBarVisible: await page.locator('.part.statusbar').first().isVisible().catch(() => false),
 			panelVisible: await page.locator('.part.panel').first().isVisible().catch(() => false),
+			sideBarVisible: await page.locator('.part.sidebar').first().isVisible().catch(() => false),
 			tabs: await page.locator('.tabs-container .tab').count()
 		};
-		results.writingLayout = !layout.statusBarVisible && !layout.panelVisible && layout.tabs === 0 ? 'PASS' : `FAIL (${JSON.stringify(layout)})`;
+		results.writingLayout = !layout.statusBarVisible && !layout.panelVisible && !layout.sideBarVisible && layout.tabs === 0 ? 'PASS' : `FAIL (${JSON.stringify(layout)})`;
+
+		// A .md opens in the rich Markdown editor (a webview), not the Monaco source editor.
+		const webview = page.locator('iframe.webview').first();
+		try {
+			await webview.waitFor({ state: 'visible', timeout: 20_000 });
+		} catch {
+			// reported below
+		}
+		const monacoNote = page.locator('.monaco-editor[data-uri$="note.md"] .view-lines').first();
+		const hasWebview = await webview.isVisible().catch(() => false);
+		const hasMonaco = await monacoNote.isVisible().catch(() => false);
+		results.richEditor = hasWebview && !hasMonaco ? 'PASS' : `FAIL (webview: ${hasWebview}, monaco: ${hasMonaco})`;
 
 		// Type and save.
 		try {
-			const editor = page.locator('.monaco-editor[data-uri$="note.md"] .view-lines').first();
-			if (await editor.count()) {
+			if (hasMonaco) {
 				results.noteEditor = 'monaco';
-				await editor.click();
+				await monacoNote.click();
 			} else {
-				results.noteEditor = 'custom';
-				await page.locator('.editor-instance').first().click();
+				results.noteEditor = 'rich';
+				// The webview host iframe holds the content in #active-frame; the editor (EditContext, not
+				// contenteditable) is .md-editor. Click the last line of text to place the caret.
+				const content = page.frameLocator('iframe.webview').first().frameLocator('#active-frame').locator('.md-editor').first();
+				await content.waitFor({ state: 'visible', timeout: 20_000 });
+				await content.getByText('First line of the note.').click();
+				await sleep(500);
 			}
 			await page.keyboard.press('Control+End');
-			await page.keyboard.type(typed, { delay: 15 });
+			// Rich editor: 15 ms per key split the line once (sync race, R3 finding); type at a human pace.
+			await page.keyboard.type(typed, { delay: hasMonaco ? 15 : 50 });
 			await sleep(300);
 			const saved = await saveUntil(page, text => text.includes(typed));
 			const onDisk = readFileSync(note, 'utf8');

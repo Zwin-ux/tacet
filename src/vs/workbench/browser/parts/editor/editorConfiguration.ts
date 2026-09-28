@@ -9,7 +9,7 @@ import { IWorkbenchContribution } from '../../../common/contributions.js';
 import { Disposable } from '../../../../base/common/lifecycle.js';
 import { IConfigurationRegistry, Extensions as ConfigurationExtensions, IConfigurationNode, ConfigurationScope } from '../../../../platform/configuration/common/configurationRegistry.js';
 import { workbenchConfigurationNodeBase } from '../../../common/configuration.js';
-import { diffEditorsAssociationsAgentsWindowDefault, diffEditorsAssociationsSettingId, editorsAssociationsAgentsWindowDefault, editorsAssociationsSettingId, IEditorResolverService, markdownDefaultEditorAgentsWindowSettingId, RegisteredEditorInfo, RegisteredEditorPriority, toRegisteredEditorPriorityInfo } from '../../../services/editor/common/editorResolverService.js';
+import { diffEditorsAssociationsAgentsWindowDefault, diffEditorsAssociationsSettingId, editorsAssociationsAgentsWindowDefault, editorsAssociationsSettingId, IEditorResolverService, markdownDefaultEditorAgentsWindowSettingId, marginEditorAssociationsDefault, RegisteredEditorInfo, RegisteredEditorPriority, toRegisteredEditorPriorityInfo } from '../../../services/editor/common/editorResolverService.js';
 import { IJSONSchemaMap } from '../../../../base/common/jsonSchema.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
 import { coalesce } from '../../../../base/common/arrays.js';
@@ -160,6 +160,7 @@ export class DynamicEditorConfigurations extends Disposable implements IWorkbenc
 			properties: {
 				[editorsAssociationsSettingId]: {
 					type: 'object',
+					default: marginEditorAssociationsDefault,
 					markdownDescription: localize('editor.editorAssociations', "Configure [glob patterns](https://aka.ms/vscode-glob-patterns) to editors (for example `\"*.hex\": \"hexEditor.hexedit\"`). These have precedence over the default behavior."),
 					patternProperties: {
 						'.*': {

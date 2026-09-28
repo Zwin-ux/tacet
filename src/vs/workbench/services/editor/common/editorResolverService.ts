@@ -51,6 +51,15 @@ function markdownEditorAgentsWindowDefault(markdownDefaultEditor?: boolean): str
 }
 
 /**
+ * Margin: Markdown opens as a rendered, writable document. This is a code default (not an extension
+ * configuration default) so that it already applies to files opened at startup.
+ */
+export const marginEditorAssociationsDefault: Readonly<Record<string, string>> = {
+	'*.md': 'vscode.markdown.editor',
+	'*.markdown': 'vscode.markdown.editor'
+};
+
+/**
  * Builds the default value for `workbench.editorAssociations` in the Agents window.
  * Shared so that dynamic re-registrations of the setting preserve the override.
  *
@@ -85,6 +94,7 @@ const editorAssociationsConfigurationNode: IConfigurationNode = {
 		},
 		[editorsAssociationsSettingId]: {
 			type: 'object',
+			default: marginEditorAssociationsDefault,
 			markdownDescription: localize('editor.editorAssociations', "Configure [glob patterns](https://aka.ms/vscode-glob-patterns) to editors (for example `\"*.hex\": \"hexEditor.hexedit\"`). These have precedence over the default behavior."),
 			additionalProperties: {
 				type: 'string'

@@ -979,7 +979,7 @@ export class MarkdownEditorProvider extends Disposable implements vscode.CustomT
 			content: document.getText(),
 			documentVersion: document.version,
 			editEpoch,
-			readonly: this.#globalState.get(MarkdownEditorProvider.#readonlyStateKey, true),
+			readonly: this.#globalState.get(MarkdownEditorProvider.#readonlyStateKey, false), // Margin: documents open writable
 			richLinksEnabled: vscode.workspace.getConfiguration('markdown').get<boolean>('experimental.richLinks.enabled', true),
 			linkPresentationRules: vscode.window.linkPresentationRules.map(rule => ({
 				id: rule.id,
