@@ -1,0 +1,16 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+/* Margin type roles (design guide 2.3). Windows falls back to the workbench stack elsewhere. */
+
+.monaco-workbench.windows .margin-display {
+	font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
+}
+
+.monaco-workbench.windows .margin-small {
+	font-family: "Segoe UI Variable Small", "Segoe UI", sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+}

@@ -378,4 +378,7 @@ import './contrib/dropOrPasteInto/browser/dropOrPasteInto.contribution.js';
 // Opener
 import './contrib/opener/browser/opener.contribution.js';
 
+// Margin
+import './contrib/margin/browser/margin.contribution.js';
+
 //#endregion

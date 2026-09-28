@@ -157,6 +157,8 @@ async function main() {
 		results.windowTitle = await page.title();
 		await sleep(6000);
 		results.screenshots = [await shot(page, 'launch')];
+		// The dev window takes focus when it opens; physical keystrokes typed elsewhere can land in it.
+		results.foreignInputBeforeTyping = await page.locator('.tab.dirty').count() > 0;
 
 		// Type and save.
 		try {
