@@ -14,3 +14,22 @@
 	font-size: 12px;
 	line-height: 16px;
 }
+
+/* Title bar (design guide 4.2): one 48px row, no edge, the Margin mark at x=16 */
+
+.monaco-workbench .part.titlebar {
+	box-shadow: none;
+}
+
+.monaco-workbench.windows .part.titlebar > .titlebar-container,
+.monaco-workbench.linux .part.titlebar > .titlebar-container {
+	padding-left: 8px;
+}
+
+.monaco-workbench .part.titlebar.titlebar > .titlebar-container > .titlebar-left > .window-appicon {
+	width: 32px;
+}
+
+.monaco-workbench .part.titlebar.titlebar > .titlebar-container > .titlebar-left > .window-appicon:not(.codicon) {
+	background-image: url('./margin-mark.svg');
+}
