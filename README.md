@@ -1,10 +1,9 @@
 <p align="center">
-  <img src="tacet/design/assets/icon/margin-app-icon-1024.png" width="112" alt="Tacet icon: a white sheet of paper with a blue margin rule">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/tacet-banner-dark.png">
+    <img src=".github/assets/tacet-banner-light.png" alt="Tacet: a quiet place to write. Mac and Windows. No AI, no account.">
+  </picture>
 </p>
-
-<h1 align="center">Tacet</h1>
-
-<p align="center"><b>A quiet place to write.</b> Notepad with a VS Code feel, for Mac and Windows.</p>
 
 <p align="center">
   <a href="#build-and-run">Build from source</a> ·
@@ -12,15 +11,22 @@
   <a href="LICENSE.txt">MIT (with one exception)</a>
 </p>
 
-<p align="center">
-  <img src=".github/assets/tacet-writing.png" alt="Tacet on a Mac: a note titled 'A quieter morning' with a paragraph, a checklist and a quote on a plain white page">
-</p>
-
 Tacet opens to a white page with a caret, and you write. Your notes are real files on your disk, Markdown reads like a page instead of a pile of symbols, and a terminal is there when you turn it on. There is no AI, no account and no telemetry.
 
 *Tacet* is the mark in a score that tells a player to stay silent. The app does the same: it stays out of the way.
 
 > **Status: early.** Development builds run on macOS (Apple silicon) and Windows (x64). There is no signed release yet. Build it from source below, and expect rough edges.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/tacet-pillars-dark.png">
+    <img src=".github/assets/tacet-pillars-light.png" alt="Four pillars: Quiet page, Real files, Keyboard first, Private (no AI, no account, no telemetry)">
+  </picture>
+</p>
+
+<p align="center">
+  <img src=".github/assets/tacet-writing.png" alt="Tacet on a Mac: a note titled 'A quieter morning' with a paragraph, a checklist and a quote on a plain white page">
+</p>
 
 ## How it works
 
