@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # Root npm updates come from the Code OSS sync, not Dependabot.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
