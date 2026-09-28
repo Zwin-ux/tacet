@@ -4,7 +4,7 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 
 ## The product in one sentence
 
-**Notepad with a VS Code feel:** open Margin, a white page with a caret, type, it is saved. Monaco-quality text, a command palette, a quiet file shelf, Markdown that reads well, a terminal one keystroke away. No AI, no git, no accounts, no marketplace. Calm like the ChatGPT desktop app, polished like Windsurf, and it must not look like VS Code.
+**Notepad with a VS Code feel:** open Margin, a white page with a caret, type, it is saved. Monaco-quality text, a command palette, a quiet file shelf, Markdown that reads well, a terminal when you turn it on. No AI, no git, no accounts, no marketplace. Calm like the ChatGPT desktop app, polished like Windsurf, and it must not look like VS Code.
 
 ## Owner decisions in force
 
@@ -36,6 +36,27 @@ README structure, taken from Paperclip and adapted:
 10. FAQ, Roadmap, **Telemetry: none** (stated plainly), Contributing, Security, License (MIT; keeps the Microsoft Code OSS notice; "Visual Studio Code" is a Microsoft trademark and Margin is not affiliated).
 
 Repo files at launch: README.md, LICENSE (MIT, both copyright lines), ThirdPartyNotices, CONTRIBUTING.md, SECURITY.md, DESIGN.md (from margin/design/DESIGN-GUIDE.md), ROADMAP.md, CHANGELOG, `.github/` issue templates, release with signed installer + SHA256SUMS, social preview image 1280×640. Assets (banner, pillars, social preview) from the design lane; demo video captured from the real app over CDP.
+
+## Requirements from user criticism (`design/CRITICISM.md`, 2026-09-27)
+
+Each is an acceptance check on the milestone named.
+
+| # | Requirement | Milestone |
+| --- | --- | --- |
+| R1 | Double-click a `.md`: a rendered, editable page with the caret ready. No setup, no folder, no trust prompt. | M8 + M6 |
+| R2 | Source view for `.md` is always one key away (Write ▾ → Code and its shortcut), never behind a switch. | M6 |
+| R3 | Drafts are never lost, are findable by title, and are readable files on disk. | M5 |
+| R4 | Links cannot execute anything: only http, https and mailto, destination shown before opening (lesson of Notepad CVE-2026-20841). | M6 |
+| R5 | Relative images and links resolve from the file's own folder; remote images blocked until the user allows them. | M6 |
+| R6 | One Ctrl+P over pinned notes, drafts, recent files and folders; `#` jumps to a heading. | M7 |
+| R7 | Recent includes files saved from drafts, supports pinning, keeps missing files with Locate / Remove. Shelf gets a Pinned section. | M4 + M7 |
+| R8 | Content search can cover "this file's folder" without creating a workspace or writing anything there. | M7 |
+| R9 | Every extra is off by default and nothing turns itself back on after an update or relaunch. | M4 + M10 |
+| R10 | File facts stay honest without a status bar: dirty dot, save failure, a notice only for non-UTF-8 or unusual line endings, full path in the title menu. | M4 |
+| R11 | Windows-native opening: single instance, Open With, drag to open, a `margin` command line (`--wait`, `--read`, `--goto`), one offer to become the default app, shown once after a file is opened. | M8 |
+| R12 | Measured Notepad-class launch time, typing latency and memory; budgets set at M9. | M9 |
+
+Rulings on the research's contradictions: source view is not an Extra (C1); first boot warns when Documents is synced by OneDrive and offers a PC-only folder (C2); the terminal is opt-in, not "one keystroke away" by default (C3); local history must be good since git is gone (C4); first launch shows the first boot, and Esc lands on a draft with no account or network (C5); downloaded `.md` files (Mark of the Web) open in Read (C10); public positioning leads with reading and safety, with "no AI" as a supporting fact (C11). Spelling squiggles (C9) are an owner decision.
 
 ## Milestones and gates
 

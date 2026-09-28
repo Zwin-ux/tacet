@@ -19,6 +19,11 @@ Sources: owner messages 2026-09-27, [REFERENCES-V2.md](REFERENCES-V2.md), [ANIMA
 | A9 | §4.23 dialogs | Unsaved changes on close uses the **native Windows dialog**. |
 | A10 | UI-KIT reading progress | Dropped. No always-visible reading-progress line. |
 | A11 | .md opening | A `.md` opens in the rich editor (Write) by default; `.txt` in the plain editor, no line numbers. Line numbers only in Code view when the Extra is on. |
+| A12 | Links (§4.12, §4.14) | Only http, https and mailto open; the destination is shown first. Relative links and images resolve from the file folder; remote images blocked until allowed. |
+| A13 | Downloaded files | A `.md` with Mark of the Web opens in Read. |
+| A14 | §4.7 shelf | Add a Pinned section above Drafts. Missing recent files stay listed with Locate / Remove. |
+| A15 | File-state notices | With no status bar, a quiet notice appears only for non-UTF-8 encoding or unusual line endings; the full path lives in the title menu. |
+| A16 | Source view | Always reachable for `.md` (Write ▾ → Code + shortcut); never an opt-in Extra. |
 Scope: every surface of the Code OSS 1.139.0 workbench that a Margin user can see.
 Companions: [tokens.json](tokens.json) (values), [theme/](theme/) (generated color themes), [css/md-theme-margin.css](css/md-theme-margin.css) (document typography), [icons/](icons/) (product icons), [assets/README.md](assets/README.md) (mockups, app icon, rejection log), [IMPLEMENTATION-MAP.md](IMPLEMENTATION-MAP.md) (engineering order).
 
