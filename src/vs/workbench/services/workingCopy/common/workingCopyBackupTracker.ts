@@ -89,7 +89,7 @@ export abstract class WorkingCopyBackupTracker extends Disposable {
 	// race between saving (after 1s per default) and making a backup of
 	// the working copy.
 	private static readonly DEFAULT_BACKUP_SCHEDULE_DELAYS = {
-		['default']: 1000,
+		['default']: 500, // Tacet: checkpoint ordinary typing within 500 ms (document contract D-22)
 		['delayed']: 2000
 	};
 
@@ -97,6 +97,12 @@ export abstract class WorkingCopyBackupTracker extends Disposable {
 	// change. This version ID allows to e.g. ask if a backup for a specific
 	// content has been made before closing.
 	private readonly mapWorkingCopyToContentVersion = new Map<IWorkingCopy, number>();
+
+	// Tacet (document contract D-22): a debounce alone can push a backup out forever while
+	// someone types without a pause. This remembers when the oldest change not yet backed up
+	// happened so the wait is bounded.
+	private static readonly MAX_BACKUP_WAIT = 1000;
+	private readonly mapWorkingCopyToFirstPendingChange = new Map<IWorkingCopy, number>();
 
 	// A map of scheduled pending backup operations for working copies
 	// Given https://github.com/microsoft/vscode/issues/158038, we explicitly
@@ -121,6 +127,7 @@ export abstract class WorkingCopyBackupTracker extends Disposable {
 
 		// Remove from content version map
 		this.mapWorkingCopyToContentVersion.delete(workingCopy);
+		this.mapWorkingCopyToFirstPendingChange.delete(workingCopy);
 
 		// Check suspended
 		if (this.suspended) {
@@ -176,10 +183,17 @@ export abstract class WorkingCopyBackupTracker extends Disposable {
 		// Schedule new backup
 		const workingCopyIdentifier = { resource: workingCopy.resource, typeId: workingCopy.typeId };
 		const cts = new CancellationTokenSource();
+		const now = Date.now();
+		const firstPendingChange = this.mapWorkingCopyToFirstPendingChange.get(workingCopy) ?? now;
+		this.mapWorkingCopyToFirstPendingChange.set(workingCopy, firstPendingChange);
+		const delay = Math.max(0, Math.min(this.getBackupScheduleDelay(workingCopy), firstPendingChange + WorkingCopyBackupTracker.MAX_BACKUP_WAIT - now));
+
 		const handle = setTimeout(async () => {
 			if (cts.token.isCancellationRequested) {
 				return;
 			}
+
+			this.mapWorkingCopyToFirstPendingChange.delete(workingCopy);
 
 			// Backup if modified
 			if (workingCopy.isModified()) {
@@ -206,7 +220,7 @@ export abstract class WorkingCopyBackupTracker extends Disposable {
 			if (!cts.token.isCancellationRequested) {
 				this.doClearPendingBackupOperation(workingCopyIdentifier);
 			}
-		}, this.getBackupScheduleDelay(workingCopy));
+		}, delay);
 
 		// Keep in map for disposal as needed
 		this.pendingBackupOperations.set(workingCopyIdentifier, {

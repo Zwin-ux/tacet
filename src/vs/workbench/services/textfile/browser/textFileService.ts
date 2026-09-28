@@ -30,6 +30,7 @@ import { IResolvedTextEditorModel } from '../../../../editor/common/services/res
 import { BaseTextEditorModel } from '../../../common/editor/textEditorModel.js';
 import { ICodeEditorService } from '../../../../editor/browser/services/codeEditorService.js';
 import { IPathService } from '../../path/common/pathService.js';
+import { sanitizeNoteTitle, suggestNoteFilename } from '../common/noteFileName.js';
 import { IWorkingCopyFileService, IFileOperationUndoRedoInfo, ICreateFileOperation } from '../../workingCopy/common/workingCopyFileService.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
 import { IWorkspaceContextService, WORKSPACE_EXTENSION } from '../../../../platform/workspace/common/workspace.js';
@@ -668,22 +669,14 @@ export abstract class AbstractTextFileService extends Disposable implements ITex
 					return toLocalResource(resource, remoteAuthority, this.pathService.defaultUriScheme);
 				}
 
-				// Untitled without associated file path: use name
-				// of untitled model if it is a valid path name and
-				// figure out the file extension from the mode if any.
-
-				let nameCandidate: string;
-				if (await this.pathService.hasValidBasename(joinPath(defaultFilePath, model.name), model.name)) {
-					nameCandidate = model.name;
-				} else {
-					nameCandidate = basename(resource);
-				}
-
+				// Untitled without associated file path: use the title of the
+				// draft as a sanitized file name (Tacet document contract D-03).
+				// Notes are Markdown unless the draft was given another language.
 				const languageId = model.getLanguageId();
-				if (languageId && languageId !== PLAINTEXT_LANGUAGE_ID) {
-					suggestedFilename = this.suggestFilename(languageId, nameCandidate);
+				if (!languageId || languageId === PLAINTEXT_LANGUAGE_ID || languageId === 'markdown') {
+					suggestedFilename = suggestNoteFilename(model.name);
 				} else {
-					suggestedFilename = nameCandidate;
+					suggestedFilename = this.suggestFilename(languageId, sanitizeNoteTitle(model.name));
 				}
 			}
 		}
@@ -693,8 +686,13 @@ export abstract class AbstractTextFileService extends Disposable implements ITex
 			suggestedFilename = basename(resource);
 		}
 
-		// Try to place where last active file was if any
-		// Otherwise fallback to user home
+		// Tacet: drafts are saved into the notes folder chosen in first boot, if any.
+		// Otherwise place where last active file was, or fallback to user home.
+		const notesFolder = this.textResourceConfigurationService.getValue<string>(undefined, 'tacet.notes.folder');
+		if (resource.scheme === Schemas.untitled && typeof notesFolder === 'string' && notesFolder.trim() && !remoteAuthority) {
+			return joinPath(URI.file(notesFolder.trim()), suggestedFilename);
+		}
+
 		return joinPath(defaultFilePath, suggestedFilename);
 	}
 

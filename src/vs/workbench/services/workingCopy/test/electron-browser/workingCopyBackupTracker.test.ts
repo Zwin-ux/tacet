@@ -523,13 +523,13 @@ suite('WorkingCopyBackupTracker (native)', function () {
 				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.CLOSE, false, true, false);
 			});
 			test('should hot exit (reason: CLOSE, windows: single, empty workspace)', function () {
-				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.CLOSE, false, false, !!isMacintosh);
+				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.CLOSE, false, false, false);
 			});
 			test('should hot exit (reason: CLOSE, windows: multiple, workspace)', function () {
 				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.CLOSE, true, true, false);
 			});
-			test('should NOT hot exit (reason: CLOSE, windows: multiple, empty workspace)', function () {
-				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.CLOSE, true, false, true);
+			test('should hot exit (reason: CLOSE, windows: multiple, empty workspace)', function () {
+				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.CLOSE, true, false, false);
 			});
 			test('should hot exit (reason: QUIT, windows: single, workspace)', function () {
 				return hotExitTest.call(this, HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE, ShutdownReason.QUIT, false, true, false);
