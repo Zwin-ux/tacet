@@ -18,6 +18,25 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 | 2026-09-27 | **As simple as possible: no status bar by default.** The window is the title bar and the page. Save state moves to the title (dirty dot next to the document name). Power features are opt-in during first boot, all off by default. |
 | 2026-09-27 | Design uses Codex (concept art) and Higgsfield (motion, custom assets, hero) freely. |
 
+## Open-source launch (owner, 2026-09-27)
+
+When v1 passes M10, Margin goes public as an open-source GitHub repo, **`Zwin-ux/margin`** (name is free as of 2026-09-27), with a repo page modeled on [paperclipai/paperclip](https://github.com/paperclipai/paperclip). Creating the public repo and pushing is owner-confirmed at the time (outward action).
+
+README structure, taken from Paperclip and adapted:
+
+1. Centered banner (light/dark `<picture>`), a link row (Download · Docs · Website), badges (MIT, stars, latest release).
+2. A short demo video of the real app (screen capture of the shipped build, not AI video).
+3. One bold line: *Margin is Notepad with a VS Code feel.* A contrast line in the Paperclip style.
+4. A 3-step table: Open a file → Write → It is saved.
+5. **Margin is right for you if** (checklist).
+6. The pillars (one image, light/dark): Quiet page, Real files, Instant, Private (no AI, no account, no telemetry).
+7. Features grid: Markdown that reads well, find anything, never lose a draft, terminal when you want it, keyboard first.
+8. **What Margin is not** (two-column table): not an IDE, not an AI editor, not a git client, not a cloud notes service, not an extension marketplace.
+9. Quickstart: installer + SHA-256 check, winget if available; build from source.
+10. FAQ, Roadmap, **Telemetry: none** (stated plainly), Contributing, Security, License (MIT; keeps the Microsoft Code OSS notice; "Visual Studio Code" is a Microsoft trademark and Margin is not affiliated).
+
+Repo files at launch: README.md, LICENSE (MIT, both copyright lines), ThirdPartyNotices, CONTRIBUTING.md, SECURITY.md, DESIGN.md (from margin/design/DESIGN-GUIDE.md), ROADMAP.md, CHANGELOG, `.github/` issue templates, release with signed installer + SHA256SUMS, social preview image 1280×640. Assets (banner, pillars, social preview) from the design lane; demo video captured from the real app over CDP.
+
 ## Milestones and gates
 
 | # | Milestone | What "done" means (gate) | State |
@@ -31,6 +50,7 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 | M7 | **Find and navigate** (W4) | Gate G4 (minus git): find a passage, jump to a heading, toggle a task, rename with link awareness, all without developer commands. | Not started |
 | M8 | **Windows citizen** (W5, git removed) | Gate G5 minus git: Open With from Explorer, Unicode paths, multiple windows, native dialogs, print to PDF, snap layouts, accessibility basics. | Not started |
 | M9 | **Trust** (W6) | Gate G6: all P0 cases in `docs/08-ACCEPTANCE.md` pass; fault injection; startup and memory budgets measured; 5 real people complete the core tasks. | Not started |
+| M11 | **Open source** (after M10) | Public repo live with the Paperclip-style README, release v1.0.0 with installer + SHA256SUMS, demo video, social preview; a fresh clone builds from source by following the README. | Not started |
 | M10 | **Release** (W7) | Gate G7: signed x64 installer, fresh install / upgrade / uninstall keeps notes, no-AI and no-network audit on the packaged artifact, notices/SBOM, release notes, landing page with hero and download. | Not started |
 
 ## How every tool is used
