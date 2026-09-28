@@ -72,6 +72,32 @@ Limitations:         Dev build (out/), not a packaged artifact. Smoke is keystro
                      upstream smoke-test suite. Not yet measured: startup time, memory.
 ```
 
+## macOS lane — dev build PASSED
+
+```text
+Date / owner:        2026-09-28 / Claude (Opus 5.5), Mac lane for the owner
+Package and gate:    macOS dev build + smoke gate (margin/tools/smoke.mjs, now cross-platform)
+Host:                MacBook, Apple silicon arm64, 8 GB RAM, macOS 26.4, Node 24.18.0 (nvm), npm 11.16.0
+Source head:         branch margin/mac (off margin/notes-first 1237bfc8)
+Changed paths:       product.json darwinBundleIdentifier = com.mazenzwin.margin;
+                     resources/darwin/code.icns = Margin sheet icon (from design/assets/icon/margin-app-icon-1024.png);
+                     smoke.mjs launches scripts/code.sh, Cmd/Option chords, stops its own processes;
+                     markdownEditorProvider.ts ignores change events with no content changes (see below)
+Commands/results:    VSCODE_INSTALL_CONCURRENCY=3 npm ci  -> EXIT 0, no native build errors
+                     npm run compile                     -> EXIT 0, 1.5 min
+                     node build/lib/preLaunch.ts          -> EXIT 0 (Electron darwin-arm64 = Margin.app)
+                     node margin/tools/smoke.mjs mac1     -> typingCases FAIL 5/7 (after-heading, middle)
+                     node margin/tools/smoke.mjs mac3/mac4 -> every check PASS, typing cases 7/7, exit 0
+Bug found and fixed: the first edit after open/save (and undo back to saved) fires
+                     onDidChangeTextDocument with no content changes (dirty-state flip). The Markdown
+                     editor host treated it as an external edit, posted an authoritative update and
+                     advanced the edit epoch, so keystrokes already in flight were dropped as stale
+                     (typing " title" after a heading saved " tle"). Platform-independent; the slower
+                     Mac exposed it. Fix: ignore events with contentChanges.length === 0.
+Evidence:            margin/evidence/mac1-smoke.json (before), mac3-*.png + mac3-smoke.json (after)
+Limitations:         dev build (out/); packaged, signed, notarized .app/.dmg not yet qualified.
+```
+
 ## Next action
 
 W1: Margin identity + AI removal. The removal inventory is being compiled into `evidence/w1-ai-inventory.md`. Order: (1) strip Copilot/chat onboarding and chat/agent contributions from workbench mains, (2) services/processes, (3) extension API surfaces, (4) built-in AI extensions + product.json keys, (5) packaging; then product identity (app id, data dir, URI scheme, white theme, icon). Gate G1 per the plan.
