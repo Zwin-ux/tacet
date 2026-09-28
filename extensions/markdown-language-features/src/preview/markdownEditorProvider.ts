@@ -541,6 +541,12 @@ export class MarkdownEditorProvider extends Disposable implements vscode.CustomT
 			if (e.document.uri.toString() !== document.uri.toString()) {
 				return;
 			}
+			// Margin: a change with no content changes is a dirty-state flip (first edit after open or
+			// save, undo back to saved). The text is unchanged, so publishing it would only advance the
+			// epoch and discard the keystrokes the webview already has in flight.
+			if (e.contentChanges.length === 0) {
+				return;
+			}
 			if (
 				e.document.getText() === expectedWebviewContent?.content
 				&& expectedWebviewContent.epoch === editQueue.epoch
