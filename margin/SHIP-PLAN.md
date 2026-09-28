@@ -56,7 +56,7 @@ Each is an acceptance check on the milestone named.
 | R11 | Windows-native opening: single instance, Open With, drag to open, a `margin` command line (`--wait`, `--read`, `--goto`), one offer to become the default app, shown once after a file is opened. | M8 |
 | R12 | Measured Notepad-class launch time, typing latency and memory; budgets set at M9. | M9 |
 
-Rulings on the research's contradictions: source view is not an Extra (C1); first boot warns when Documents is synced by OneDrive and offers a PC-only folder (C2); the terminal is opt-in, not "one keystroke away" by default (C3); local history must be good since git is gone (C4); first launch shows the first boot, and Esc lands on a draft with no account or network (C5); downloaded `.md` files (Mark of the Web) open in Read (C10); public positioning leads with reading and safety, with "no AI" as a supporting fact (C11). Spelling squiggles (C9) are an owner decision.
+Rulings on the research's contradictions: source view is not an Extra (C1); first boot warns when Documents is synced by OneDrive and offers a PC-only folder (C2); the terminal is opt-in, not "one keystroke away" by default (C3); local history must be good since git is gone (C4); first launch shows the first boot, and Esc lands on a draft with no account or network (C5); downloaded `.md` files (Mark of the Web) open in Read (C10); public positioning leads with reading and safety, with "no AI" as a supporting fact (C11). Spelling (C9): owner decided 2026-09-27 — an opt-in "Check spelling" on the first-boot Extras step, off by default, squiggles only, never autocorrect.
 
 ## Milestones and gates
 
