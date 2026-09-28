@@ -1,0 +1,37 @@
+{
+  "name": "margin-welcome",
+  "publisher": "vscode",
+  "displayName": "Margin Welcome",
+  "description": "First-boot welcome screen for Margin (spike: Animate UI in a webview).",
+  "version": "10.0.0",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "activationEvents": [],
+  "main": "./out/extension",
+  "scripts": {
+    "compile": "gulp compile-extension:margin-welcome",
+    "watch": "gulp watch-extension:margin-welcome",
+    "build-webview": "npm --prefix webview run build"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "margin.welcome.show",
+        "title": "Show Welcome",
+        "category": "Margin"
+      }
+    ]
+  }
+}
