@@ -19,7 +19,6 @@ import { DiffEditorInput } from '../../../../common/editor/diffEditorInput.js';
 import { IContextKey, IContextKeyService, RawContextKey } from '../../../../../platform/contextkey/common/contextkey.js';
 import { TextFileContentProvider } from '../../common/files.js';
 import { FileEditorInput } from './fileEditorInput.js';
-import { SAVE_FILE_AS_LABEL } from '../fileConstants.js';
 import { INotificationService, INotificationHandle, INotificationActions, Severity } from '../../../../../platform/notification/common/notification.js';
 import { IOpenerService } from '../../../../../platform/opener/common/opener.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../../platform/storage/common/storage.js';
@@ -126,7 +125,7 @@ export class TextFileSaveErrorHandler extends Disposable implements ISaveErrorHa
 
 			// Otherwise show the message that will lead the user into the save conflict editor.
 			else {
-				message = localize('staleSaveError', "Failed to save '{0}': The content of the file is newer. Please compare your version with the file contents or overwrite the content of the file with your changes.", basename(resource));
+				message = localize('staleSaveError', "Couldn't save '{0}': The content of the file is newer. Please compare your version with the file contents or overwrite the content of the file with your changes.", basename(resource));
 
 				primaryActions.push(this.instantiationService.createInstance(ResolveSaveConflictAction, model));
 				primaryActions.push(this.instantiationService.createInstance(SaveModelIgnoreModifiedSinceAction, model, options));
@@ -157,11 +156,11 @@ export class TextFileSaveErrorHandler extends Disposable implements ISaveErrorHa
 				primaryActions.push(this.instantiationService.createInstance(RetrySaveModelAction, model, options));
 			}
 
-			// Save As
-			primaryActions.push(this.instantiationService.createInstance(SaveModelAsAction, model));
+			// Save a Copy (Tacet document contract D-24: keep the text, offer Retry and Save a Copy)
+			primaryActions.push(this.instantiationService.createInstance(SaveModelAsAction, model, localize('saveACopy', "Save a Copy...")));
 
-			// Revert
-			primaryActions.push(this.instantiationService.createInstance(RevertModelAction, model));
+			// Revert throws the unsaved text away, so it is a secondary action, never a primary button
+			secondaryActions.push(this.instantiationService.createInstance(RevertModelAction, model));
 
 			// Message
 			if (isWriteLocked) {
@@ -173,7 +172,7 @@ export class TextFileSaveErrorHandler extends Disposable implements ISaveErrorHa
 			} else if (canSaveElevated && isPermissionDenied) {
 				message = isWindows ? localize('permissionDeniedSaveError', "Failed to save '{0}': Insufficient permissions. Select 'Retry as Admin' to retry as administrator.", basename(resource)) : localize('permissionDeniedSaveErrorSudo', "Failed to save '{0}': Insufficient permissions. Select 'Retry as Sudo' to retry as superuser.", basename(resource));
 			} else {
-				message = localize({ key: 'genericSaveError', comment: ['{0} is the resource that failed to save and {1} the error message'] }, "Failed to save '{0}': {1}", basename(resource), toErrorMessage(error, false));
+				message = localize({ key: 'genericSaveError', comment: ['{0} is the resource that failed to save and {1} the error message'] }, "Couldn't save '{0}': {1}. Your text is still here.", basename(resource), toErrorMessage(error, false));
 			}
 		}
 
@@ -327,9 +326,10 @@ class SaveModelAsAction extends Action {
 
 	constructor(
 		private model: ITextFileEditorModel,
+		label: string,
 		@IEditorService private editorService: IEditorService
 	) {
-		super('workbench.files.action.saveModelAs', SAVE_FILE_AS_LABEL.value);
+		super('workbench.files.action.saveModelAs', label);
 	}
 
 	override async run(): Promise<void> {

@@ -172,8 +172,10 @@ export class NativeWorkingCopyBackupTracker extends WorkingCopyBackupTracker imp
 
 			// Window Close
 			case ShutdownReason.CLOSE:
-				if (this.contextService.getWorkbenchState() !== WorkbenchState.EMPTY && this.filesConfigurationService.hotExitConfiguration === HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE) {
-					return modifiedWorkingCopies; // backup if a workspace/folder is open and onExitAndWindowClose is configured
+				// Tacet: notes live in windows without a folder, so onExitAndWindowClose applies to those too.
+				// Their backups are restored on next launch (empty windows with backups are always restored).
+				if (this.filesConfigurationService.hotExitConfiguration === HotExitConfiguration.ON_EXIT_AND_WINDOW_CLOSE) {
+					return modifiedWorkingCopies; // backup when onExitAndWindowClose is configured
 				}
 
 				if (isMacintosh || await this.nativeHostService.getWindowCount() > 1) {

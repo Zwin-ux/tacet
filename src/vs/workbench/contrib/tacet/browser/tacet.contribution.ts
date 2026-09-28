@@ -4,3 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import './media/tacet.css';
+import { registerWorkbenchContribution2, WorkbenchPhase } from '../../../common/contributions.js';
+import { DraftsMirror } from './draftsMirror.js';
+
+registerWorkbenchContribution2(DraftsMirror.ID, DraftsMirror, WorkbenchPhase.AfterRestored);
