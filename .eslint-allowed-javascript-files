@@ -166,4 +166,5 @@ test/unit/fullJsonStreamReporter.js
 test/unit/node/index.js
 test/unit/reporter.js
 tacet/tools/smoke.mjs
+tacet/tools/durability.mjs
 tacet/tools/first-boot.mjs
