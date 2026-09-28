@@ -15,6 +15,7 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 | 2026-09-27 | North star: bare bones, high quality; ChatGPT desktop calm + VS Code power + Windsurf polish (`design/REFERENCES-V2.md`). |
 | 2026-09-27 | "More like Notepad with a VS Code feel": git and source control removed. |
 | 2026-09-27 | First boot is a React webview built with Animate UI + Motion (`extensions/margin-welcome`). Workbench chrome keeps plain CSS motion. |
+| 2026-09-27 | **As simple as possible: no status bar by default.** The window is the title bar and the page. Save state moves to the title (dirty dot next to the document name). Power features are opt-in during first boot, all off by default. |
 | 2026-09-27 | Design uses Codex (concept art) and Higgsfield (motion, custom assets, hero) freely. |
 
 ## Milestones and gates
@@ -23,8 +24,8 @@ Status: coordinator plan of record, 2026-09-27. One page that ties every lane to
 | --- | --- | --- | --- |
 | M1 | **Teardown** (R1 + R1b) | Compile 0; launch; smoke: type/save/undo/terminal; no removed surface (AI, debug, tasks, testing, notebooks, remote, marketplace, sync, telemetry, walkthroughs, timeline, comments, git/SCM) reachable. | R1 green (1d18a30e); R1b git removal queued |
 | M2 | **Identity** (R2a) | Margin themes, white first paint, Segoe UI Variable 14/20, 48px title bar, no menu row / command center / activity rail / tabs / breadcrumbs / minimap / floating cards; product name, window title and icons are Margin. A stranger shown the screenshot does not say "VS Code". | In progress |
-| M3 | **First boot** | 3 steps (theme + text size; import VS Code settings and shortcuts; where notes live), Enter continues, Esc skips, keyboard-complete, reduced motion instant, lands on a blank page with the caret. Built with Animate UI in a webview; spec `design/FIRST-BOOT.md`. | Design + tech spike in progress |
-| M4 | **The Margin shell** (R2b) | Left-aligned document title with title menu; quiet `Write ▾` mode picker; shelf = New note, Search, Drafts, Recent, Folders (no row icons); slim footer that shows only what matters; Code mode = source view + terminal. Guide §13 checklist passes at 1440 and 480 px, light, dark, one Contrast Theme. | Waiting on M2 + design concepts |
+| M3 | **First boot** | 3 steps (theme + text size; import VS Code settings and shortcuts; where notes live) plus one optional "Extras" step, all off by default: status line, line numbers, terminal shortcut, Markdown source view, Enter continues, Esc skips, keyboard-complete, reduced motion instant, lands on a blank page with the caret. Built with Animate UI in a webview; spec `design/FIRST-BOOT.md`. | Design + tech spike in progress |
+| M4 | **The Margin shell** (R2b) | Left-aligned document title with title menu; quiet `Write ▾` mode picker; shelf = New note, Search, Drafts, Recent, Folders (no row icons); no footer by default (save state in the title; status line only if chosen in first boot or settings); Code mode = source view + terminal. Guide §13 checklist passes at 1440 and 480 px, light, dark, one Contrast Theme. | Waiting on M2 + design concepts |
 | M5 | **Durable notes** (W2) | Gate G2: drafts survive cancel, save failure, external change, renderer kill and normal exit; no duplicate draft after save; user files untouched by tests. | Not started |
 | M6 | **Writing surface** (W3) | Gate G3: Write/Read/Code on one document without text moving; Read cannot edit; source fallback for unsupported Markdown; `.txt` stays plain. | Not started |
 | M7 | **Find and navigate** (W4) | Gate G4 (minus git): find a passage, jump to a heading, toggle a task, rename with link awareness, all without developer commands. | Not started |
