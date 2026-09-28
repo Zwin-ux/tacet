@@ -63,6 +63,7 @@ VSCODE_INSTALL_CONCURRENCY=3 npm ci
 npm run compile
 ./scripts/code.sh                                  # run the dev build
 node tacet/tools/smoke.mjs mac --skip-prelaunch    # smoke gate: type, save, undo, terminal
+node tacet/tools/durability.mjs mac --skip-prelaunch   # G2 durability gate: drafts and files cannot be lost
 npm run gulp vscode-darwin-arm64-min               # package Tacet.app (next to the repo folder)
 ```
 
@@ -74,6 +75,7 @@ $env:VSCODE_INSTALL_CONCURRENCY=3; npm ci
 npm run compile
 .\scripts\code.bat
 node tacet\tools\smoke.mjs win --skip-prelaunch
+node tacet\tools\durability.mjs win --skip-prelaunch
 npm run gulp vscode-win32-x64-min
 ```
 
