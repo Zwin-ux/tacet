@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset=".github/assets/tacet-banner-dark.png">
-    <img src=".github/assets/tacet-banner-light.png" alt="Tacet: a quiet place to write. Mac and Windows. No AI, no account.">
+    <img src=".github/assets/tacet-banner-light.png" alt="Tacet: a stripped-down VS Code fork for writing. Mac and Windows. No AI, no account.">
   </picture>
 </p>
 
