@@ -10,7 +10,7 @@
   <a href="https://www.mazenzwin.com">Website</a>
 </p>
 
-Tacet is a stripped-down fork of VS Code (Code - OSS) for writing Markdown and plain text. It keeps the editor, file explorer, search and terminal, and removes AI, extensions marketplace, source control, debugging and telemetry. Your notes stay plain files on disk.
+Tacet is a stripped-down fork of VS Code (Code - OSS) for writing Markdown and plain text. It keeps the editor, file explorer, search and terminal, and removes AI features, the extension marketplace, source control, debugging and telemetry. Your notes stay plain files on disk.
 
 > **Early.** No signed release yet. Build it from source.
 
